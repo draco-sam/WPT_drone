@@ -57,17 +57,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=main_wpt_tx.c Lib_Sam/oscillator_pic24f_00.c
+SOURCEFILES_QUOTED_IF_SPACED=main_wpt_tx_00.c Lib_Sam/lib_wpt_tx_00.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/main_wpt_tx.o ${OBJECTDIR}/Lib_Sam/oscillator_pic24f_00.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/main_wpt_tx.o.d ${OBJECTDIR}/Lib_Sam/oscillator_pic24f_00.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/main_wpt_tx_00.o ${OBJECTDIR}/Lib_Sam/lib_wpt_tx_00.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/main_wpt_tx_00.o.d ${OBJECTDIR}/Lib_Sam/lib_wpt_tx_00.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/main_wpt_tx.o ${OBJECTDIR}/Lib_Sam/oscillator_pic24f_00.o
+OBJECTFILES=${OBJECTDIR}/main_wpt_tx_00.o ${OBJECTDIR}/Lib_Sam/lib_wpt_tx_00.o
 
 # Source Files
-SOURCEFILES=main_wpt_tx.c Lib_Sam/oscillator_pic24f_00.c
+SOURCEFILES=main_wpt_tx_00.c Lib_Sam/lib_wpt_tx_00.c
 
 
 
@@ -95,34 +95,34 @@ MP_LINKER_FILE_OPTION=,--script=p24FJ128GC006.gld
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: compile
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
-${OBJECTDIR}/main_wpt_tx.o: main_wpt_tx.c  nbproject/Makefile-${CND_CONF}.mk
+${OBJECTDIR}/main_wpt_tx_00.o: main_wpt_tx_00.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/main_wpt_tx.o.d 
-	@${RM} ${OBJECTDIR}/main_wpt_tx.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE)  main_wpt_tx.c  -o ${OBJECTDIR}/main_wpt_tx.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/main_wpt_tx.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
-	@${FIXDEPS} "${OBJECTDIR}/main_wpt_tx.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	@${RM} ${OBJECTDIR}/main_wpt_tx_00.o.d 
+	@${RM} ${OBJECTDIR}/main_wpt_tx_00.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  main_wpt_tx_00.c  -o ${OBJECTDIR}/main_wpt_tx_00.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/main_wpt_tx_00.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/main_wpt_tx_00.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
-${OBJECTDIR}/Lib_Sam/oscillator_pic24f_00.o: Lib_Sam/oscillator_pic24f_00.c  nbproject/Makefile-${CND_CONF}.mk
+${OBJECTDIR}/Lib_Sam/lib_wpt_tx_00.o: Lib_Sam/lib_wpt_tx_00.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/Lib_Sam" 
-	@${RM} ${OBJECTDIR}/Lib_Sam/oscillator_pic24f_00.o.d 
-	@${RM} ${OBJECTDIR}/Lib_Sam/oscillator_pic24f_00.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE)  Lib_Sam/oscillator_pic24f_00.c  -o ${OBJECTDIR}/Lib_Sam/oscillator_pic24f_00.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/Lib_Sam/oscillator_pic24f_00.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
-	@${FIXDEPS} "${OBJECTDIR}/Lib_Sam/oscillator_pic24f_00.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	@${RM} ${OBJECTDIR}/Lib_Sam/lib_wpt_tx_00.o.d 
+	@${RM} ${OBJECTDIR}/Lib_Sam/lib_wpt_tx_00.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  Lib_Sam/lib_wpt_tx_00.c  -o ${OBJECTDIR}/Lib_Sam/lib_wpt_tx_00.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/Lib_Sam/lib_wpt_tx_00.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/Lib_Sam/lib_wpt_tx_00.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
 else
-${OBJECTDIR}/main_wpt_tx.o: main_wpt_tx.c  nbproject/Makefile-${CND_CONF}.mk
+${OBJECTDIR}/main_wpt_tx_00.o: main_wpt_tx_00.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/main_wpt_tx.o.d 
-	@${RM} ${OBJECTDIR}/main_wpt_tx.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE)  main_wpt_tx.c  -o ${OBJECTDIR}/main_wpt_tx.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/main_wpt_tx.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
-	@${FIXDEPS} "${OBJECTDIR}/main_wpt_tx.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	@${RM} ${OBJECTDIR}/main_wpt_tx_00.o.d 
+	@${RM} ${OBJECTDIR}/main_wpt_tx_00.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  main_wpt_tx_00.c  -o ${OBJECTDIR}/main_wpt_tx_00.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/main_wpt_tx_00.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/main_wpt_tx_00.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
-${OBJECTDIR}/Lib_Sam/oscillator_pic24f_00.o: Lib_Sam/oscillator_pic24f_00.c  nbproject/Makefile-${CND_CONF}.mk
+${OBJECTDIR}/Lib_Sam/lib_wpt_tx_00.o: Lib_Sam/lib_wpt_tx_00.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/Lib_Sam" 
-	@${RM} ${OBJECTDIR}/Lib_Sam/oscillator_pic24f_00.o.d 
-	@${RM} ${OBJECTDIR}/Lib_Sam/oscillator_pic24f_00.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE)  Lib_Sam/oscillator_pic24f_00.c  -o ${OBJECTDIR}/Lib_Sam/oscillator_pic24f_00.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/Lib_Sam/oscillator_pic24f_00.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
-	@${FIXDEPS} "${OBJECTDIR}/Lib_Sam/oscillator_pic24f_00.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	@${RM} ${OBJECTDIR}/Lib_Sam/lib_wpt_tx_00.o.d 
+	@${RM} ${OBJECTDIR}/Lib_Sam/lib_wpt_tx_00.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  Lib_Sam/lib_wpt_tx_00.c  -o ${OBJECTDIR}/Lib_Sam/lib_wpt_tx_00.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/Lib_Sam/lib_wpt_tx_00.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/Lib_Sam/lib_wpt_tx_00.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
 endif
 

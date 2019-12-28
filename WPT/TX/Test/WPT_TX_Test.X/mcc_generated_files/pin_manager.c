@@ -77,7 +77,7 @@ void PIN_MANAGER_Initialize (void)
      ***************************************************************************/
     TRISB = 0xF0FF;
     TRISC = 0x1000;
-    TRISD = 0x0FFF;
+    TRISD = 0x0FFB;
     TRISE = 0x00FF;
     TRISF = 0x00BB;
     TRISG = 0x03CC;
@@ -120,6 +120,14 @@ void PIN_MANAGER_Initialize (void)
     //Setting UTRDIS bit to use RG2 and RG3 as GPIO 
     U1CNFG2bits.UTRDIS = 1;
 
+    /****************************************************************************
+     * Set the PPS
+     ***************************************************************************/
+    __builtin_write_OSCCONL(OSCCON & 0xbf); // unlock PPS
+
+    RPOR11bits.RP23R = 0x0012;    //RD2->OC1:OC1
+
+    __builtin_write_OSCCONL(OSCCON | 0x40); // lock PPS
 
 }
 

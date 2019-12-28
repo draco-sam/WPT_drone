@@ -9,4 +9,6 @@
 #include "p24FJ128GC006.h"
 
 void oscillator_init(void);
+void pwm1_init (void);
+void pwm_on_off(unsigned short choix_pwm);
 

@@ -52,6 +52,7 @@
 #include <stdbool.h>
 #include "interrupt_manager.h"
 #include "traps.h"
+#include "oc1.h"
 
 #ifndef _XTAL_FREQ
 #define _XTAL_FREQ  32000000UL
