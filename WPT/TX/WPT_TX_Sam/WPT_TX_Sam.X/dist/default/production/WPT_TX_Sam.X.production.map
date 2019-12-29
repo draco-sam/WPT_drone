@@ -67,9 +67,9 @@ Default Scalar Model: Small
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x200               0x10a           0x18f  (399)
-.text                        0x30a                0x54            0x7e  (126)
+.text                        0x30a                0x62            0x93  (147)
 
-                 Total "program" memory used (bytes):          0x20d  (525) <1%
+                 Total "program" memory used (bytes):          0x222  (546) <1%
 
 
 "data" Memory  [Origin = 0x800, Length = 0x2000]
@@ -101,8 +101,8 @@ External Symbols in Program Memory (by address):
                   0x000304                  __DefaultInterrupt
                   0x00030a                  _oscillator_init
                   0x000322                  _pwm1_init
-                  0x000334                  _pwm_on_off
-                  0x000356                  _main
+                  0x000340                  _pwm_on_off
+                  0x000362                  _main
 
 External Symbols in Program Memory (by name):
 
@@ -111,10 +111,10 @@ External Symbols in Program Memory (by name):
                   0x000252                  __data_init_da
                   0x00023c                  __psv_init
                   0x000200                  __resetPRI
-                  0x000356                  _main
+                  0x000362                  _main
                   0x00030a                  _oscillator_init
                   0x000322                  _pwm1_init
-                  0x000334                  _pwm_on_off
+                  0x000340                  _pwm_on_off
 
 Memory Configuration
 
@@ -198,10 +198,10 @@ __CONFIG1
 .comment
  *(.comment)
 
-.debug_info       0x000000        0xa14
+.debug_info       0x000000        0xbb4
  *(.debug_info)
  .debug_info      0x000000        0x199 build/default/production/main_wpt_tx_00.o
- .debug_info      0x000199        0x87b build/default/production/Lib_Sam/lib_wpt_tx_00.o
+ .debug_info      0x000199        0xa1b build/default/production/Lib_Sam/lib_wpt_tx_00.o
  *(.gnu.linkonce.wi.*)
 
 .debug_abbrev     0x000000        0x141
@@ -209,19 +209,19 @@ __CONFIG1
  .debug_abbrev    0x000000         0x36 build/default/production/main_wpt_tx_00.o
  .debug_abbrev    0x000036        0x10b build/default/production/Lib_Sam/lib_wpt_tx_00.o
 
-.debug_line       0x000000         0xf9
+.debug_line       0x000000         0xfd
  *(.debug_line)
- .debug_line      0x000000         0x3f build/default/production/main_wpt_tx_00.o
- .debug_line      0x00003f         0xba build/default/production/Lib_Sam/lib_wpt_tx_00.o
+ .debug_line      0x000000         0x40 build/default/production/main_wpt_tx_00.o
+ .debug_line      0x000040         0xbd build/default/production/Lib_Sam/lib_wpt_tx_00.o
 
 .debug_frame      0x000000         0x98
  *(.debug_frame)
  .debug_frame     0x000000         0x30 build/default/production/main_wpt_tx_00.o
  .debug_frame     0x000030         0x68 build/default/production/Lib_Sam/lib_wpt_tx_00.o
 
-.debug_str        0x000000          0xc
+.debug_str        0x000000         0x17
  *(.debug_str)
- .debug_str       0x000000          0xc build/default/production/Lib_Sam/lib_wpt_tx_00.o
+ .debug_str       0x000000         0x17 build/default/production/Lib_Sam/lib_wpt_tx_00.o
 
 .debug_loc
  *(.debug_loc)
@@ -1964,27 +1964,27 @@ OUTPUT(dist/default/production/WPT_TX_Sam.X.production.elf elf32-pic30)
 LOAD default_isr
 
 .debug_pubtypes
-                  0x000030         0x96
+                  0x000030         0xb7
  .debug_pubtypes
                   0x000030         0x12 build/default/production/main_wpt_tx_00.o
  .debug_pubtypes
-                  0x000042         0x84 build/default/production/Lib_Sam/lib_wpt_tx_00.o
+                  0x000042         0xa5 build/default/production/Lib_Sam/lib_wpt_tx_00.o
 
 __c30_signature
-                  0x0000c6         0x18
+                  0x0000e7         0x18
  __c30_signature
-                  0x0000c6          0x6 build/default/production/main_wpt_tx_00.o
+                  0x0000e7          0x6 build/default/production/main_wpt_tx_00.o
  __c30_signature
-                  0x0000cc          0x6 build/default/production/Lib_Sam/lib_wpt_tx_00.o
+                  0x0000ed          0x6 build/default/production/Lib_Sam/lib_wpt_tx_00.o
  __c30_signature
-                  0x0000d2          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(crt0_extended24.o)
+                  0x0000f3          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(crt0_extended24.o)
  __c30_signature
-                  0x0000d8          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(data_init_24.o)
+                  0x0000f9          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(data_init_24.o)
 
-.text             0x00030a         0x54
- .text            0x00030a         0x4c build/default/production/Lib_Sam/lib_wpt_tx_00.o
+.text             0x00030a         0x62
+ .text            0x00030a         0x58 build/default/production/Lib_Sam/lib_wpt_tx_00.o
                   0x00030a                  _oscillator_init
                   0x000322                  _pwm1_init
-                  0x000334                  _pwm_on_off
- .text            0x000356          0x8 build/default/production/main_wpt_tx_00.o
-                  0x000356                  _main
+                  0x000340                  _pwm_on_off
+ .text            0x000362          0xa build/default/production/main_wpt_tx_00.o
+                  0x000362                  _main

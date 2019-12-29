@@ -10,5 +10,8 @@
 #include "Lib_Sam\p24FJ128GC006.h"
 
 int main(void) {
+    
+    Nop();
+    
     return 0;
 }

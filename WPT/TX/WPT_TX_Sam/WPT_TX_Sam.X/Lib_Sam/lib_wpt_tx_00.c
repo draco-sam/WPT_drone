@@ -1,6 +1,6 @@
 /* 
- * File             : oscillator_pic24f_00.c
- * Date             : 28/12/2019.   
+ * File             : lib_wpt_tx_00.c
+ * Date             : 29/12/2019.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -51,6 +51,23 @@ void pwm1_init (void)
     OC1R    = 0x00;// OC1R 0. 
     
     //Calculer période et duty !!!
+    
+    
+    
+    
+    /* 
+     * Configurer OC1 (PW1) sur Remappable Peripheral pin RP23.
+     * Output Compare 1 sur Output Function Number 18 (0x12).
+     * RPOR11 : Peripheral Pin Select Output Register 11.
+     * 
+     * Remarque :
+     * OSCCON bit 6 pour verrouiller ou déverrouiller I/O et donc RP pin.
+     * Code assembleur pour lock/unlock PPS.
+     */
+    TRISDBITS.TRISD2 = 0;//RD2 en output. !!! A vérifier si nécessaire !!!
+    __builtin_write_OSCCONL(OSCCON & 0xbf); // unlock PPS
+    RPOR11bits.RP23R = 0x0012;
+    __builtin_write_OSCCONL(OSCCON | 0x40); // lock PPS
 }
 //*************************************************************************************************
 
