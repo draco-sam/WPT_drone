@@ -39,28 +39,15 @@ void pwm1_init (void)
  * 
  */
 {
-    //OCSIDL disabled; OCTSEL Peripheral clock (Fcy).
-    //ENFLT2 disabled; ENFLT1 disabled; ENFLT0 disabled.
-    //OCFLT2 disabled; OCFLT1 disabled; OCFLT0 disabled.
-    //TRIGMODE Only Software; OCM Output compare disable. 
-    OC1CON1 = 0x1C00;//old value : 0x1C06. 
-    
-    //OCTRIG : Trigger designated by SYNCSEL ; SYNCSEL TMR5; All other OFF.
-    OC1CON2 = 0x8F;
-    OC1RS   = 0x00;// OC1RS 0.
-    OC1R    = 0x00;// OC1R 0. 
-    
-    //Calculer période et duty !!!
-    
-    
-    
-    
     /* 
-     * Configurer OC1 (PW1) sur Remappable Peripheral pin RP23.
+     * Remappable Peripheral Pin (PPS) RP23 :
+     * -------------------------------------
+     * Configurer OC1 (PW1) sur pin RP23.
      * Output Compare 1 sur Output Function Number 18 (0x12).
      * RPOR11 : Peripheral Pin Select Output Register 11.
      * 
-     * Remarque :
+     * Remarques :
+     * ----------
      * OSCCON bit 6 pour verrouiller ou déverrouiller I/O et donc RP pin.
      * Code assembleur pour lock/unlock PPS.
      */
@@ -68,6 +55,39 @@ void pwm1_init (void)
     __builtin_write_OSCCONL(OSCCON & 0xbf); // unlock PPS
     RPOR11bits.RP23R = 0x0012;
     __builtin_write_OSCCONL(OSCCON | 0x40); // lock PPS
+    
+       
+    
+    /*
+     * Configurer période PWM :
+     * -----------------------
+     * Timer5 prescaler à 1:1.
+     */
+    T5CONBITS.TCKPS = 0b00;
+    
+    
+    OC1RS   = 0x00;//Reset.
+    OC1R    = 0x00;//Reset.
+    
+    /*
+     * OUTPUT COMPARE 1 CONTROL REGISTER 1 :
+     * ------------------------------------
+     * bit 15-10    : OCSIDL disabled; OCTSEL Peripheral clock (Fcy).
+     * bit 7-4      : ENFLT<2:0> disabled; OCFLT<2:0> disabled.
+     * bit 3-0      : TRIGMODE Only Software; OCM Output compare disable.
+     */
+    OC1CON1 = 0x1C00;//old value : 0x1C06. 
+    
+    /*
+     * OCxCON2: OUTPUT COMPARE 1 CONTROL REGISTER 2 :
+     * ---------------------------------------------
+     * bit 7        : OCTRIG : Trigger designated by SYNCSEL.
+     * bit 4-0      : SYNCSEL TMR5.
+     * other bits   : All other OFF.
+     */
+    OC1CON2 = 0x8F;
+    
+    
 }
 //*************************************************************************************************
 
