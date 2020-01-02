@@ -6,8 +6,8 @@
  * Revision history : 
  */
 
-
-#include "Lib_Sam\p24FJ128GC006.h"
+//D:\Program Files (x86)\Microchip\xc16\v1.41\support\dsPIC33C\h.
+#include "Lib_Sam\dsPIC33CK256MP206.h"
 
 int main(void) {
     

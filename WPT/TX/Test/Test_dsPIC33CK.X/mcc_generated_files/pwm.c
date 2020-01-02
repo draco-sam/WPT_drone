@@ -54,7 +54,13 @@
 void PWM_Initialize (void)
 {
     // MCLKSEL AFPLLO - Auxiliary Clock with PLL Enabled; HRERR disabled; LOCK disabled; DIVSEL 1:2; 
+    /*
+     * bit 8        : Write-protected registers and bits are unlocked.
+     * bit 5-4      : PWM Clock Divider ratio is 1:2.
+     * bit 1-0      : AFPLLO ? Auxiliary PLL post-divider output.
+     */
     PCLKCON = 0x03;
+    
     // FSCL 0; 
     FSCL = 0x00;
     // FSMINPER 0; 
@@ -63,14 +69,23 @@ void PWM_Initialize (void)
     MPHASE = 0x00;
     // MDC 0; 
     MDC = 0x00;
+    
     // MPER 16; 
+    //??? 0x00 ???
     MPER = 0x10;
+    
     // LFSR 0; 
     LFSR = 0x00;
     // CTA7EN disabled; CTA8EN disabled; CTA1EN disabled; CTA2EN disabled; CTA5EN disabled; CTA6EN disabled; CTA3EN disabled; CTA4EN disabled; 
     CMBTRIGL = 0x00;
     // CTB8EN disabled; CTB3EN disabled; CTB2EN disabled; CTB1EN disabled; CTB7EN disabled; CTB6EN disabled; CTB5EN disabled; CTB4EN disabled; 
     CMBTRIGH = 0x00;
+    
+    /*
+     * LOGCONy: COMBINATORIAL PWM LOGIC CONTROL REGISTER y :
+     * ----------------------------------------------------
+     * !!! PAS utilisé !!!
+     */
     // PWMLFA PWMS1 or PWMS2;; S1APOL Positive logic; S2APOL Positive logic; PWMLFAD No Assignment; PWMS1A PWM1H; PWMS2A PWM1H; 
     LOGCONA = 0x00;
     // PWMLFB PWMS1 | PWMS2; S2BPOL Positive logic; PWMLFBD No Assignment; S1BPOL Positive logic; PWMS2B PWM1H; PWMS1B PWM1H; 
@@ -83,6 +98,12 @@ void PWM_Initialize (void)
     LOGCONE = 0x00;
     // S1FPOL Positive logic; PWMS2F PWM1H; PWMS1F PWM1H; S2FPOL Positive logic; PWMLFFD No Assignment; PWMLFF PWMS1 | PWMS2; 
     LOGCONF = 0x00;
+    
+    /*
+     * PWMEVTy: PWM EVENT OUTPUT CONTROL REGISTER y :
+     * ---------------------------------------------
+     * !!! PAS utilisé !!!
+     */
     // EVTASEL PGTRGSEL bits; EVTASYNC Not synchronized; EVTAPOL Active-high; EVTAPGS PG1; EVTASTRD Stretched to 8 PWM clock cycles minimum; EVTAOEN disabled; 
     PWMEVTA = 0x00;
     // EVTBPGS PG1; EVTBSYNC Not synchronized; EVTBPOL Active-high; EVTBSEL PGTRGSEL bits; EVTBSTRD Stretched to 8 PWM clock cycles minimum; EVTBOEN disabled; 
@@ -95,16 +116,43 @@ void PWM_Initialize (void)
     PWMEVTE = 0x00;
     // EVTFPOL Active-high; EVTFPGS PG1; EVTFSTRD Stretched to 8 PWM clock cycles minimum; EVTFSEL PGTRGSEL bits; EVTFOEN disabled; EVTFSYNC Not synchronized; 
     PWMEVTF = 0x00;
+    
     // MSTEN disabled; TRGMOD Single trigger mode; SOCS Self-trigger; UPDMOD SOC update; MPHSEL disabled; MPERSEL disabled; MDCSEL disabled; 
+    /*
+     * PGxCONH: PWM GENERATOR x CONTROL REGISTER HIGH :
+     * -----------------------------------------------
+     * bit 15       : PWM Generator uses PGxDC register for duty cycle.
+     * bit 14       : PWM Generator uses PGxPER register for period.
+     * bit 10-8     : SOC update.
+     * bit other    : 0.
+     * 
+     */
     PG5CONH = 0x00;
+    
     // TRSET disabled; UPDREQ disabled; CLEVT disabled; TRCLR disabled; CAP disabled; SEVT disabled; FFEVT disabled; UPDATE disabled; FLTEVT disabled; 
     PG5STAT = 0x00;
     // FLTDAT 0; DBDAT 0; SWAP disabled; OVRENH disabled; OVRENL disabled; OSYNC User output overrides are synchronized to the local PWM time base; CLMOD disabled; FFDAT 0; CLDAT 0; OVRDAT 0; 
     PG5IOCONL = 0x00;
+    
     // PENL enabled; DTCMPSEL PCI Sync Logic; PMOD Independent; POLL Active-high; PENH enabled; CAPSRC Software; POLH Active-high; 
+    /*
+     * PGxIOCONH: PWM GENERATOR x I/O CONTROL REGISTER HIGH :
+     * -----------------------------------------------------
+     * bit 5-4      : PWM Generator outputs operate in Independent mode.
+     * bit 3        : PWM Generator controls the PWMxH output pin.
+     * bit 2        : PWM Generator controls the PWMxL output pin.
+     * bit 1        : ??? Output PWMxH pin is active-high ???
+     * bit 0        : ??? Output PWMxL pin is active-high ???
+     */
     PG5IOCONH = 0x1C;
-    // UPDTRG Manual; ADTR1PS 1:1; PGTRGSEL EOC event; ADTR1EN3 disabled; ADTR1EN1 disabled; ADTR1EN2 disabled; 
+    
+    /*
+     * PGxEVTL: PWM GENERATOR x EVENT REGISTER LOW :
+     * --------------------------------------------
+     * bit 2-0      : EOC event is the PWM Generator trigger.
+     */
     PG5EVTL = 0x00;
+    
     // ADTR2EN1 disabled; IEVTSEL EOC; SIEN disabled; FFIEN disabled; ADTR1OFS None; CLIEN disabled; FLTIEN disabled; ADTR2EN2 disabled; ADTR2EN3 disabled; 
     PG5EVTH = 0x00;
     // PSS Tied to 0; PPS Not inverted; SWTERM disabled; PSYNC disabled; TERM Manual Terminate; AQPS Not inverted; AQSS None; TSYNCDIS PWM EOC; 
@@ -127,6 +175,7 @@ void PWM_Initialize (void)
     PG5LEBL = 0x00;
     // PWMPCI 1; PLR disabled; PLF disabled; PHR disabled; PHF disabled; 
     PG5LEBH = 0x00;
+    
     // PHASE 0; 
     PG5PHASE = 0x00;
     // DC 296; 
@@ -135,6 +184,7 @@ void PWM_Initialize (void)
     PG5DCA = 0x00;
     // PER 584; 
     PG5PER = 0x248;
+    
     // TRIGA 0; 
     PG5TRIGA = 0x00;
     // TRIGB 0; 
@@ -147,7 +197,16 @@ void PWM_Initialize (void)
     PG5DTH = 0x00;
     
 
-    // HREN enabled; MODSEL Independent Edge; TRGCNT 1; CLKSEL Master clock; ON disabled; 
+    // HREN enabled; MODSEL Independent Edge; TRGCNT 1; CLKSEL Master clock; ON disabled;
+    /*
+     * PGxCONL: PWM GENERATOR x CONTROL REGISTER LOW :
+     * ----------------------------------------------
+     * bit 15       : PWM Generator enable.
+     * bit 10-8     : PWM Generator produces one PWM cycle after triggered
+     * bit 7        : PWM Generator x operates in High-Resolution mode.
+     * bit 4-3      : ??? 0b00 ou 0b01 ???
+     * bit 2-0      : Independent Edge PWM mode.
+     */
     PG5CONL = 0x88;
 }
 
