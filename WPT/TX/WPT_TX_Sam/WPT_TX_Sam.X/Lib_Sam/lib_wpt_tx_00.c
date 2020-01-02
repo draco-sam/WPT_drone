@@ -1,6 +1,6 @@
 /* 
  * File             : lib_wpt_tx_00.c
- * Date             : 29/12/2019.   
+ * Date             : 02/01/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -9,6 +9,16 @@
 #include "lib_wpt_tx_00.h"
 #include "dsPIC33CK256MP206.h"
 
+/*
+ * FOSC CONFIGURATION REGISTER :
+ * ----------------------------
+ * !!! Placer au dessus de toutes lignes de codes !!!
+ * 
+ * Mesurer f_cy sur pin OSC2.
+ * 
+ * (Primary Oscillator disabled & OSC2 is clock output).
+ */
+_FOSC( POSCMD_NONE & OSCIOFNC_OFF);
 
 void oscillator_init(void)
 /*
@@ -28,7 +38,7 @@ void oscillator_init(void)
     /*
      * PLL FEEDBACK DIVIDER REGISTER :
      * ------------------------------
-     * bit 7-0      : 150 (default).
+     * bit 7-0      : Feedback divider 150 (default).
      */
     PLLFBD = 0x96;
     
@@ -47,7 +57,7 @@ void oscillator_init(void)
     /*
      * AUXILIARY CLOCK CONTROL REGISTER :
      * ---------------------------------
-     * bit 15       : AFPLLO is connected to the APLL post-divider output.
+     * bit 15       : AFPLLO is connected to the APLL post-divider output (bypass disabled).
      * bit 8        : FRC is the clock source for APLL.
      * bit 3-0      : Auxiliary PLL Phase Detector Input divided by 1.
      */ 
@@ -74,9 +84,11 @@ void oscillator_init(void)
     
     // PMDLOCK disabled; 
     PMDCON = 0x00;
-    // ADC1MD enabled; T1MD enabled; U2MD enabled; U1MD enabled; SPI2MD enabled; SPI1MD enabled; QEIMD enabled; PWMMD enabled; I2C1MD enabled; 
+    // ADC1MD enabled; T1MD enabled; U2MD enabled; U1MD enabled; SPI2MD enabled; SPI1MD enabled; 
+    //QEIMD enabled; PWMMD enabled; I2C1MD enabled; 
     PMD1 = 0x00;
-    // CCP2MD enabled; CCP1MD enabled; CCP4MD enabled; CCP3MD enabled; CCP7MD enabled; CCP8MD enabled; CCP5MD enabled; CCP6MD enabled; CCP9MD enabled; 
+    // CCP2MD enabled; CCP1MD enabled; CCP4MD enabled; CCP3MD enabled; CCP7MD enabled; 
+    //CCP8MD enabled; CCP5MD enabled; CCP6MD enabled; CCP9MD enabled; 
     PMD2 = 0x00;
     // I2C3MD enabled; PMPMD enabled; U3MD enabled; QEI2MD enabled; CRCMD enabled; I2C2MD enabled; 
     PMD3 = 0x00;
@@ -86,7 +98,8 @@ void oscillator_init(void)
     PMD6 = 0x00;
     // CMP3MD enabled; PTGMD enabled; CMP1MD enabled; CMP2MD enabled; 
     PMD7 = 0x00;
-    // DMTMD enabled; CLC3MD enabled; OPAMPMD enabled; BIASMD enabled; CLC4MD enabled; SENT2MD enabled; SENT1MD enabled; CLC1MD enabled; CLC2MD enabled; 
+    // DMTMD enabled; CLC3MD enabled; OPAMPMD enabled; BIASMD enabled; CLC4MD enabled; 
+    //SENT2MD enabled; SENT1MD enabled; CLC1MD enabled; CLC2MD enabled; 
     PMD8 = 0x00;
     
     /*
@@ -98,6 +111,7 @@ void oscillator_init(void)
     // CF no clock failure; NOSC FRCDIV; CLKLOCK unlocked; OSWEN Switch is Complete; 
     __builtin_write_OSCCONH((uint8_t) (0x07));
     __builtin_write_OSCCONL((uint8_t) (0x00));
+    
 }
 //*************************************************************************************************
 
@@ -119,20 +133,20 @@ void pwm_init (void)
     FSCL = 0x00;
     // FSMINPER 0; 
     FSMINPER = 0x00;
-    // MPHASE 0; 
-    MPHASE = 0x00;
-    // MDC 0; 
-    MDC = 0x00;
     
-    // MPER
-    //MPER = 0x10;
-    MPER = 0x00;
+     
+    MPHASE = 0x00;// MPHASE 0;
+    MDC = 0x00;// MDC 0; 
+    MPER = 0x00;// MPER = 0x10???
     
     // LFSR 0; 
     LFSR = 0x00;
-    // CTA7EN disabled; CTA8EN disabled; CTA1EN disabled; CTA2EN disabled; CTA5EN disabled; CTA6EN disabled; CTA3EN disabled; CTA4EN disabled; 
+    
+    // CTA7EN disabled; CTA8EN disabled; CTA1EN disabled; CTA2EN disabled; CTA5EN disabled; 
+    //CTA6EN disabled; CTA3EN disabled; CTA4EN disabled; 
     CMBTRIGL = 0x00;
-    // CTB8EN disabled; CTB3EN disabled; CTB2EN disabled; CTB1EN disabled; CTB7EN disabled; CTB6EN disabled; CTB5EN disabled; CTB4EN disabled; 
+    // CTB8EN disabled; CTB3EN disabled; CTB2EN disabled; CTB1EN disabled; CTB7EN disabled; 
+    //CTB6EN disabled; CTB5EN disabled; CTB4EN disabled; 
     CMBTRIGH = 0x00;
     
     /*
@@ -171,10 +185,13 @@ void pwm_init (void)
      */
     PG5CONH = 0x00;
     
-    // TRSET disabled; UPDREQ disabled; CLEVT disabled; TRCLR disabled; CAP disabled; SEVT disabled; FFEVT disabled; UPDATE disabled; FLTEVT disabled; 
+    // TRSET disabled; UPDREQ disabled; CLEVT disabled; TRCLR disabled; CAP disabled; 
+    //SEVT disabled; FFEVT disabled; UPDATE disabled; FLTEVT disabled; 
     PG5STAT = 0x00;
     
-    // FLTDAT 0; DBDAT 0; SWAP disabled; OVRENH disabled; OVRENL disabled; OSYNC User output overrides are synchronized to the local PWM time base; CLMOD disabled; FFDAT 0; CLDAT 0; OVRDAT 0; 
+    // FLTDAT 0; DBDAT 0; SWAP disabled; OVRENH disabled; OVRENL disabled; 
+    //OSYNC User output overrides are synchronized to the local PWM time base; CLMOD disabled; 
+    //FFDAT 0; CLDAT 0; OVRDAT 0; 
     PG5IOCONL = 0x00;
     
     /*
@@ -196,29 +213,44 @@ void pwm_init (void)
      */
     PG5EVTL = 0x00;
     
-    // ADTR2EN1 disabled; IEVTSEL EOC; SIEN disabled; FFIEN disabled; ADTR1OFS None; CLIEN disabled; FLTIEN disabled; ADTR2EN2 disabled; ADTR2EN3 disabled; 
+    // ADTR2EN1 disabled; IEVTSEL EOC; SIEN disabled; FFIEN disabled; ADTR1OFS None; 
+    //CLIEN disabled; FLTIEN disabled; ADTR2EN2 disabled; ADTR2EN3 disabled; 
     PG5EVTH = 0x00;
-    // PSS Tied to 0; PPS Not inverted; SWTERM disabled; PSYNC disabled; TERM Manual Terminate; AQPS Not inverted; AQSS None; TSYNCDIS PWM EOC; 
+    
+    // PSS Tied to 0; PPS Not inverted; SWTERM disabled; PSYNC disabled; TERM Manual Terminate; 
+    //AQPS Not inverted; AQSS None; TSYNCDIS PWM EOC; 
     PG5FPCIL = 0x00;
-    // PCIGT disabled; TQPS Not inverted; SWPCI Drives '0'; BPEN disabled; TQSS None; SWPCIM PCI acceptance logic; BPSEL PWM Generator 1; ACP Level-sensitive; 
+    // PCIGT disabled; TQPS Not inverted; SWPCI Drives '0'; BPEN disabled; TQSS None; 
+    //SWPCIM PCI acceptance logic; BPSEL PWM Generator 1; ACP Level-sensitive; 
     PG5FPCIH = 0x00;
-    // PSS Tied to 0; PPS Not inverted; SWTERM disabled; PSYNC disabled; TERM Manual Terminate; AQPS Not inverted; AQSS None; TSYNCDIS PWM EOC; 
+    
+    // PSS Tied to 0; PPS Not inverted; SWTERM disabled; PSYNC disabled; TERM Manual Terminate; 
+    //AQPS Not inverted; AQSS None; TSYNCDIS PWM EOC; 
     PG5CLPCIL = 0x00;
-    // PCIGT disabled; TQPS Not inverted; SWPCI Drives '0'; BPEN disabled; TQSS None; SWPCIM PCI acceptance logic; BPSEL PWM Generator 1; ACP Level-sensitive; 
+    // PCIGT disabled; TQPS Not inverted; SWPCI Drives '0'; BPEN disabled; TQSS None; 
+    //SWPCIM PCI acceptance logic; BPSEL PWM Generator 1; ACP Level-sensitive; 
     PG5CLPCIH = 0x00;
-    // PSS Tied to 0; PPS Not inverted; SWTERM disabled; PSYNC disabled; TERM Manual Terminate; AQPS Not inverted; AQSS None; TSYNCDIS PWM EOC; 
+    
+    // PSS Tied to 0; PPS Not inverted; SWTERM disabled; PSYNC disabled; TERM Manual Terminate; 
+    //AQPS Not inverted; AQSS None; TSYNCDIS PWM EOC; 
     PG5FFPCIL = 0x00;
-    // PCIGT disabled; TQPS Not inverted; SWPCI Drives '0'; BPEN disabled; TQSS None; SWPCIM PCI acceptance logic; BPSEL PWM Generator 1; ACP Level-sensitive; 
+    // PCIGT disabled; TQPS Not inverted; SWPCI Drives '0'; BPEN disabled; TQSS None; 
+    //SWPCIM PCI acceptance logic; BPSEL PWM Generator 1; ACP Level-sensitive; 
     PG5FFPCIH = 0x00;
-    // PSS Tied to 0; PPS Not inverted; SWTERM disabled; PSYNC disabled; TERM Manual Terminate; AQPS Not inverted; AQSS None; TSYNCDIS PWM EOC; 
+    
+    // PSS Tied to 0; PPS Not inverted; SWTERM disabled; PSYNC disabled; TERM Manual Terminate; 
+    //AQPS Not inverted; AQSS None; TSYNCDIS PWM EOC; 
     PG5SPCIL = 0x00;
-    // PCIGT disabled; TQPS Not inverted; SWPCI Drives '0'; BPEN disabled; TQSS None; SWPCIM PCI acceptance logic; BPSEL PWM Generator 1; ACP Level-sensitive; 
+    // PCIGT disabled; TQPS Not inverted; SWPCI Drives '0'; BPEN disabled; TQSS None; 
+    //SWPCIM PCI acceptance logic; BPSEL PWM Generator 1; ACP Level-sensitive; 
     PG5SPCIH = 0x00;
+    
     // LEB 0; 
     PG5LEBL = 0x00;
     // PWMPCI 1; PLR disabled; PLF disabled; PHR disabled; PHF disabled; 
     PG5LEBH = 0x00;
     
+    //Phase, Duty, Periode :
     PG5PHASE = 0x00;// PHASE 0;
     PG5DC = 0x128;// Duty Cycle 296;
     PG5DCA = 0x00;// Duty Cycle adjust 0;
@@ -236,14 +268,14 @@ void pwm_init (void)
     /*
      * PWM GENERATOR x CONTROL REGISTER LOW :
      * ----------------------------------------------
-     * bit 15       : PWM Generator enable.
+     * bit 15       : PWM Generator disable (pwm_on_off(1) for enable).
      * bit 10-8     : PWM Generator produces one PWM cycle after triggered
      * bit 7        : PWM Generator x operates in High-Resolution mode.
      * bit 4-3      : PWM Generator uses Master clock selected by the MCLKSEL[1-0],
      *                AFPLLO ? Auxiliary PLL post-divider.
      * bit 2-0      : Independent Edge PWM mode.
      */
-    PG5CONL = 0x88;
+    PG5CONL = 0x08;
 
     
     
@@ -258,12 +290,12 @@ void pwm_on_off(unsigned short choix_pwm)
     //PWM ON.
     if(choix_pwm == 1)
     {
-        OC1CON1bits.OCM = 0b110;//Edge-Aligned PWM mode on OCx.
+        PG5CONLBITS.ON = 1;
     }
     //PWM OFF dans tous les autres cas.
     else
     { 
-       OC1CON1bits.OCM = 0;
+       PG5CONLBITS.ON = 0;
     }
 }
 //*************************************************************************************************
