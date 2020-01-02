@@ -48,26 +48,63 @@
 
 void CLOCK_Initialize(void)
 {
-    // FRCDIV FRC/1; PLLPRE 1; DOZE 1:8; DOZEN disabled; ROI disabled; 
+    /*
+     * CLOCK DIVIDER REGISTER :
+     * -----------------------
+     * bit 14-12    : FP (fréquency processor) divided by 8 (default).
+     * bit 11       : Processor clock and peripheral clock ratio is forced to 1:1.
+     * bit 10-8     : Internal Fast RC Oscillator Postscaler divided by 1.
+     * bit 3-0      : PLLPRE[3:0] Input divided by 1.
+     */
     CLKDIV = 0x3001;
-    // PLLFBDIV 150; 
+    
+    /*
+     * PLL FEEDBACK DIVIDER REGISTER :
+     * ------------------------------
+     * bit 7-0      : 150 (default).
+     */
     PLLFBD = 0x96;
-    // TUN Center frequency; 
+    
+    // FRC OSCILLATOR TUNING REGISTER. Center frequency (8.00 MHz nominal).
     OSCTUN = 0x00;
-    // POST1DIV 1:4; VCODIV FVCO/4; POST2DIV 1:1; 
+    
+    /*
+     * PLL OUTPUT DIVIDER REGISTER :
+     * ----------------------------
+     * bit 9-8      : FVCO/4.
+     * bit 6-4      : POST1DIV[2:0] PLL Output #1 Divider by 4.
+     * bit 2-0      : POST2DIV[2:0] PLL Output #2 Divider by 1.
+     */ 
     PLLDIV = 0x41;
-    // APLLEN enabled; FRCSEL FRC; APLLPRE 1:1; 
+    
+    /*
+     * AUXILIARY CLOCK CONTROL REGISTER :
+     * ---------------------------------
+     * bit 15       : AFPLLO is connected to the APLL post-divider output.
+     * bit 8        : FRC is the clock source for APLL.
+     * bit 3-0      : Auxiliary PLL Phase Detector Input divided by 1.
+     */ 
     ACLKCON1 = 0x8101;
-    // APLLFBDIV 125; 
+    
+    // APLL Feedback Divider bits 125; 
     APLLFBD1 = 0x7D;
     // APOST1DIV 1:2; APOST2DIV 1:1; AVCODIV FVCO/4; 
     APLLDIV1 = 0x21;
+    
     // ROEN disabled; ROSWEN disabled; ROSLP disabled; ROSEL FOSC; ROOUT disabled; ROSIDL disabled; 
     REFOCONL = 0x00;
     // RODIV 0; 
     REFOCONH = 0x00;
-    // IOLOCK disabled; 
-    RPCON = 0x00;
+    
+    /*
+     * PERIPHERAL REMAPPING CONFIGURATION REGISTER :
+     * --------------------------------------------
+     * bit 11       : All Peripheral Remapping registers are unlocked and can be written.
+     */
+    __builtin_write_RPCON(0);
+    //RPCON = 0x00;
+    
+    
     // PMDLOCK disabled; 
     PMDCON = 0x00;
     // ADC1MD enabled; T1MD enabled; U2MD enabled; U1MD enabled; SPI2MD enabled; SPI1MD enabled; QEIMD enabled; PWMMD enabled; I2C1MD enabled; 
@@ -84,6 +121,13 @@ void CLOCK_Initialize(void)
     PMD7 = 0x00;
     // DMTMD enabled; CLC3MD enabled; OPAMPMD enabled; BIASMD enabled; CLC4MD enabled; SENT2MD enabled; SENT1MD enabled; CLC1MD enabled; CLC2MD enabled; 
     PMD8 = 0x00;
+    
+    /*
+     * OSCCON: OSCILLATOR CONTROL REGISTER :
+     * ------------------------------------
+     * bit 14-12    : Fast RC Oscillator (FRC).
+     * bit 10-8     : Fast RC Oscillator (FRC) with Divide-by-n (FRCDIVN).
+     */
     // CF no clock failure; NOSC FRCDIV; CLKLOCK unlocked; OSWEN Switch is Complete; 
     __builtin_write_OSCCONH((uint8_t) (0x07));
     __builtin_write_OSCCONL((uint8_t) (0x00));

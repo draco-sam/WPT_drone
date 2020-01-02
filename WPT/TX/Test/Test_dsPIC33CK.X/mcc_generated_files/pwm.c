@@ -140,11 +140,12 @@ void PWM_Initialize (void)
      * -----------------------------------------------------
      * bit 5-4      : PWM Generator outputs operate in Independent mode.
      * bit 3        : PWM Generator controls the PWMxH output pin.
-     * bit 2        : PWM Generator controls the PWMxL output pin.
+     * bit 2        : PWM Generator does not control the PWMxL output pin.
      * bit 1        : ??? Output PWMxH pin is active-high ???
      * bit 0        : ??? Output PWMxL pin is active-high ???
      */
-    PG5IOCONH = 0x1C;
+    //PG5IOCONH = 0x1C;
+    PG5IOCONH = 0x18;
     
     /*
      * PGxEVTL: PWM GENERATOR x EVENT REGISTER LOW :

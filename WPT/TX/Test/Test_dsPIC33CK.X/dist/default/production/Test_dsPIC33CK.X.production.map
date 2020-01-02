@@ -95,11 +95,11 @@ Default Scalar Model: Small
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x200               0x132           0x1cb  (459)
-.text                        0x332               0x33a           0x4d7  (1239)
-.dinit                       0x66c                0x10            0x18  (24)
-.text                        0x67c                 0xc            0x12  (18)
+.text                        0x332               0x344           0x4e6  (1254)
+.dinit                       0x676                0x10            0x18  (24)
+.text                        0x686                 0xc            0x12  (18)
 
-                 Total "program" memory used (bytes):          0x6cc  (1740) <1%
+                 Total "program" memory used (bytes):          0x6db  (1755) <1%
 
 
 "data" Memory  [Origin = 0x1000, Length = 0x6000]
@@ -148,21 +148,21 @@ External Symbols in Program Memory (by address):
                   0x000458                  _RESET_GetCause
                   0x000564                  _RESET_CauseClearAll
                   0x00056c                  _CLOCK_Initialize
-                  0x0005be                  _PIN_MANAGER_Initialize
-                  0x000622                  _SYSTEM_Initialize
-                  0x000636                  _OSCILLATOR_Initialize
-                  0x00063e                  _SYSTEM_GetResetCause
-                  0x00064e                  _SYSTEM_ResetCauseClearAll
-                  0x00067c                  _main
-                  0x000682                  _INTERRUPT_Initialize
+                  0x0005c8                  _PIN_MANAGER_Initialize
+                  0x00062c                  _SYSTEM_Initialize
+                  0x000640                  _OSCILLATOR_Initialize
+                  0x000648                  _SYSTEM_GetResetCause
+                  0x000658                  _SYSTEM_ResetCauseClearAll
+                  0x000686                  _main
+                  0x00068c                  _INTERRUPT_Initialize
                   0x02bf00                  __FSEC.sec
 
 External Symbols in Program Memory (by name):
 
                   0x00056c                  _CLOCK_Initialize
-                  0x000682                  _INTERRUPT_Initialize
-                  0x000636                  _OSCILLATOR_Initialize
-                  0x0005be                  _PIN_MANAGER_Initialize
+                  0x00068c                  _INTERRUPT_Initialize
+                  0x000640                  _OSCILLATOR_Initialize
+                  0x0005c8                  _PIN_MANAGER_Initialize
                   0x000332                  _PWM_Initialize
                   0x0003c2                  _PWM_Tasks_EventA
                   0x0003dc                  _PWM_Tasks_EventB
@@ -173,9 +173,9 @@ External Symbols in Program Memory (by name):
                   0x0003a8                  _PWM_Tasks_Generator5
                   0x000564                  _RESET_CauseClearAll
                   0x000458                  _RESET_GetCause
-                  0x00063e                  _SYSTEM_GetResetCause
-                  0x000622                  _SYSTEM_Initialize
-                  0x00064e                  _SYSTEM_ResetCauseClearAll
+                  0x000648                  _SYSTEM_GetResetCause
+                  0x00062c                  _SYSTEM_Initialize
+                  0x000658                  _SYSTEM_ResetCauseClearAll
                   0x00030c                  __AddressError
                   0x00032c                  __DefaultInterrupt
                   0x02bf00                  __FSEC.sec
@@ -188,7 +188,7 @@ External Symbols in Program Memory (by name):
                   0x000248                  __data_init_extended
                   0x00023c                  __psv_init
                   0x000200                  __resetPRI
-                  0x00067c                  _main
+                  0x000686                  _main
 
 Memory Configuration
 
@@ -352,17 +352,17 @@ __FBTSEQ
 .comment
  *(.comment)
 
-.debug_info       0x000000       0x373c
+.debug_info       0x000000       0x371c
  *(.debug_info)
  .debug_info      0x000000        0x4ee build/default/production/mcc_generated_files/reset.o
  .debug_info      0x0004ee        0x855 build/default/production/mcc_generated_files/system.o
  .debug_info      0x000d43        0x1c2 build/default/production/main.o
- .debug_info      0x000f05        0x3f6 build/default/production/mcc_generated_files/clock.o
- .debug_info      0x0012fb        0x62d build/default/production/mcc_generated_files/traps.o
- .debug_info      0x001928        0x1ba build/default/production/mcc_generated_files/interrupt_manager.o
- .debug_info      0x001ae2        0x7ff build/default/production/mcc_generated_files/mcc.o
- .debug_info      0x0022e1        0x4e1 build/default/production/mcc_generated_files/pin_manager.o
- .debug_info      0x0027c2        0xf7a build/default/production/mcc_generated_files/pwm.o
+ .debug_info      0x000f05        0x3d6 build/default/production/mcc_generated_files/clock.o
+ .debug_info      0x0012db        0x62d build/default/production/mcc_generated_files/traps.o
+ .debug_info      0x001908        0x1ba build/default/production/mcc_generated_files/interrupt_manager.o
+ .debug_info      0x001ac2        0x7ff build/default/production/mcc_generated_files/mcc.o
+ .debug_info      0x0022c1        0x4e1 build/default/production/mcc_generated_files/pin_manager.o
+ .debug_info      0x0027a2        0xf7a build/default/production/mcc_generated_files/pwm.o
  *(.gnu.linkonce.wi.*)
 
 .debug_abbrev     0x000000        0x5d6
@@ -377,17 +377,17 @@ __FBTSEQ
  .debug_abbrev    0x0004cd         0x59 build/default/production/mcc_generated_files/pin_manager.o
  .debug_abbrev    0x000526         0xb0 build/default/production/mcc_generated_files/pwm.o
 
-.debug_line       0x000000        0xade
+.debug_line       0x000000        0xae6
  *(.debug_line)
  .debug_line      0x000000        0x173 build/default/production/mcc_generated_files/reset.o
  .debug_line      0x000173        0x171 build/default/production/mcc_generated_files/system.o
  .debug_line      0x0002e4        0x112 build/default/production/main.o
- .debug_line      0x0003f6        0x13a build/default/production/mcc_generated_files/clock.o
- .debug_line      0x000530        0x15b build/default/production/mcc_generated_files/traps.o
- .debug_line      0x00068b         0x55 build/default/production/mcc_generated_files/interrupt_manager.o
- .debug_line      0x0006e0        0x12f build/default/production/mcc_generated_files/mcc.o
- .debug_line      0x00080f        0x144 build/default/production/mcc_generated_files/pin_manager.o
- .debug_line      0x000953        0x18b build/default/production/mcc_generated_files/pwm.o
+ .debug_line      0x0003f6        0x142 build/default/production/mcc_generated_files/clock.o
+ .debug_line      0x000538        0x15b build/default/production/mcc_generated_files/traps.o
+ .debug_line      0x000693         0x55 build/default/production/mcc_generated_files/interrupt_manager.o
+ .debug_line      0x0006e8        0x12f build/default/production/mcc_generated_files/mcc.o
+ .debug_line      0x000817        0x144 build/default/production/mcc_generated_files/pin_manager.o
+ .debug_line      0x00095b        0x18b build/default/production/mcc_generated_files/pwm.o
 
 .debug_frame      0x000000        0x530
  *(.debug_frame)
@@ -3650,7 +3650,7 @@ __c30_signature
 .config_BSLIM     0x02bf10          0x2
  .config_BSLIM    0x02bf10          0x2 build/default/production/mcc_generated_files/mcc.o
 
-.text             0x000332        0x33a
+.text             0x000332        0x344
  .text            0x000332        0x126 build/default/production/mcc_generated_files/pwm.o
                   0x000332                  _PWM_Initialize
                   0x0003a2                  _PWM_Generator5CallBack
@@ -3671,25 +3671,25 @@ __c30_signature
                   0x000458                  _RESET_GetCause
                   0x000460                  _RESET_CauseHandler
                   0x000564                  _RESET_CauseClearAll
- .text            0x00056c         0x52 build/default/production/mcc_generated_files/clock.o
+ .text            0x00056c         0x5c build/default/production/mcc_generated_files/clock.o
                   0x00056c                  _CLOCK_Initialize
- .text            0x0005be         0x46 build/default/production/mcc_generated_files/pin_manager.o
-                  0x0005be                  _PIN_MANAGER_Initialize
- .text            0x000604         0x32 build/default/production/mcc_generated_files/system.o
-                  0x000622                  _SYSTEM_Initialize
- .text            0x000636         0x20 build/default/production/mcc_generated_files/mcc.o
-                  0x000636                  _OSCILLATOR_Initialize
-                  0x00063e                  _SYSTEM_GetResetCause
-                  0x000646                  _SYSTEM_ResetCauseHandler
-                  0x00064e                  _SYSTEM_ResetCauseClearAll
- .text            0x000656         0x16 build/default/production/mcc_generated_files/traps.o
-                  0x000656                  _TRAPS_halt_on_error
+ .text            0x0005c8         0x46 build/default/production/mcc_generated_files/pin_manager.o
+                  0x0005c8                  _PIN_MANAGER_Initialize
+ .text            0x00060e         0x32 build/default/production/mcc_generated_files/system.o
+                  0x00062c                  _SYSTEM_Initialize
+ .text            0x000640         0x20 build/default/production/mcc_generated_files/mcc.o
+                  0x000640                  _OSCILLATOR_Initialize
+                  0x000648                  _SYSTEM_GetResetCause
+                  0x000650                  _SYSTEM_ResetCauseHandler
+                  0x000658                  _SYSTEM_ResetCauseClearAll
+ .text            0x000660         0x16 build/default/production/mcc_generated_files/traps.o
+                  0x000660                  _TRAPS_halt_on_error
 
-.dinit            0x00066c         0x10
- .dinit           0x00066c         0x10 data_init
+.dinit            0x000676         0x10
+ .dinit           0x000676         0x10 data_init
 
-.text             0x00067c          0xc
- .text            0x00067c          0x6 build/default/production/main.o
-                  0x00067c                  _main
- .text            0x000682          0x6 build/default/production/mcc_generated_files/interrupt_manager.o
-                  0x000682                  _INTERRUPT_Initialize
+.text             0x000686          0xc
+ .text            0x000686          0x6 build/default/production/main.o
+                  0x000686                  _main
+ .text            0x00068c          0x6 build/default/production/mcc_generated_files/interrupt_manager.o
+                  0x00068c                  _INTERRUPT_Initialize
