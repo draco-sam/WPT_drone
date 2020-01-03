@@ -52,6 +52,7 @@
 #include "pin_manager.h"
 #include <stdint.h>
 #include <stdbool.h>
+#include "tmr1.h"
 #include "pwm.h"
 #include "watchdog.h"
 #include "reset.h"

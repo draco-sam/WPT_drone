@@ -5,8 +5,8 @@
                    displayName="Header Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="Lib_Sam" projectFiles="true">
-        <itemPath>Lib_Sam/p24FJ128GC006.h</itemPath>
         <itemPath>Lib_Sam/lib_wpt_tx_00.h</itemPath>
+        <itemPath>Lib_Sam/dsPIC33CK256MP206.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="LinkerScript"

@@ -17,24 +17,24 @@
          <string>class com.microchip.mcc.mcu16.modules.pwm_upb.PWM</string>
       </entry>
       <entry>
-         <string>WATCHDOG</string>
-         <string>class com.microchip.mcc.mcu16.systemManager.wdt.Wdt</string>
-      </entry>
-      <entry>
          <string>Pin Module</string>
          <string>class com.microchip.mcc.mcu16.pinManager.PinManager</string>
+      </entry>
+      <entry>
+         <string>WATCHDOG</string>
+         <string>class com.microchip.mcc.mcu16.systemManager.wdt.Wdt</string>
       </entry>
       <entry>
          <string>DMT</string>
          <string>class com.microchip.mcc.mcu16.systemManager.dmt.DMT</string>
       </entry>
       <entry>
-         <string>RESET</string>
-         <string>class com.microchip.mcc.mcu16.systemManager.reset.RESET</string>
-      </entry>
-      <entry>
          <string>ICD</string>
          <string>class com.microchip.mcc.mcu16.systemManager.icd.Icd</string>
+      </entry>
+      <entry>
+         <string>RESET</string>
+         <string>class com.microchip.mcc.mcu16.systemManager.reset.RESET</string>
       </entry>
       <entry>
          <string>Interrupt Module</string>
@@ -43,6 +43,10 @@
       <entry>
          <string>com.microchip.mcc.mcu16.Mcu16PeripheralLibraryLibraryModule</string>
          <string>class com.microchip.mcc.protocolServices.base.modules.librarymodule.LibraryModule</string>
+      </entry>
+      <entry>
+         <string>TMR1</string>
+         <string>class com.microchip.mcc.mcu16.modules.tmr.TMR</string>
       </entry>
    </usedClasses>
    <usedLibraries class="java.util.ArrayList">
@@ -396,6 +400,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG2EVTH" settingAlias="ADTR1OFS" alias="13"/>
          <value>13</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR1" name="inputMode"/>
+         <value>periodMode</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG4IOCONL" settingAlias="CLMOD" alias="enabled"/>
@@ -886,6 +894,10 @@
          <value>4096</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TECS" alias="FRC"/>
+         <value>3</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG4EVTH" settingAlias="ADTR2EN2" alias="disabled"/>
          <value>0</value>
       </entry>
@@ -1168,6 +1180,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="PWM" registerAlias="PG3SPCIL" settingAlias="TSYNCDIS"/>
          <value>PWM EOC</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="TMR1" registerAlias="TMR"/>
+         <value>0</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG2FFPCIL" settingAlias="PSS" alias="Tied to 0"/>
@@ -3078,6 +3094,10 @@
          <value>disabled</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TSYNC" alias="enabled"/>
+         <value>1</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG3FPCIL" settingAlias="PSS" alias="RPn input, PCI12R"/>
          <value>12</value>
       </entry>
@@ -3324,6 +3344,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG5EVTL" settingAlias="ADTR1PS" alias="1:25"/>
          <value>24</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR1" name="T1CK"/>
+         <value>disabled</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG5EVTL" settingAlias="ADTR1PS" alias="1:24"/>
@@ -4798,6 +4822,10 @@
          <value>0</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TSYNC" alias="disabled"/>
+         <value>0</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="trisUserSetRC10"/>
          <value>disabled</value>
       </entry>
@@ -5842,8 +5870,16 @@
          <value>1</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="TMR1" registerAlias="TI" settingAlias="enable"/>
+         <value>enabled</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="Pin Module" registerAlias="CNPUC" settingAlias="CNPUC15" alias="disabled"/>
          <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="TMR1" registerAlias="TI" settingAlias="context"/>
+         <value>OFF</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="PWM" registerAlias="PG1STAT" settingAlias="FFEVT"/>
@@ -6102,6 +6138,10 @@
          <value>8</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR1" name="timerExtPinSelection"/>
+         <value>FALSE</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="PWM" registerAlias="PG8PER" settingAlias="PER8"/>
          <value>16</value>
       </entry>
@@ -6140,6 +6180,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="INTERNAL OSCILLATOR" registerAlias="PMD1" settingAlias="I2C1MD" alias="disabled"/>
          <value>1</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR1" name="localClockFreq"/>
+         <value>8000000</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="Pin Module" registerAlias="CNFD" settingAlias="CNFD6" alias="enabled"/>
@@ -8794,6 +8838,10 @@
          <value>1</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TMWDIS"/>
+         <value>disabled</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="LOGCONA" settingAlias="PWMS1A" alias="PWM5H"/>
          <value>8</value>
       </entry>
@@ -8864,6 +8912,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG4SPCIL" settingAlias="PSS" alias="Device pin, PCI20"/>
          <value>20</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TON"/>
+         <value>enabled</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="CMBTRIGL" settingAlias="CTA2EN" alias="disabled"/>
@@ -9018,6 +9070,10 @@
          <value>0</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR1" name="clockSourceSelect"/>
+         <value>FRC</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG8SPCIL" settingAlias="PSS" alias="RPn input, PCI9R"/>
          <value>9</value>
       </entry>
@@ -9143,6 +9199,10 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG8STAT" settingAlias="CAHALF" alias="enabled"/>
+         <value>1</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TECS" alias="FCY"/>
          <value>1</value>
       </entry>
       <entry>
@@ -9766,6 +9826,10 @@
          <value>0</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR1" name="tickerFactor"/>
+         <value>1</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="Pin Module" registerAlias="LATC" settingAlias="LATC11" alias="clear"/>
          <value>0</value>
       </entry>
@@ -10024,6 +10088,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG7FPCIL" settingAlias="PSS" alias="Device pin, PCI22"/>
          <value>22</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TSIDL" alias="enabled"/>
+         <value>1</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="PWM" registerAlias="PG2CLPCIL" settingAlias="AQSS"/>
@@ -10302,6 +10370,14 @@
          <value>11</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TCKPS" alias="1:1"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TCKPS" alias="1:8"/>
+         <value>1</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG2EVTL" settingAlias="ADTR1EN3" alias="enabled"/>
          <value>1</value>
       </entry>
@@ -10424,6 +10500,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="Pin Module" registerAlias="RPOR18" settingAlias="RP68R"/>
          <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR1" name="prescaledFreq"/>
+         <value>125000.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="Pin Module" registerAlias="CNEN0C" settingAlias="CNIE0C11" alias="disabled"/>
@@ -10699,6 +10779,10 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PWMEVTB" settingAlias="EVTBSTRD" alias="Stretched to 8 PWM clock cycles minimum"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TCS" alias="FOSC/2"/>
          <value>0</value>
       </entry>
       <entry>
@@ -11082,6 +11166,10 @@
          <value>2</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TCS"/>
+         <value>External</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="Pin Module" registerAlias="CNPUD" settingAlias="CNPUD8"/>
          <value>disabled</value>
       </entry>
@@ -11223,6 +11311,10 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG5STAT" settingAlias="TRCLR" alias="disabled"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TMWIP" alias="Write complete"/>
          <value>0</value>
       </entry>
       <entry>
@@ -11396,6 +11488,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG3EVTH" settingAlias="IEVTSEL" alias="TRIGA"/>
          <value>3</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="TMR1" registerAlias="TI" settingAlias="flag"/>
+         <value>disabled</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="Pin Module" registerAlias="TRISC" settingAlias="TRISC7" alias="input"/>
@@ -11672,6 +11768,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG5FFPCIL" settingAlias="PSS" alias="Device pin, PCI20"/>
          <value>20</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="TMR1" registerAlias="PR"/>
+         <value>62499</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PWMEVTC" settingAlias="EVTCSEL" alias="PCI Sync Active Output"/>
@@ -13406,6 +13506,10 @@
          <value>None</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TSYNC"/>
+         <value>enabled</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="Pin Module" registerAlias="CNPUD" settingAlias="CNPUD15"/>
          <value>disabled</value>
       </entry>
@@ -14312,6 +14416,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG6FFPCIL" settingAlias="PSS" alias="RPn input, PCI16R"/>
          <value>16</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR1" name="prescaleDivisor"/>
+         <value>64</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="System Module" registerAlias="FOSCSEL" settingAlias="FNOSC" alias="LPRC"/>
@@ -15794,6 +15902,10 @@
          <value>0</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR1" name="requestedPeriod"/>
+         <value>0.5</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG1FFPCIL" settingAlias="PSS" alias="PWM Event C"/>
          <value>25</value>
       </entry>
@@ -16080,6 +16192,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG7SPCIL" settingAlias="AQSS" alias="SWPCI Control bit"/>
          <value>7</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TGATE" alias="enabled"/>
+         <value>1</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG6FFPCIL" settingAlias="PSS" alias="Internally connected to Combo Trigger A"/>
@@ -17342,6 +17458,10 @@
          <value>1</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="TMR1" registerAlias="TMR" settingAlias="TMR"/>
+         <value>0</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="PWM" name="pwmMasterPrimaryDutyCycle"/>
          <value>0</value>
       </entry>
@@ -17438,6 +17558,10 @@
          <value>6</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR1" name="timerMaxCount"/>
+         <value>65535</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG2CLPCIH" settingAlias="BPSEL" alias="PWM Generator 8"/>
          <value>7</value>
       </entry>
@@ -17460,6 +17584,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="Pin Module" registerAlias="TRISD" settingAlias="TRISD10" alias="output"/>
          <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR1" name="TimerFrequency"/>
+         <value>8000000</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="Custom Name RB6"/>
@@ -17536,6 +17664,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG1CLPCIH" settingAlias="TQSS" alias="Selects PCI Source#9"/>
          <value>6</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="PRWIP" alias="Write complete"/>
+         <value>0</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="Custom Name RD1"/>
@@ -17903,6 +18035,10 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG6EVTH" settingAlias="SIEN" alias="enabled"/>
+         <value>1</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TMWDIS" alias="enabled"/>
          <value>1</value>
       </entry>
       <entry>
@@ -19150,6 +19286,10 @@
          <value>14</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TMWIP"/>
+         <value>Write complete</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="LOGCOND" settingAlias="PWMS1D" alias="PWM8L"/>
          <value>15</value>
       </entry>
@@ -19364,6 +19504,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG5FPCIL" settingAlias="AQPS" alias="Not inverted"/>
          <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TON" alias="enabled"/>
+         <value>1</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG3FPCIL" settingAlias="PSS" alias="PWM Event A"/>
@@ -19956,6 +20100,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="PWM" registerAlias="PG8CONH" settingAlias="UPDMOD"/>
          <value>SOC update</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR1" name="combinedTimer"/>
+         <value>0</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="INTERNAL OSCILLATOR" registerAlias="PLLFBD" settingAlias="PLLDIV" alias="164"/>
@@ -20894,6 +21042,10 @@
          <value>255</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="TMR1" registerAlias="TCON"/>
+         <value>33574</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="Pin Module" registerAlias="CNEN1D" settingAlias="CNIE1D0" alias="disabled"/>
          <value>0</value>
       </entry>
@@ -21208,6 +21360,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="LOGCONE" settingAlias="PWMS1E" alias="PWM2H"/>
          <value>2</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TCKPS"/>
+         <value>1:64</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="Pin Module" registerAlias="CNEN0B" settingAlias="CNIE0B4" alias="disabled"/>
@@ -22630,11 +22786,19 @@
          <value>31</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TCS" alias="External"/>
+         <value>1</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="Pin Module" registerAlias="LATC" settingAlias="LATC12" alias="set"/>
          <value>1</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="PWM" registerAlias="PEVTAI" settingAlias="flag"/>
+         <value>disabled</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TGATE"/>
          <value>disabled</value>
       </entry>
       <entry>
@@ -27310,6 +27474,10 @@
          <value>disabled</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR1" name="TMR1_TIISRFunction"/>
+         <value>ISR_TMR1_TI</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PWMEVTD" settingAlias="EVTDSEL" alias="PCI Feed-forward Active Output"/>
          <value>3</value>
       </entry>
@@ -27444,6 +27612,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG4EVTH" settingAlias="ADTR1OFS" alias="25"/>
          <value>25</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="TMR1" registerAlias="PR" settingAlias="PR"/>
+         <value>62499</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG4EVTH" settingAlias="ADTR1OFS" alias="26"/>
@@ -27966,6 +28138,10 @@
          <value>0</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR1" name="maxPeriod"/>
+         <value>0.524288</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="Pin Module" registerAlias="CNPDD" settingAlias="CNPDD1"/>
          <value>disabled</value>
       </entry>
@@ -28348,6 +28524,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG8SPCIL" settingAlias="PSS" alias="Comparator 2 output"/>
          <value>28</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TECS" alias="T1CK"/>
+         <value>0</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG6EVTH" settingAlias="ADTR1OFS" alias="14"/>
@@ -30410,6 +30590,10 @@
          <value>1</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR1" name="actualPeriod"/>
+         <value>0.5</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG7EVTL" settingAlias="ADTR1PS" alias="1:14"/>
          <value>13</value>
       </entry>
@@ -30654,6 +30838,10 @@
          <value>39</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TECS"/>
+         <value>FRC</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG6CLPCIH" settingAlias="SWPCIM" alias="Acceptance qualifier logic"/>
          <value>1</value>
       </entry>
@@ -30786,6 +30974,10 @@
          <value>0</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR1" name="minPeriod"/>
+         <value>0.000016</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="Pin Module" registerAlias="CNEN1A" settingAlias="CNIE1A1"/>
          <value>disabled</value>
       </entry>
@@ -30844,6 +31036,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG5CLPCIL" settingAlias="PSS" alias="Internally connected to Combo Trigger B"/>
          <value>3</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR1" name="customPR"/>
+         <value>62499</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="Pin Module" registerAlias="CNEN1D" settingAlias="CNIE1D8"/>
@@ -31450,6 +31646,10 @@
          <value>None</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TSIDL" alias="disabled"/>
+         <value>0</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="PWM" registerAlias="PG7CLPCIL" settingAlias="TSYNCDIS"/>
          <value>PWM EOC</value>
       </entry>
@@ -31804,6 +32004,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="Pin Module" registerAlias="CNFD" settingAlias="CNFD2" alias="disabled"/>
          <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TSIDL"/>
+         <value>disabled</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG5FPCIH" settingAlias="TQSS" alias="Selects PCI Source#8"/>
@@ -32552,6 +32756,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG5IOCONH" settingAlias="POLL" alias="Active-low"/>
          <value>1</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TECS" alias="FOSC"/>
+         <value>2</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG5FFPCIH" settingAlias="BPSEL" alias="PWM Generator 1"/>
@@ -33328,6 +33536,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="iocUserSet RD14"/>
          <value>disabled</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR1" name="callBackRate"/>
+         <value>0.5</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="iocUserSet RD13"/>
@@ -34662,6 +34874,10 @@
          <value>1</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TON" alias="disabled"/>
+         <value>0</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="PWM" registerAlias="PG6EVTL" settingAlias="ADTR1PS"/>
          <value>1:1</value>
       </entry>
@@ -35530,6 +35746,10 @@
          <value>0</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TMWIP" alias="Write pending"/>
+         <value>1</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG5FFPCIL" settingAlias="PSS" alias="RPn input, PCI12R"/>
          <value>12</value>
       </entry>
@@ -35580,6 +35800,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG6FFPCIH" settingAlias="BPEN" alias="disabled"/>
          <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="PRWIP" alias="Write pending"/>
+         <value>1</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG8FPCIL" settingAlias="PSS" alias="Comparator 1 output"/>
@@ -35659,6 +35883,10 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG1SPCIH" settingAlias="TQPS" alias="Not inverted"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TGATE" alias="disabled"/>
          <value>0</value>
       </entry>
       <entry>
@@ -35832,6 +36060,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="Pin Module" registerAlias="CNSTATB" settingAlias="CNSTATB2" alias="disabled"/>
          <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TCKPS" alias="1:64"/>
+         <value>2</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG1SPCIL" settingAlias="PSS" alias="Device pin, PCI19"/>
@@ -37334,6 +37566,10 @@
          <value>0</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TCKPS" alias="1:256"/>
+         <value>3</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="Pin Module" registerAlias="TRISB" settingAlias="TRISB8"/>
          <value>input</value>
       </entry>
@@ -37658,12 +37894,20 @@
          <value>1</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="TMR1" registerAlias="TCON" settingAlias="TMWDIS" alias="disabled"/>
+         <value>0</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG1SPCIL" settingAlias="TSYNCDIS" alias="Immediately"/>
          <value>1</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG7CLPCIL" settingAlias="TERM" alias="Selects PCI Source#1"/>
          <value>5</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="TMR1" registerAlias="TCON" settingAlias="PRWIP"/>
+         <value>Write complete</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG3SPCIL" settingAlias="AQSS" alias="Selects PCI Source#8"/>
@@ -37788,6 +38032,10 @@
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="PWM" registerAlias="PG1IOCONL" settingAlias="OVRENL" alias="disabled"/>
          <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="TMR1" registerAlias="TI" settingAlias="priority"/>
+         <value>1</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="PWM" registerAlias="PG3LEBH" settingAlias="PWMPCI"/>
@@ -38710,6 +38958,10 @@
          <value>164</value>
       </entry>
       <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR1" name="timerBitMode"/>
+         <value>16 Bit</value>
+      </entry>
+      <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="INTERNAL OSCILLATOR" registerAlias="APLLFBD1" settingAlias="APLLFBDIV" alias="161"/>
          <value>161</value>
       </entry>
@@ -39424,12 +39676,12 @@
    </tokenMap>
    <generatedFileHashHistoryMap class="java.util.HashMap">
       <entry>
-         <file>mcc_generated_files\pwm.c</file>
-         <hash>35b59c529e539cbe274b1c914073b70e4ef3d8197613e216daf69d6d6c3c3152</hash>
+         <file>mcc_generated_files\mcc.h</file>
+         <hash>ec375e92d409c3d84aeafb2ec7a4aa4bb3b6861ed3dff05e01059e1e18f63271</hash>
       </entry>
       <entry>
-         <file>mcc_generated_files\mcc.h</file>
-         <hash>1138259c2eaa13858931430279f70291a25741fe7c73d9ebe6a9844b6e8dea73</hash>
+         <file>mcc_generated_files\pwm.c</file>
+         <hash>35b59c529e539cbe274b1c914073b70e4ef3d8197613e216daf69d6d6c3c3152</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\interrupt_manager.h</file>
@@ -39438,6 +39690,10 @@
       <entry>
          <file>mcc_generated_files\reset.c</file>
          <hash>678fb68ce740cc3b60002c9f1966569f42c8b4093726943c893a8eafb3cf90fa</hash>
+      </entry>
+      <entry>
+         <file>mcc_generated_files\tmr1.h</file>
+         <hash>4c0657cc7e9def80691d70786d2b0c8cd62618a684f16192d6a62c4423444d77</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\clock.c</file>
@@ -39450,6 +39706,10 @@
       <entry>
          <file>mcc_generated_files\pin_manager.h</file>
          <hash>328c8d8157ba846a75de59b77ea81ef73595fe50922ac100af565667051ec148</hash>
+      </entry>
+      <entry>
+         <file>mcc_generated_files\tmr1.c</file>
+         <hash>63c60f14ac2678a527bc3957970fe599773f7d0858cd1b30a711fe6cfba770ec</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\pwm.h</file>
@@ -39469,7 +39729,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files\system.c</file>
-         <hash>ea06978afd90740899602d9d5bca4b5ab9ff6e850c9a416124f482b9d9b25c50</hash>
+         <hash>825b1878cf36f33959f0e6b8dabfd93b5f293e63257cd1d593d5c6daf5b7b5b7</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\traps.c</file>
@@ -39489,7 +39749,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files\interrupt_manager.c</file>
-         <hash>4ed56b49b1e439d57ca3a0cbd8150795432cc6fa7c1ef64f93a3cc3049fae8fb</hash>
+         <hash>5a8953e601279d8e1b9a562648b3c9581e11db656bea75f4d11936c644322f0c</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\reset.h</file>

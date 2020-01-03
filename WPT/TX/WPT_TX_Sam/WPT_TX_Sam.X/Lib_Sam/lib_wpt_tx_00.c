@@ -1,13 +1,19 @@
 /* 
  * File             : lib_wpt_tx_00.c
- * Date             : 02/01/2020.   
+ * Date             : 03/01/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
  */
 
+#include <stdio.h>
 #include "lib_wpt_tx_00.h"
 #include "dsPIC33CK256MP206.h"
+
+//Variable globale uniquement pour "lib_wpt_tx_xx".
+static TRISCBITS    trisc_bits;
+static LATCBITS     latc_bits;
+static PG5CONLBITS  pg5conl_bits;
 
 /*
  * FOSC CONFIGURATION REGISTER :
@@ -19,6 +25,20 @@
  * (Primary Oscillator disabled & OSC2 is clock output).
  */
 _FOSC( POSCMD_NONE & OSCIOFNC_OFF);
+
+void pin_init (void)
+/*
+ * Initialiser les I/O avant de démarrer le code.
+ */
+{
+    //3 LEDs as output and ON :
+    trisc_bits.TRISC12 = 0;//Blue LED output.
+    trisc_bits.TRISC13 = 0;//Green LED output.
+    trisc_bits.TRISC14 = 0;//Red LED output.
+    latc_bits.LATC12 = 1;//Blue LED ON.
+    latc_bits.LATC13 = 1;//Green LED ON.
+    latc_bits.LATC14 = 1;//Red LED ON.
+}
 
 void oscillator_init(void)
 /*
@@ -290,15 +310,94 @@ void pwm_on_off(unsigned short choix_pwm)
     //PWM ON.
     if(choix_pwm == 1)
     {
-        PG5CONLBITS.ON = 1;
+        pg5conl_bits.ON = 1;
     }
     //PWM OFF dans tous les autres cas.
     else
     { 
-       PG5CONLBITS.ON = 0;
+       pg5conl_bits.ON = 0;
     }
 }
 //*************************************************************************************************
 
+void TMR1_init (void)
+/*
+ * Timer1 Initialisation.
+ */
+{ 
+    TMR1 = 0x00;//Reset Timer.
+    
+    /*
+     * Timer Period Register 1 :
+     * ------------------------
+     * Clock in         : FRC 8 MHz
+     * Prescaler        : 1/64
+     * Timer resolution : 8µs
+     * Period           : 62499 (0xF423) * 8µs = 0.5s
+     */
+    PR1 = 0xF423;
+    
+    /*
+     * TIMER1 CONTROL REGISTER :
+     * ------------------------
+     * bit 15       : Ton, Stops 16-bit Timer1.
+     * bit 13       : SIDL, Continues module operation in Idle mode.
+     *              : Integrated DeveLopment Environment.  
+     * bit 12       : TMWDIS, Back-to-back writes are enabled in Asynchronous mode.
+     * bit 11       : TMWIP, Write to the timer in Asynchronous mode is complete.
+     * bit 10       : PRWIP, Write to the Period register in Asynchronous mode is complete.
+     * bit 9-8      : TECS[1:0], FRC clock.
+     * bit 6        : Gated time accumulation is disabled.
+     * bit 5-4      : TCKPS[1:0], prescale 1/64.
+     * bit 2        : TSYNC, Synchronizes the External Clock input.
+     * bit 1        : TCS, External Clock source selected by TECS.
+     */
+    T1CON = 0x326;
 
+    IFS0bits.T1IF = 0;
+    IEC0bits.T1IE = 1;   
+}
+//*************************************************************************************************
 
+void __attribute__ ( ( interrupt, no_auto_psv ) ) _T1Interrupt (  )
+/*
+ * ISR : Interrupt Timer1 Service Rountine :
+ * ----------------------------------------
+ */
+{ 
+    // !!! Check if the Timer Interrupt/Status is set !!!
+
+    /*
+     * Blink at 0.5s the 3 leds :
+     * -------------------------
+     * Toggle the state of the 3 PORTx (LED). 
+     */
+    latc_bits.LATC12 = !latc_bits.LATC12;//Blue LED.
+    latc_bits.LATC13 = !latc_bits.LATC13;//Green LED.
+    latc_bits.LATC14 = !latc_bits.LATC14;//Red LED.
+
+    
+    IFS0bits.T1IF = 0;//Reset flag.
+}
+//*************************************************************************************************
+
+void TMR1_start( void )
+{
+
+    /*Enable the interrupt*/
+    IEC0bits.T1IE = 1;
+
+    /* Start the Timer */
+    T1CONbits.TON = 1;
+}
+//*************************************************************************************************
+
+void TMR1_stop( void )
+{
+    /* Stop the Timer */
+    T1CONbits.TON = 0;
+
+    /*Disable the interrupt*/
+    IEC0bits.T1IE = 0;
+}
+//*************************************************************************************************
