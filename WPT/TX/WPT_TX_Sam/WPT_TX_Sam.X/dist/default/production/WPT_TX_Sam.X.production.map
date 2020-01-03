@@ -67,19 +67,19 @@ Default Scalar Model: Small
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x200               0x166           0x219  (537)
-.text                        0x366               0x122           0x1b3  (435)
-.dinit                       0x488                 0x8             0xc  (12)
+.text                        0x366               0x146           0x1e9  (489)
+.dinit                       0x4ac                 0x8             0xc  (12)
 
-                 Total "program" memory used (bytes):          0x3d8  (984) <1%
+                 Total "program" memory used (bytes):          0x40e  (1038) <1%
 
 
 "data" Memory  [Origin = 0x1000, Length = 0x6000]
 
 section                    address      alignment gaps    total length  (dec)
 -------                    -------      --------------    -------------------
-.nbss                       0x1000                   0             0x6  (6)
+.nbss                       0x1000                   0             0x8  (8)
 
-                 Total "data" memory used (bytes):            0x6  (6) <1%
+                 Total "data" memory used (bytes):            0x8  (8) <1%
 
 
 Dynamic Memory Usage
@@ -87,9 +87,9 @@ Dynamic Memory Usage
 region                     address                      maximum length  (dec)
 ------                     -------                      ---------------------
 heap                             0                                   0  (0)
-stack                       0x1006                              0x5ffa  (24570)
+stack                       0x1008                              0x5ff8  (24568)
 
-                 Maximum dynamic memory (bytes):         0x5ffa  (24570)
+                 Maximum dynamic memory (bytes):         0x5ff8  (24568)
 
 Note: Project is using a large data memory model when small data memory model is sufficient.
 
@@ -103,30 +103,32 @@ External Symbols in Program Memory (by address):
                   0x0002fa                  __T1Interrupt
                   0x000360                  __DefaultInterrupt
                   0x000366                  _pin_init
-                  0x000378                  _oscillator_init
-                  0x0003d4                  _pwm_init
-                  0x000442                  _pwm_on_off
-                  0x000456                  _TMR1_init
-                  0x00046a                  _TMR1_start
-                  0x000474                  _TMR1_stop
-                  0x00047e                  _main
+                  0x000388                  _oscillator_init
+                  0x0003e4                  _pwm_init
+                  0x000452                  _pwm_on_off
+                  0x000466                  _TMR1_init
+                  0x00047a                  _TMR1_start
+                  0x000484                  _TMR1_stop
+                  0x00048e                  _interrupt_init
+                  0x00049a                  _main
 
 External Symbols in Program Memory (by name):
 
-                  0x000456                  _TMR1_init
-                  0x00046a                  _TMR1_start
-                  0x000474                  _TMR1_stop
+                  0x000466                  _TMR1_init
+                  0x00047a                  _TMR1_start
+                  0x000484                  _TMR1_stop
                   0x000360                  __DefaultInterrupt
                   0x0002fa                  __T1Interrupt
                   0x000248                  __data_init
                   0x000248                  __data_init_extended
                   0x00023c                  __psv_init
                   0x000200                  __resetPRI
-                  0x00047e                  _main
-                  0x000378                  _oscillator_init
+                  0x00048e                  _interrupt_init
+                  0x00049a                  _main
+                  0x000388                  _oscillator_init
                   0x000366                  _pin_init
-                  0x0003d4                  _pwm_init
-                  0x000442                  _pwm_on_off
+                  0x0003e4                  _pwm_init
+                  0x000452                  _pwm_on_off
 
 Memory Configuration
 
@@ -276,10 +278,10 @@ __FBTSEQ
 .comment
  *(.comment)
 
-.debug_info       0x000000       0x148f
+.debug_info       0x000000       0x16b0
  *(.debug_info)
- .debug_info      0x000000       0x12f6 build/default/production/Lib_Sam/lib_wpt_tx_00.o
- .debug_info      0x0012f6        0x199 build/default/production/main_wpt_tx_00.o
+ .debug_info      0x000000       0x1517 build/default/production/Lib_Sam/lib_wpt_tx_00.o
+ .debug_info      0x001517        0x199 build/default/production/main_wpt_tx_00.o
  *(.gnu.linkonce.wi.*)
 
 .debug_abbrev     0x000000        0x13f
@@ -287,19 +289,19 @@ __FBTSEQ
  .debug_abbrev    0x000000        0x109 build/default/production/Lib_Sam/lib_wpt_tx_00.o
  .debug_abbrev    0x000109         0x36 build/default/production/main_wpt_tx_00.o
 
-.debug_line       0x000000        0x17f
+.debug_line       0x000000        0x18b
  *(.debug_line)
- .debug_line      0x000000        0x13f build/default/production/Lib_Sam/lib_wpt_tx_00.o
- .debug_line      0x00013f         0x40 build/default/production/main_wpt_tx_00.o
+ .debug_line      0x000000        0x146 build/default/production/Lib_Sam/lib_wpt_tx_00.o
+ .debug_line      0x000146         0x45 build/default/production/main_wpt_tx_00.o
 
-.debug_frame      0x000000        0x12c
+.debug_frame      0x000000        0x148
  *(.debug_frame)
- .debug_frame     0x000000         0xfc build/default/production/Lib_Sam/lib_wpt_tx_00.o
- .debug_frame     0x0000fc         0x30 build/default/production/main_wpt_tx_00.o
+ .debug_frame     0x000000        0x118 build/default/production/Lib_Sam/lib_wpt_tx_00.o
+ .debug_frame     0x000118         0x30 build/default/production/main_wpt_tx_00.o
 
-.debug_str        0x000000         0xe8
+.debug_str        0x000000         0xf1
  *(.debug_str)
- .debug_str       0x000000         0xe8 build/default/production/Lib_Sam/lib_wpt_tx_00.o
+ .debug_str       0x000000         0xf1 build/default/production/Lib_Sam/lib_wpt_tx_00.o
 
 .debug_loc
  *(.debug_loc)
@@ -308,12 +310,12 @@ __FBTSEQ
  *(.debug_macinfo)
 
 .debug_pubnames
-                  0x000000         0xb0
+                  0x000000         0xc3
  *(.debug_pubnames)
  .debug_pubnames
-                  0x000000         0x95 build/default/production/Lib_Sam/lib_wpt_tx_00.o
+                  0x000000         0xa8 build/default/production/Lib_Sam/lib_wpt_tx_00.o
  .debug_pubnames
-                  0x000095         0x1b build/default/production/main_wpt_tx_00.o
+                  0x0000a8         0x1b build/default/production/main_wpt_tx_00.o
 
 .debug_ranges
  *(.debug_ranges)
@@ -3369,42 +3371,43 @@ LOAD default_isr
 LOAD data_init
 
 .debug_pubtypes
-                  0x000030         0xf5
+                  0x000030        0x135
  .debug_pubtypes
-                  0x000030         0xe3 build/default/production/Lib_Sam/lib_wpt_tx_00.o
+                  0x000030        0x123 build/default/production/Lib_Sam/lib_wpt_tx_00.o
  .debug_pubtypes
-                  0x000113         0x12 build/default/production/main_wpt_tx_00.o
+                  0x000153         0x12 build/default/production/main_wpt_tx_00.o
 
 __c30_signature
-                  0x000125         0x18
+                  0x000165         0x18
  __c30_signature
-                  0x000125          0x6 build/default/production/Lib_Sam/lib_wpt_tx_00.o
+                  0x000165          0x6 build/default/production/Lib_Sam/lib_wpt_tx_00.o
  __c30_signature
-                  0x00012b          0x6 build/default/production/main_wpt_tx_00.o
+                  0x00016b          0x6 build/default/production/main_wpt_tx_00.o
  __c30_signature
-                  0x000131          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(crt0_extendedch.o)
+                  0x000171          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(crt0_extendedch.o)
  __c30_signature
-                  0x000137          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(data_init_extendedch.o)
+                  0x000177          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(data_init_extendedch.o)
 
-.nbss               0x1000          0x6
- .nbss              0x1000          0x6 build/default/production/Lib_Sam/lib_wpt_tx_00.o
+.nbss               0x1000          0x8
+ .nbss              0x1000          0x8 build/default/production/Lib_Sam/lib_wpt_tx_00.o
 
 .ivt._T1Interrupt
                   0x000016          0x2
  .ivt._T1Interrupt
                   0x000016          0x2 build/default/production/Lib_Sam/lib_wpt_tx_00.o
 
-.text             0x000366        0x122
- .text            0x000366        0x118 build/default/production/Lib_Sam/lib_wpt_tx_00.o
+.text             0x000366        0x146
+ .text            0x000366        0x134 build/default/production/Lib_Sam/lib_wpt_tx_00.o
                   0x000366                  _pin_init
-                  0x000378                  _oscillator_init
-                  0x0003d4                  _pwm_init
-                  0x000442                  _pwm_on_off
-                  0x000456                  _TMR1_init
-                  0x00046a                  _TMR1_start
-                  0x000474                  _TMR1_stop
- .text            0x00047e          0xa build/default/production/main_wpt_tx_00.o
-                  0x00047e                  _main
+                  0x000388                  _oscillator_init
+                  0x0003e4                  _pwm_init
+                  0x000452                  _pwm_on_off
+                  0x000466                  _TMR1_init
+                  0x00047a                  _TMR1_start
+                  0x000484                  _TMR1_stop
+                  0x00048e                  _interrupt_init
+ .text            0x00049a         0x12 build/default/production/main_wpt_tx_00.o
+                  0x00049a                  _main
 
-.dinit            0x000488          0x8
- .dinit           0x000488          0x8 data_init
+.dinit            0x0004ac          0x8
+ .dinit           0x0004ac          0x8 data_init

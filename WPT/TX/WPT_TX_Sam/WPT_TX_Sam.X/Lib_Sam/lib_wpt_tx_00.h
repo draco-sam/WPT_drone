@@ -15,4 +15,5 @@ void pwm_on_off(unsigned short choix_pwm);
 void TMR1_init (void);
 void TMR1_start( void );
 void TMR1_stop( void );
+void interrupt_init (void);
 

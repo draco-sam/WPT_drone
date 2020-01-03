@@ -14,6 +14,7 @@
 static TRISCBITS    trisc_bits;
 static LATCBITS     latc_bits;
 static PG5CONLBITS  pg5conl_bits;
+static INTCON2BITS  intcon2_bits;
 
 /*
  * FOSC CONFIGURATION REGISTER :
@@ -31,6 +32,11 @@ void pin_init (void)
  * Initialiser les I/O avant de démarrer le code.
  */
 {
+    TRISA = 0x001F;//All input
+    TRISB = 0xFFFD;//RB1/OSCO output.
+    TRISC = 0xFFCF;//RC4/PWM5H and RC5/PWM5L output for PWM GaN.
+    TRISD = 0xFFFF;
+    
     //3 LEDs as output and ON :
     trisc_bits.TRISC12 = 0;//Blue LED output.
     trisc_bits.TRISC13 = 0;//Green LED output.
@@ -354,8 +360,8 @@ void TMR1_init (void)
      */
     T1CON = 0x326;
 
-    IFS0bits.T1IF = 0;
-    IEC0bits.T1IE = 1;   
+    IFS0bits.T1IF = 0;//Reset flag Timer1.
+    IEC0bits.T1IE = 1;//Timer1 enable.   
 }
 //*************************************************************************************************
 
@@ -399,5 +405,18 @@ void TMR1_stop( void )
 
     /*Disable the interrupt*/
     IEC0bits.T1IE = 0;
+}
+//*************************************************************************************************
+
+void interrupt_init (void)
+/*
+ * Interrupt initialisation.
+ */
+{
+    IPC0bits.T1IP = 1;//Timer1 priority 1.
+    
+    //Global Interrupt Enable bit
+    //intcon2_bits.GIE = 1;//Interrupts and associated IE bits are enabled???
+    
 }
 //*************************************************************************************************
