@@ -46,17 +46,19 @@
 #include "clock.h"
 #include "system.h"
 #include "system_types.h"
-#include "tmr1.h"
-#include "pwm.h"
 #include "interrupt_manager.h"
 #include "traps.h"
+#include "i2c2.h"
+#include "pwm.h"
+#include "tmr1.h"
 
 void SYSTEM_Initialize(void)
 {
     PIN_MANAGER_Initialize();
-    CLOCK_Initialize();
     INTERRUPT_Initialize();
+    CLOCK_Initialize();
     PWM_Initialize();
+    I2C2_Initialize();
     TMR1_Initialize();
     INTERRUPT_GlobalEnable();
     SYSTEM_CORCONModeOperatingSet(CORCON_MODE_PORVALUES);
