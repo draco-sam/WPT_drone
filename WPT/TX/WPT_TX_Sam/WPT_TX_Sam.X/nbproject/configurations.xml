@@ -16,7 +16,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <logicalFolder name="f1" displayName="Lib_Sam" projectFiles="true">
+      <logicalFolder name="f1" displayName="Lib_TX_Sam" projectFiles="true">
         <itemPath>Lib_Sam/lib_wpt_tx_00.c</itemPath>
       </logicalFolder>
       <itemPath>main_wpt_tx_00.c</itemPath>
