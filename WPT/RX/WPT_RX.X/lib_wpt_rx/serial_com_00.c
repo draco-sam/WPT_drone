@@ -1,6 +1,6 @@
 /* 
  * File             : serial_com_00.c
- * Date             : 07/01/2020.   
+ * Date             : 08/01/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -24,7 +24,30 @@ void i2c_master_init(void)
  * 
  */
 {
+    // Baud Rate Generator Value.   
+    I2C2BRG = 2932;//I2CBRG 18 (ox12);
     
+    //Enables the I2Cx module, and configures the SDAx and SCLx pins as serial port pins.
+    i2c_2_con_l_bits.I2CEN      = 1;
+    i2c_2_con_l_bits.I2CEN      = 0;
+    i2c_2_con_l_bits.STREN      = 0;
+    i2c_2_con_l_bits.A10M       = 0;//I2CxADD is a 7-bit Slave address.
+    //Slew rate control is disabled for Standard Speed mode (100kHz, 1MHz).
+    i2c_2_con_l_bits.DISSLW     = 1;
+    i2c_2_con_l_bits.SMEN       = 0;//Disables SMBus-specific inputs.
+    i2c_2_con_l_bits.STREN      = 0;//Disables clock stretching.
+    i2c_2_con_l_bits.ACKDT      = 0;
+    i2c_2_con_l_bits.ACKEN      = 0;//Acknowledge sequence is Idle.
+    i2c_2_con_l_bits.RCEN       = 0;//Receive sequence is not in progress.
+    i2c_2_con_l_bits.PEN        = 0;//Stop condition is Idle (inactif).
+    i2c_2_con_l_bits.RSEN       = 0;//Restart condition is Idle.
+    i2c_2_con_l_bits.SEN        = 0;//Start condition is Idle.
+    
+    I2C2STAT = 0;//I2Cx STATUS REGISTER.
+        
+    IFS2bits.MI2C2IF = 0;//Clear the master interrupt flag.
+    IEC2bits.MI2C2IE = 1;//Enable the master interrupt.
+    //INTCON2bits.GIE = 1;
 }
 //**************************************************************************************************
 
@@ -34,7 +57,8 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C2Interrupt ( void )
  * 
  */    
     
-    //!!! Bloquer toutes les intérruptions !!!
+    //INTCON2bits.GIE = 0;
+    IEC2bits.MI2C2IE = 0;//disable the master interrupt.
     
     //!!! Ajouter code pour LED en debug !!!
     
@@ -115,6 +139,9 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C2Interrupt ( void )
         }
         i2c_interrupt_counter = 0;//Reset.  
     }
+    
+    //INTCON2bits.GIE = 1;
+    IEC2bits.MI2C2IE = 1;//Enable the master interrupt.
 }
 //**************************************************************************************************
 
