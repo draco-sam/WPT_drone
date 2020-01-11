@@ -31,7 +31,7 @@
 #ifndef XC_HEADER_TEMPLATE_H
 #define	XC_HEADER_TEMPLATE_H
 
-#include "dsPIC33CK256MP206.h"  
+#include "PIC24FJ128GC006.h"  
 
 // TODO Insert appropriate #include <>
 

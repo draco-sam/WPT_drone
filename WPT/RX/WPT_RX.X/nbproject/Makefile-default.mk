@@ -57,17 +57,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=main_wpt_rx_00.c lib_wpt_rx/lib_wpt_rx_00.c lib_wpt_rx/serial_com_00.c
+SOURCEFILES_QUOTED_IF_SPACED=lib_wpt_rx/lib_wpt_rx_00.c lib_wpt_rx/serial_com_00.c main_wpt_rx_00.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/main_wpt_rx_00.o ${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o ${OBJECTDIR}/lib_wpt_rx/serial_com_00.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/main_wpt_rx_00.o.d ${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o.d ${OBJECTDIR}/lib_wpt_rx/serial_com_00.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o ${OBJECTDIR}/lib_wpt_rx/serial_com_00.o ${OBJECTDIR}/main_wpt_rx_00.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o.d ${OBJECTDIR}/lib_wpt_rx/serial_com_00.o.d ${OBJECTDIR}/main_wpt_rx_00.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/main_wpt_rx_00.o ${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o ${OBJECTDIR}/lib_wpt_rx/serial_com_00.o
+OBJECTFILES=${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o ${OBJECTDIR}/lib_wpt_rx/serial_com_00.o ${OBJECTDIR}/main_wpt_rx_00.o
 
 # Source Files
-SOURCEFILES=main_wpt_rx_00.c lib_wpt_rx/lib_wpt_rx_00.c lib_wpt_rx/serial_com_00.c
+SOURCEFILES=lib_wpt_rx/lib_wpt_rx_00.c lib_wpt_rx/serial_com_00.c main_wpt_rx_00.c
 
 
 
@@ -90,18 +90,11 @@ ifneq ($(INFORMATION_MESSAGE), )
 endif
 	${MAKE}  -f nbproject/Makefile-default.mk dist/${CND_CONF}/${IMAGE_TYPE}/WPT_RX.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
 
-MP_PROCESSOR_OPTION=33CK256MP206
-MP_LINKER_FILE_OPTION=,--script=p33CK256MP206.gld
+MP_PROCESSOR_OPTION=24FJ128GC006
+MP_LINKER_FILE_OPTION=,--script=p24FJ128GC006.gld
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: compile
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
-${OBJECTDIR}/main_wpt_rx_00.o: main_wpt_rx_00.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/main_wpt_rx_00.o.d 
-	@${RM} ${OBJECTDIR}/main_wpt_rx_00.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE)  main_wpt_rx_00.c  -o ${OBJECTDIR}/main_wpt_rx_00.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/main_wpt_rx_00.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
-	@${FIXDEPS} "${OBJECTDIR}/main_wpt_rx_00.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
-	
 ${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o: lib_wpt_rx/lib_wpt_rx_00.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx" 
 	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o.d 
@@ -116,14 +109,14 @@ ${OBJECTDIR}/lib_wpt_rx/serial_com_00.o: lib_wpt_rx/serial_com_00.c  nbproject/M
 	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/serial_com_00.c  -o ${OBJECTDIR}/lib_wpt_rx/serial_com_00.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/serial_com_00.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
 	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/serial_com_00.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
-else
 ${OBJECTDIR}/main_wpt_rx_00.o: main_wpt_rx_00.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/main_wpt_rx_00.o.d 
 	@${RM} ${OBJECTDIR}/main_wpt_rx_00.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE)  main_wpt_rx_00.c  -o ${OBJECTDIR}/main_wpt_rx_00.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/main_wpt_rx_00.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	${MP_CC} $(MP_EXTRA_CC_PRE)  main_wpt_rx_00.c  -o ${OBJECTDIR}/main_wpt_rx_00.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/main_wpt_rx_00.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
 	@${FIXDEPS} "${OBJECTDIR}/main_wpt_rx_00.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
+else
 ${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o: lib_wpt_rx/lib_wpt_rx_00.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx" 
 	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o.d 
@@ -137,6 +130,13 @@ ${OBJECTDIR}/lib_wpt_rx/serial_com_00.o: lib_wpt_rx/serial_com_00.c  nbproject/M
 	@${RM} ${OBJECTDIR}/lib_wpt_rx/serial_com_00.o 
 	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/serial_com_00.c  -o ${OBJECTDIR}/lib_wpt_rx/serial_com_00.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/serial_com_00.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
 	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/serial_com_00.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/main_wpt_rx_00.o: main_wpt_rx_00.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/main_wpt_rx_00.o.d 
+	@${RM} ${OBJECTDIR}/main_wpt_rx_00.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  main_wpt_rx_00.c  -o ${OBJECTDIR}/main_wpt_rx_00.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/main_wpt_rx_00.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/main_wpt_rx_00.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
 endif
 
@@ -157,7 +157,7 @@ endif
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
 dist/${CND_CONF}/${IMAGE_TYPE}/WPT_RX.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}: ${OBJECTFILES}  nbproject/Makefile-${CND_CONF}.mk    
 	@${MKDIR} dist/${CND_CONF}/${IMAGE_TYPE} 
-	${MP_CC} $(MP_EXTRA_LD_PRE)  -o dist/${CND_CONF}/${IMAGE_TYPE}/WPT_RX.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}  ${OBJECTFILES_QUOTED_IF_SPACED}      -mcpu=$(MP_PROCESSOR_OPTION)        -D__DEBUG=__DEBUG   -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)   -mreserve=data@0x1000:0x101B -mreserve=data@0x101C:0x101D -mreserve=data@0x101E:0x101F -mreserve=data@0x1020:0x1021 -mreserve=data@0x1022:0x1023 -mreserve=data@0x1024:0x1027 -mreserve=data@0x1028:0x104F   -Wl,--local-stack,,--defsym=__MPLAB_BUILD=1,--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,-D__DEBUG=__DEBUG,,$(MP_LINKER_FILE_OPTION),--stack=16,--check-sections,--data-init,--pack-data,--handles,--isr,--no-gc-sections,--fill-upper=0,--stackguard=16,--no-force-link,--smart-io,-Map="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map",--report-mem,--memorysummary,dist/${CND_CONF}/${IMAGE_TYPE}/memoryfile.xml$(MP_EXTRA_LD_POST)  -mdfp=${DFP_DIR}/xc16 
+	${MP_CC} $(MP_EXTRA_LD_PRE)  -o dist/${CND_CONF}/${IMAGE_TYPE}/WPT_RX.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}  ${OBJECTFILES_QUOTED_IF_SPACED}      -mcpu=$(MP_PROCESSOR_OPTION)        -D__DEBUG=__DEBUG   -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)   -mreserve=data@0x800:0x81B -mreserve=data@0x81C:0x81D -mreserve=data@0x81E:0x81F -mreserve=data@0x820:0x821 -mreserve=data@0x822:0x823 -mreserve=data@0x824:0x827 -mreserve=data@0x82A:0x84F   -Wl,--local-stack,,--defsym=__MPLAB_BUILD=1,--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,-D__DEBUG=__DEBUG,,$(MP_LINKER_FILE_OPTION),--stack=16,--check-sections,--data-init,--pack-data,--handles,--isr,--no-gc-sections,--fill-upper=0,--stackguard=16,--no-force-link,--smart-io,-Map="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map",--report-mem,--memorysummary,dist/${CND_CONF}/${IMAGE_TYPE}/memoryfile.xml$(MP_EXTRA_LD_POST)  -mdfp=${DFP_DIR}/xc16 
 	
 else
 dist/${CND_CONF}/${IMAGE_TYPE}/WPT_RX.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}: ${OBJECTFILES}  nbproject/Makefile-${CND_CONF}.mk   

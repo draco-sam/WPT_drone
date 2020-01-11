@@ -6,7 +6,7 @@
  * Revision history : 
  */
 
-#include "dsPIC33CK256MP206.h"
+#include "PIC24FJ128GC006.h"
 
 void i2c_master_write(unsigned short data);
 void i2c_master_init(void);
