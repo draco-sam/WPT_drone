@@ -67,22 +67,22 @@ Default Scalar Model: Small
 
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
-.text                        0x200               0x1d4           0x2be  (702)
-.text                        0x3d4                0x4a            0x6f  (111)
-.dinit                       0x41e                0x12            0x1b  (27)
-.text                        0x430                 0x6             0x9  (9)
+.text                        0x200               0x1fc           0x2fa  (762)
+.text                        0x3fc                0x64            0x96  (150)
+.dinit                       0x460                0x12            0x1b  (27)
+.text                        0x472                 0x6             0x9  (9)
 
-                 Total "program" memory used (bytes):          0x351  (849) <1%
+                 Total "program" memory used (bytes):          0x3b4  (948) <1%
 
 
 "data" Memory  [Origin = 0x800, Length = 0x2000]
 
 section                    address      alignment gaps    total length  (dec)
 -------                    -------      --------------    -------------------
-.nbss                        0x800                   0             0xc  (12)
-.ndata                       0x80c                   0             0x4  (4)
+.nbss                        0x800                   0            0x12  (18)
+.ndata                       0x812                   0             0x4  (4)
 
-                 Total "data" memory used (bytes):           0x10  (16) <1%
+                 Total "data" memory used (bytes):           0x16  (22) <1%
 
 
 Dynamic Memory Usage
@@ -90,9 +90,9 @@ Dynamic Memory Usage
 region                     address                      maximum length  (dec)
 ------                     -------                      ---------------------
 heap                             0                                   0  (0)
-stack                        0x810                              0x1ff0  (8176)
+stack                        0x816                              0x1fea  (8170)
 
-                 Maximum dynamic memory (bytes):         0x1ff0  (8176)
+                 Maximum dynamic memory (bytes):         0x1fea  (8170)
 
 Note: Project is using a large data memory model when small data memory model is sufficient.
 
@@ -104,22 +104,24 @@ External Symbols in Program Memory (by address):
                   0x000252                  __data_init
                   0x000252                  __data_init_da
                   0x000304                  __MI2C2Interrupt
-                  0x0003ce                  __DefaultInterrupt
-                  0x0003d4                  _i2c_master_init
-                  0x0003fe                  _i2c_master_write
-                  0x000430                  _main
+                  0x0003f6                  __DefaultInterrupt
+                  0x0003fc                  _i2c_master_init
+                  0x000426                  _i2c_master_start_read_tm
+                  0x00044a                  _i2c_master_get_tm
+                  0x000472                  _main
 
 External Symbols in Program Memory (by name):
 
-                  0x0003ce                  __DefaultInterrupt
+                  0x0003f6                  __DefaultInterrupt
                   0x000304                  __MI2C2Interrupt
                   0x000252                  __data_init
                   0x000252                  __data_init_da
                   0x00023c                  __psv_init
                   0x000200                  __resetPRI
-                  0x0003d4                  _i2c_master_init
-                  0x0003fe                  _i2c_master_write
-                  0x000430                  _main
+                  0x00044a                  _i2c_master_get_tm
+                  0x0003fc                  _i2c_master_init
+                  0x000426                  _i2c_master_start_read_tm
+                  0x000472                  _main
 
 Memory Configuration
 
@@ -161,7 +163,7 @@ LOAD d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libfx-elf.a
                   0x000002          0x2 SHORT 0x0 ((ABSOLUTE (__reset) >> 0x10) & 0x7f)
                   0x000003          0x2 SHORT 0x0
 
-.text             0x000200        0x1d4
+.text             0x000200        0x1fc
  *(.init)
  .init            0x000200         0x4c d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(crt0_extended24.o)
                   0x000200                  __resetPRI
@@ -173,18 +175,18 @@ LOAD d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libfx-elf.a
  *(.user_init)
  *(.handle)
  *(.isr*)
- .isr.text        0x000304         0xca build/default/production/lib_wpt_rx/serial_com_00.o
+ .isr.text        0x000304         0xf2 build/default/production/lib_wpt_rx/serial_com_00.o
                   0x000304                  __MI2C2Interrupt
- .isr             0x0003ce          0x4 default_isr
-                  0x0003ce                  __DefaultInterrupt
+ .isr             0x0003f6          0x4 default_isr
+                  0x0003f6                  __DefaultInterrupt
  *(.libc)
  *(.libm)
  *(.libdsp)
  *(.lib*)
  .libpic30_crt_start_mode
-                  0x0003d2          0x2 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normalda.Leo)
-                  0x0003d2                  __crt_start_mode
-                  0x0003d2                  __crt_start_mode_normal
+                  0x0003fa          0x2 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normalda.Leo)
+                  0x0003fa                  __crt_start_mode
+                  0x0003fa                  __crt_start_mode_normal
 
 usercode
  *(usercode)
@@ -204,29 +206,29 @@ __CONFIG1
 .comment
  *(.comment)
 
-.debug_info       0x000000        0xc38
+.debug_info       0x000000        0xcca
  *(.debug_info)
  .debug_info      0x000000        0x17c build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
- .debug_info      0x00017c        0x932 build/default/production/lib_wpt_rx/serial_com_00.o
- .debug_info      0x000aae        0x18a build/default/production/main_wpt_rx_00.o
+ .debug_info      0x00017c        0x9c4 build/default/production/lib_wpt_rx/serial_com_00.o
+ .debug_info      0x000b40        0x18a build/default/production/main_wpt_rx_00.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev     0x000000        0x14f
+.debug_abbrev     0x000000        0x168
  *(.debug_abbrev)
  .debug_abbrev    0x000000         0x1f build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
- .debug_abbrev    0x00001f         0xfa build/default/production/lib_wpt_rx/serial_com_00.o
- .debug_abbrev    0x000119         0x36 build/default/production/main_wpt_rx_00.o
+ .debug_abbrev    0x00001f        0x113 build/default/production/lib_wpt_rx/serial_com_00.o
+ .debug_abbrev    0x000132         0x36 build/default/production/main_wpt_rx_00.o
 
-.debug_line       0x000000        0x156
+.debug_line       0x000000        0x165
  *(.debug_line)
  .debug_line      0x000000         0x1a build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
- .debug_line      0x00001a         0xfb build/default/production/lib_wpt_rx/serial_com_00.o
- .debug_line      0x000115         0x41 build/default/production/main_wpt_rx_00.o
+ .debug_line      0x00001a        0x10a build/default/production/lib_wpt_rx/serial_com_00.o
+ .debug_line      0x000124         0x41 build/default/production/main_wpt_rx_00.o
 
-.debug_frame      0x000000         0xa0
+.debug_frame      0x000000         0xbc
  *(.debug_frame)
- .debug_frame     0x000000         0x70 build/default/production/lib_wpt_rx/serial_com_00.o
- .debug_frame     0x000070         0x30 build/default/production/main_wpt_rx_00.o
+ .debug_frame     0x000000         0x8c build/default/production/lib_wpt_rx/serial_com_00.o
+ .debug_frame     0x00008c         0x30 build/default/production/main_wpt_rx_00.o
 
 .debug_str        0x000000          0x9
  *(.debug_str)
@@ -239,12 +241,12 @@ __CONFIG1
  *(.debug_macinfo)
 
 .debug_pubnames
-                  0x000000         0x6a
+                  0x000000         0x88
  *(.debug_pubnames)
  .debug_pubnames
-                  0x000000         0x4f build/default/production/lib_wpt_rx/serial_com_00.o
+                  0x000000         0x6d build/default/production/lib_wpt_rx/serial_com_00.o
  .debug_pubnames
-                  0x00004f         0x1b build/default/production/main_wpt_rx_00.o
+                  0x00006d         0x1b build/default/production/main_wpt_rx_00.o
 
 .debug_ranges
  *(.debug_ranges)
@@ -1995,25 +1997,26 @@ __c30_signature
  __c30_signature
                   0x00010d          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(data_init_24.o)
 
-.nbss               0x0800          0xc
- .nbss              0x0800          0xc build/default/production/lib_wpt_rx/serial_com_00.o
+.nbss               0x0800         0x12
+ .nbss              0x0800         0x12 build/default/production/lib_wpt_rx/serial_com_00.o
 
-.ndata              0x080c          0x4
- .ndata             0x080c          0x4 build/default/production/lib_wpt_rx/serial_com_00.o
+.ndata              0x0812          0x4
+ .ndata             0x0812          0x4 build/default/production/lib_wpt_rx/serial_com_00.o
 
 .ivt._MI2C2Interrupt
                   0x000078          0x2
  .ivt._MI2C2Interrupt
                   0x000078          0x2 build/default/production/lib_wpt_rx/serial_com_00.o
 
-.text             0x0003d4         0x4a
- .text            0x0003d4         0x4a build/default/production/lib_wpt_rx/serial_com_00.o
-                  0x0003d4                  _i2c_master_init
-                  0x0003fe                  _i2c_master_write
+.text             0x0003fc         0x64
+ .text            0x0003fc         0x64 build/default/production/lib_wpt_rx/serial_com_00.o
+                  0x0003fc                  _i2c_master_init
+                  0x000426                  _i2c_master_start_read_tm
+                  0x00044a                  _i2c_master_get_tm
 
-.dinit            0x00041e         0x12
- .dinit           0x00041e         0x12 data_init
+.dinit            0x000460         0x12
+ .dinit           0x000460         0x12 data_init
 
-.text             0x000430          0x6
- .text            0x000430          0x6 build/default/production/main_wpt_rx_00.o
-                  0x000430                  _main
+.text             0x000472          0x6
+ .text            0x000472          0x6 build/default/production/main_wpt_rx_00.o
+                  0x000472                  _main

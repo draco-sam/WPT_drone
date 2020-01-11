@@ -12,6 +12,17 @@
 
 int main(void) {
     
+    //Sub addresses of read register on i2c slave IC charger :
+    #define ADDR_VBAT           0x3a;
+    #define ADDR_IBAT           0x3d;
+    #define ADDR_VIN            0x3b;
+    #define ADDR_VSYS           0x3c;
+    #define ADDR_I_IN           0x3e;
+    #define ADDR_DIE_TEMP       0x3f;
+    #define ADDR_NTC_RATIO      0x40;
+    #define ADDR_I_CHARGE_DAC   0x44;
+    #define ADDR_V_CHARGE_DAC   0x45;
+    
     Nop();
     
     /*
