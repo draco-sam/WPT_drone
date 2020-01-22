@@ -174,7 +174,7 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C2Interrupt ( void )
 }
 //**************************************************************************************************
 
-void i2c_master_start_read_tm(unsigned short command)
+void i2c_master_start_read_tm(unsigned short address)
 /*
  * Start i2C master read telemetry from slave IC charger and save it on static variables.
  */
@@ -187,7 +187,7 @@ void i2c_master_start_read_tm(unsigned short command)
     if(i2c_1_stat_bits.TRSTAT == 0 && i2c_1_stat_bits.P == 1)
     {
         i2c_flag_read   = 1;//Read ongoing, flag for interrupt.
-        i2c_command     = command;
+        i2c_command     = address;
         i2c_1_con.SEN   = 1;//Initiates Start condition on SDAx and SCLx pins.
     }
     //si non attendre ????    

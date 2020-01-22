@@ -12,22 +12,39 @@
 
 int main(void) {
     
+    //Déclaration de structures :
+    LATGBITS lat_rg;
+    LATEBITS lat_re;
+    
+    #define LED_RED         lat_rg.LATG7
+    #define LED_GREEN       lat_rg.LATG6
+    #define LED_BLUE        lat_re.LATE7
+    
+    
     //Sub addresses of read register on i2c slave IC charger :
-    #define ADDR_VBAT           0x3a;
-    #define ADDR_IBAT           0x3d;
-    #define ADDR_VIN            0x3b;
-    #define ADDR_VSYS           0x3c;
-    #define ADDR_I_IN           0x3e;
-    #define ADDR_DIE_TEMP       0x3f;
-    #define ADDR_NTC_RATIO      0x40;
-    #define ADDR_I_CHARGE_DAC   0x44;
-    #define ADDR_V_CHARGE_DAC   0x45;
+    #define TM_VBAT           0x3a
+    #define TM_IBAT           0x3d
+    #define TM_VIN            0x3b
+    #define TM_VSYS           0x3c
+    #define TM_I_IN           0x3e
+    #define TM_DIE_TEMP       0x3f
+    #define TM_NTC_RATIO      0x40
+    #define TM_I_CHARGE_DAC   0x44
+    #define TM_V_CHARGE_DAC   0x45
+
+    
+    LED_RED = 0;
+   
     
     Nop();
     
     
     pin_init();
     oscillator_init();
+    
+    i2c_master_init();
+    
+    i2c_master_start_read_tm(TM_VIN);
     
     
      
