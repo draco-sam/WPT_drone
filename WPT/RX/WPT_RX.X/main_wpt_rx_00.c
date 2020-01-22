@@ -25,16 +25,12 @@ int main(void) {
     
     Nop();
     
-    /*
+    
     pin_init();
     oscillator_init();
-    interrupt_init();
-    TMR1_init();
-    pwm_init();
     
-    TMR1_start();//For blink LEDs at 0.5s.
     
-     */
+     
     
     while (1)
     {
