@@ -11,7 +11,7 @@
 
 void oscillator_init(void)
 /*
- * 
+ * fcy = 4 MHz (8MHz/2).
  */
 {
     // CPDIV 1:1; PLLEN disabled; RCDIV FRC/1; DOZE 1:8; DOZEN disabled; ROI disabled; 

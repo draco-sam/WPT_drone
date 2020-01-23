@@ -1,24 +1,23 @@
 /* 
  * File             : main_wpt_rx_00.c
- * Date             : 11/01/2020.   
+ * Date             : 23/01/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
  */
 
 //D:\Program Files (x86)\Microchip\xc16\v1.41\support\PIC24F\h.
-#include "lib_wpt_rx/PIC24FJ128GC006.h"
+//#include "lib_wpt_rx/PIC24FJ128GC006.h"
 #include "lib_wpt_rx/lib_wpt_rx_00.h"
 
 int main(void) {
     
-    //Déclaration de structures :
-    LATGBITS lat_rg;
-    LATEBITS lat_re;
-    
-    #define LED_RED         lat_rg.LATG7
-    #define LED_GREEN       lat_rg.LATG6
-    #define LED_BLUE        lat_re.LATE7
+       
+    #define led_red         LATGbits.LATG7
+    #define led_green       LATGbits.LATG6
+    #define led_blue        LATEbits.LATE7
+    #define on              0
+    #define off             1
     
     
     //Sub addresses of read register on i2c slave IC charger :
@@ -33,8 +32,7 @@ int main(void) {
     #define TM_V_CHARGE_DAC   0x45
 
     
-    LED_RED = 0;
-   
+      
     
     Nop();
     
@@ -44,9 +42,24 @@ int main(void) {
     
     i2c_master_init();
     
+   
+    
+    
+    //!!! Vérifier Pull-up !!!
     i2c_master_start_read_tm(TM_VIN);
     
     
+    
+    TRISEbits.TRISE7    = 0;//"0" : Output.
+    TRISGbits.TRISG6    = 0;
+    TRISGbits.TRISG7    = 0;
+    
+    
+    led_red     = on;
+    led_green   = 1;
+    led_blue    = off;
+    
+   
      
     
     while (1)

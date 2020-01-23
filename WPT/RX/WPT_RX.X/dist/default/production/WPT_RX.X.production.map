@@ -68,10 +68,10 @@ Default Scalar Model: Small
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x200               0x1fc           0x2fa  (762)
-.text                        0x3fc               0x11c           0x1aa  (426)
-.dinit                       0x518                0x12            0x1b  (27)
+.text                        0x3fc               0x110           0x198  (408)
+.dinit                       0x50c                0x12            0x1b  (27)
 
-                 Total "program" memory used (bytes):          0x4bf  (1215) <1%
+                 Total "program" memory used (bytes):          0x4ad  (1197) <1%
 
 
 "data" Memory  [Origin = 0x800, Length = 0x2000]
@@ -108,8 +108,8 @@ External Symbols in Program Memory (by address):
                   0x000434                  _pin_init
                   0x00049a                  _i2c_master_init
                   0x0004c4                  _i2c_master_start_read_tm
-                  0x0004e8                  _i2c_master_get_tm
-                  0x000502                  _main
+                  0x0004d6                  _i2c_master_get_tm
+                  0x0004f0                  _main
 
 External Symbols in Program Memory (by name):
 
@@ -119,10 +119,10 @@ External Symbols in Program Memory (by name):
                   0x000252                  __data_init_da
                   0x00023c                  __psv_init
                   0x000200                  __resetPRI
-                  0x0004e8                  _i2c_master_get_tm
+                  0x0004d6                  _i2c_master_get_tm
                   0x00049a                  _i2c_master_init
                   0x0004c4                  _i2c_master_start_read_tm
-                  0x000502                  _main
+                  0x0004f0                  _main
                   0x0003fc                  _oscillator_init
                   0x000434                  _pin_init
 
@@ -209,24 +209,24 @@ __CONFIG1
 .comment
  *(.comment)
 
-.debug_info       0x000000       0x1541
+.debug_info       0x000000       0x171f
  *(.debug_info)
  .debug_info      0x000000        0x817 build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
  .debug_info      0x000817        0x9c4 build/default/production/lib_wpt_rx/serial_com_00.o
- .debug_info      0x0011db        0x366 build/default/production/main_wpt_rx_00.o
+ .debug_info      0x0011db        0x544 build/default/production/main_wpt_rx_00.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev     0x000000        0x26b
+.debug_abbrev     0x000000        0x276
  *(.debug_abbrev)
  .debug_abbrev    0x000000         0xac build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
  .debug_abbrev    0x0000ac        0x113 build/default/production/lib_wpt_rx/serial_com_00.o
- .debug_abbrev    0x0001bf         0xac build/default/production/main_wpt_rx_00.o
+ .debug_abbrev    0x0001bf         0xb7 build/default/production/main_wpt_rx_00.o
 
-.debug_line       0x000000        0x2ac
+.debug_line       0x000000        0x2b1
  *(.debug_line)
  .debug_line      0x000000         0xe5 build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
  .debug_line      0x0000e5        0x10c build/default/production/lib_wpt_rx/serial_com_00.o
- .debug_line      0x0001f1         0xbb build/default/production/main_wpt_rx_00.o
+ .debug_line      0x0001f1         0xc0 build/default/production/main_wpt_rx_00.o
 
 .debug_frame      0x000000        0x108
  *(.debug_frame)
@@ -234,10 +234,11 @@ __CONFIG1
  .debug_frame     0x00004c         0x8c build/default/production/lib_wpt_rx/serial_com_00.o
  .debug_frame     0x0000d8         0x30 build/default/production/main_wpt_rx_00.o
 
-.debug_str        0x000000         0x15
+.debug_str        0x000000         0x3b
  *(.debug_str)
  .debug_str       0x000000          0xc build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
  .debug_str       0x00000c          0x9 build/default/production/lib_wpt_rx/serial_com_00.o
+ .debug_str       0x000015         0x26 build/default/production/main_wpt_rx_00.o
 
 .debug_loc
  *(.debug_loc)
@@ -1985,26 +1986,26 @@ LOAD default_isr
 LOAD data_init
 
 .debug_pubtypes
-                  0x000048        0x148
+                  0x000048        0x186
  .debug_pubtypes
                   0x000048         0x4e build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
  .debug_pubtypes
                   0x000096         0xa1 build/default/production/lib_wpt_rx/serial_com_00.o
  .debug_pubtypes
-                  0x000137         0x59 build/default/production/main_wpt_rx_00.o
+                  0x000137         0x97 build/default/production/main_wpt_rx_00.o
 
 __c30_signature
-                  0x000190         0x1e
+                  0x0001ce         0x1e
  __c30_signature
-                  0x000190          0x6 build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
+                  0x0001ce          0x6 build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
  __c30_signature
-                  0x000196          0x6 build/default/production/lib_wpt_rx/serial_com_00.o
+                  0x0001d4          0x6 build/default/production/lib_wpt_rx/serial_com_00.o
  __c30_signature
-                  0x00019c          0x6 build/default/production/main_wpt_rx_00.o
+                  0x0001da          0x6 build/default/production/main_wpt_rx_00.o
  __c30_signature
-                  0x0001a2          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(crt0_extended24.o)
+                  0x0001e0          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(crt0_extended24.o)
  __c30_signature
-                  0x0001a8          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(data_init_24.o)
+                  0x0001e6          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(data_init_24.o)
 
 .nbss               0x0800         0x12
  .nbss              0x0800         0x12 build/default/production/lib_wpt_rx/serial_com_00.o
@@ -2017,16 +2018,16 @@ __c30_signature
  .ivt._MI2C2Interrupt
                   0x000078          0x2 build/default/production/lib_wpt_rx/serial_com_00.o
 
-.text             0x0003fc        0x11c
+.text             0x0003fc        0x110
  .text            0x0003fc         0x9e build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
                   0x0003fc                  _oscillator_init
                   0x000434                  _pin_init
- .text            0x00049a         0x68 build/default/production/lib_wpt_rx/serial_com_00.o
+ .text            0x00049a         0x56 build/default/production/lib_wpt_rx/serial_com_00.o
                   0x00049a                  _i2c_master_init
                   0x0004c4                  _i2c_master_start_read_tm
-                  0x0004e8                  _i2c_master_get_tm
- .text            0x000502         0x16 build/default/production/main_wpt_rx_00.o
-                  0x000502                  _main
+                  0x0004d6                  _i2c_master_get_tm
+ .text            0x0004f0         0x1c build/default/production/main_wpt_rx_00.o
+                  0x0004f0                  _main
 
-.dinit            0x000518         0x12
- .dinit           0x000518         0x12 data_init
+.dinit            0x00050c         0x12
+ .dinit           0x00050c         0x12 data_init

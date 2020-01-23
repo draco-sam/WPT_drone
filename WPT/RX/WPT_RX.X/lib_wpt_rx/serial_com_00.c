@@ -30,7 +30,7 @@ void i2c_master_init(void)
 {
     // Baud Rate Generator Value.
     //Recalculer !!!! changement de PIC dsPIC33 -->PIC24 !!!
-    I2C2BRG = 2932;//I2CBRG 18 (ox12);
+    I2C1BRG = 9;//I2CBRG 18 (ox12);
         
     i2c_1_con.I2CEN     = 1;//Enables the I2Cx module, SDAx and SCLx pins as serial port pins.
     i2c_1_con.I2CSIDL   = 0;//0 = Continues module operation in Idle mode.
@@ -179,17 +179,24 @@ void i2c_master_start_read_tm(unsigned short address)
  * Start i2C master read telemetry from slave IC charger and save it on static variables.
  */
 {
+    //LATG = 0b01000000;
+    i2c_flag_read   = 1;//Read ongoing, flag for interrupt.
+    i2c_command     = address;
+    i2c_1_con.SEN   = 1;//Initiates Start condition on SDAx and SCLx pins.
     /*
      * Vérifier si :
      *      - Bus libre.
      *      - Stop bit anciennement détecté.
      */
+    /*
     if(i2c_1_stat_bits.TRSTAT == 0 && i2c_1_stat_bits.P == 1)
     {
+        LATG = 0b01000000;
         i2c_flag_read   = 1;//Read ongoing, flag for interrupt.
         i2c_command     = address;
         i2c_1_con.SEN   = 1;//Initiates Start condition on SDAx and SCLx pins.
     }
+    */
     //si non attendre ????    
 }
 //**************************************************************************************************
