@@ -87,8 +87,8 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C1Interrupt ( void )
     IEC1bits.MI2C1IE = 0;//disable the master interrupt.
     IFS1bits.MI2C1IF = 0;//Reset flag master I2C 2.
     
-    led_red     = on;
-    led_blue    = off;
+    led_red     = off;
+    led_blue    = on;
     led_green   = off;
     
     i2c_interrupt_counter++;
