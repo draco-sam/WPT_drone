@@ -58,18 +58,23 @@
  */
 int main(void)
 {
+    unsigned int data           = 0xa0;
+    unsigned int address        = 0xff;
+    
     // initialize the device
     SYSTEM_Initialize();
     
     
     //Configurer les IO des leds en output :
-    TRISEbits.TRISE7    = 0;//"0" : Output.
-    TRISGbits.TRISG6    = 0;
-    TRISGbits.TRISG7    = 0;
+//    TRISEbits.TRISE7    = 0;//"0" : Output.
+//    TRISGbits.TRISG6    = 0;
+//    TRISGbits.TRISG7    = 0;
     
-    led_red     = off;
-    led_blue    = off;
-    led_green   = off;
+//    led_red     = off;
+//    led_blue    = off;
+//    led_green   = off;
+    
+    I2C1_MasterWrite(&data,8,address);
 
     while (1)
     {

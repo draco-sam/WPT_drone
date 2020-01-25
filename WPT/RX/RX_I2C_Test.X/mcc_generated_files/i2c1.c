@@ -201,7 +201,6 @@ static I2C_TR_QUEUE_ENTRY            *p_i2c1_current = NULL;
 
 void I2C1_Initialize(void)
 {
-    
     i2c1_object.pTrHead = i2c1_tr_queue;
     i2c1_object.pTrTail = i2c1_tr_queue;
     i2c1_object.trStatus.s.empty = true;
@@ -222,7 +221,6 @@ void I2C1_Initialize(void)
     IFS1bits.MI2C1IF = 0;
     // enable the master interrupt
     IEC1bits.MI2C1IE = 1;
-    //led_red = on;
 }
 
 
@@ -296,6 +294,8 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C1Interrupt ( void )
 
                 // start the i2c request
                 i2c1_state = S_MASTER_SEND_ADDR;
+                
+                led_red = on;
             }
 
             break;
@@ -594,13 +594,13 @@ static void I2C1_Stop(I2C1_MESSAGE_STATUS completion_code)
 }
 
 void I2C1_MasterWrite(
-                                uint8_t *pdata,
-                                uint8_t length,
-                                uint16_t address,
-                                I2C1_MESSAGE_STATUS *pstatus)
+                        uint8_t *pdata,
+                        uint8_t length,
+                        uint16_t address,
+                        I2C1_MESSAGE_STATUS *pstatus)
 {
     static I2C1_TRANSACTION_REQUEST_BLOCK   trBlock;
-
+    
     // check if there is space in the queue
     if (i2c1_object.trStatus.s.full != true)
     {

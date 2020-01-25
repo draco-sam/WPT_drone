@@ -53,7 +53,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include <xc.h>
+#include "PIC24FJ128GC006.h"
 
 #ifdef __cplusplus  // Provide C++ Compatibility
 

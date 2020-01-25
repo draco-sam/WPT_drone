@@ -49,9 +49,15 @@
     Section: Includes
 */
 
-#include <xc.h>
+#include "PIC24FJ128GC006.h"
 #include <stdio.h>
 #include "pin_manager.h"
+
+#define led_red         LATGbits.LATG7
+#define led_green       LATGbits.LATG6
+#define led_blue        LATEbits.LATE7
+#define on              0
+#define off             1
 
 /**
  Section: File specific functions
@@ -81,6 +87,11 @@ void PIN_MANAGER_Initialize (void)
     TRISE = 0x00FF;
     TRISF = 0x00BB;
     TRISG = 0x03CC;
+    
+    //Configurer les IO des leds en output :
+    TRISEbits.TRISE7    = 0;//"0" : Output.
+    TRISGbits.TRISG6    = 0;
+    TRISGbits.TRISG7    = 0;
 
     /****************************************************************************
      * Setting the Weak Pull Up and Weak Pull Down SFR(s)
@@ -116,6 +127,15 @@ void PIN_MANAGER_Initialize (void)
     ANSE = 0x00F0;
     ANSF = 0x00B9;
     ANSG = 0x03C0;
+    
+    //Pour les leds en digital io.    
+    ANSEbits.ANSELE7 = 0;
+    ANSGbits.ANSELG6 = 0;
+    ANSGbits.ANSELG7 = 0;
+    
+    led_red     = off;
+    led_green   = off;
+    led_blue    = off;
 
     //Setting UTRDIS bit to use RG2 and RG3 as GPIO 
     U1CNFG2bits.UTRDIS = 1;

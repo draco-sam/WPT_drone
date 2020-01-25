@@ -49,7 +49,7 @@
 /**
     Section: Includes
 */
-#include <xc.h>
+#include "PIC24FJ128GC006.h"
 
 /**
     Section: Device Pin Macros
