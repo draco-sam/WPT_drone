@@ -10,6 +10,8 @@
 //#include "lib_wpt_rx/PIC24FJ128GC006.h"
 #include "lib_wpt_rx/lib_wpt_rx_00.h"
 
+
+
 int main(void) {
     
        
@@ -56,9 +58,12 @@ int main(void) {
     
     
     led_red     = on;
-    led_green   = 1;
+    led_green   = off;
     led_blue    = off;
     
+    
+    //LATDbits.LATD9    = 1;
+    //LATDbits.LATD10   = 1;
    
      
     

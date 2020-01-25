@@ -61,10 +61,11 @@ void pin_init(void)
     
     /****************************************************************************
      * Setting the GPIO Direction SFR(s)
+     * I2C as digital input ("1").
      ***************************************************************************/
     TRISB = 0xF0FF;
     TRISC = 0x1000;
-    TRISD = 0x0FFF;
+    TRISD = 0x0FFF;//pin 43 (RD9): SDA1 ; pin 44 (RD10).0x0FFF_old.
     TRISE = 0x00FF;
     TRISF = 0x00BB;
     TRISG = 0x030C;//11 0000 1100. TRISG_old = 0x3cc.
@@ -102,7 +103,7 @@ void pin_init(void)
      * "1" : Analog pin.
      ***************************************************************************/
     ANSB = 0xF0FC;
-    ANSD = 0xFFFF;
+    ANSD = 0x09FF;//pin 43 (RD9): SDA1 ; pin 44 (RD10) : SCL1.0xFFFF_old
     ANSE = 0x00F0;
     ANSF = 0x00B9;
     ANSG = 0x03C0;
