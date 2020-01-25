@@ -14,7 +14,7 @@
  #define on              0
  #define off             1
 
-static unsigned short   i2c_slave_add_write         = 0b11010000;//Adresse 104 et bit 0 à "0".
+static unsigned short   i2c_slave_add_write         = 0x00;//Adresse 104 et bit 0 à "0".
 static unsigned short   i2c_slave_add_read          = 0b11010001;//Adresse 104 et bit 0 à "1".
 static int              i2c_data_l                  = 0;//Low 8-bit from 16-bit data.
 static int              i2c_data_h                  = 0;//High 8-bit from 16-bit data.
@@ -80,8 +80,6 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C1Interrupt ( void )
 /*
  * 
  */    
-    
-    //!!! Ajouter code pour LED en debug !!!
     
     //INTCON2bits.GIE = 0;
     IEC1bits.MI2C1IE = 0;//disable the master interrupt.

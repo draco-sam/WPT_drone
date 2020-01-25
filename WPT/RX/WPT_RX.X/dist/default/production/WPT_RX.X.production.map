@@ -68,18 +68,18 @@ Default Scalar Model: Small
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x200               0x202           0x303  (771)
-.text                        0x402               0x138           0x1d4  (468)
-.dinit                       0x53a                0x12            0x1b  (27)
+.text                        0x402               0x132           0x1cb  (459)
+.dinit                       0x534                0x10            0x18  (24)
 
-                 Total "program" memory used (bytes):          0x4f2  (1266) <1%
+                 Total "program" memory used (bytes):          0x4e6  (1254) <1%
 
 
 "data" Memory  [Origin = 0x800, Length = 0x2000]
 
 section                    address      alignment gaps    total length  (dec)
 -------                    -------      --------------    -------------------
-.nbss                        0x800                   0            0x12  (18)
-.ndata                       0x812                   0             0x4  (4)
+.nbss                        0x800                   0            0x14  (20)
+.ndata                       0x814                   0             0x2  (2)
 
                  Total "data" memory used (bytes):           0x16  (22) <1%
 
@@ -224,11 +224,11 @@ __CONFIG1
  .debug_abbrev    0x0000d6        0x113 build/default/production/lib_wpt_rx/serial_com_00.o
  .debug_abbrev    0x0001e9         0xb7 build/default/production/main_wpt_rx_00.o
 
-.debug_line       0x000000        0x2c1
+.debug_line       0x000000        0x2be
  *(.debug_line)
  .debug_line      0x000000         0xef build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
  .debug_line      0x0000ef        0x112 build/default/production/lib_wpt_rx/serial_com_00.o
- .debug_line      0x000201         0xc0 build/default/production/main_wpt_rx_00.o
+ .debug_line      0x000201         0xbd build/default/production/main_wpt_rx_00.o
 
 .debug_frame      0x000000        0x124
  *(.debug_frame)
@@ -2009,18 +2009,18 @@ __c30_signature
  __c30_signature
                   0x000277          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(data_init_24.o)
 
-.nbss               0x0800         0x12
- .nbss              0x0800         0x12 build/default/production/lib_wpt_rx/serial_com_00.o
+.nbss               0x0800         0x14
+ .nbss              0x0800         0x14 build/default/production/lib_wpt_rx/serial_com_00.o
 
-.ndata              0x0812          0x4
- .ndata             0x0812          0x4 build/default/production/lib_wpt_rx/serial_com_00.o
+.ndata              0x0814          0x2
+ .ndata             0x0814          0x2 build/default/production/lib_wpt_rx/serial_com_00.o
 
 .ivt._MI2C1Interrupt
                   0x000036          0x2
  .ivt._MI2C1Interrupt
                   0x000036          0x2 build/default/production/lib_wpt_rx/serial_com_00.o
 
-.text             0x000402        0x138
+.text             0x000402        0x132
  .text            0x000402         0xc2 build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
                   0x000402                  _oscillator_init
                   0x00043a                  _pin_init
@@ -2029,8 +2029,8 @@ __c30_signature
                   0x0004c4                  _i2c_master_init
                   0x0004f2                  _i2c_master_start_read_tm
                   0x000504                  _i2c_master_get_tm
- .text            0x00051e         0x1c build/default/production/main_wpt_rx_00.o
+ .text            0x00051e         0x16 build/default/production/main_wpt_rx_00.o
                   0x00051e                  _main
 
-.dinit            0x00053a         0x12
- .dinit           0x00053a         0x12 data_init
+.dinit            0x000534         0x10
+ .dinit           0x000534         0x10 data_init

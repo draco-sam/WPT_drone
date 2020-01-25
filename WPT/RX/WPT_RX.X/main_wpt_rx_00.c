@@ -1,13 +1,12 @@
 /* 
  * File             : main_wpt_rx_00.c
- * Date             : 23/01/2020.   
+ * Date             : 25/01/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
  */
 
 //D:\Program Files (x86)\Microchip\xc16\v1.41\support\PIC24F\h.
-//#include "lib_wpt_rx/PIC24FJ128GC006.h"
 #include "lib_wpt_rx/lib_wpt_rx_00.h"
 
 
@@ -53,11 +52,6 @@ int main(void) {
     i2c_master_start_read_tm(TM_VIN);
     
     
-    led_red     = off;
-    led_green   = off;
-    led_blue    = off;
-    
- 
     
     while (1)
     {
