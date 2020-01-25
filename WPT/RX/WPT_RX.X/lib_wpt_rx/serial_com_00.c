@@ -36,30 +36,44 @@ void i2c_master_init(void)
 {
     // Baud Rate Generator Value.
     //Recalculer !!!! changement de PIC dsPIC33 -->PIC24 !!!
-    I2C1BRG = 9;//I2CBRG 18 (ox12);
-        
-    I2C1CONbits.I2CEN     = 1;//Enables the I2Cx module, SDAx and SCLx pins as serial port pins.
-    I2C1CONbits.I2CSIDL   = 0;//0 = Continues module operation in Idle mode.
-    I2C1CONbits.IPMIEN    = 0;//IPMI Support mode is disabled.
-    I2C1CONbits.A10M      = 0;//I2CxADD is a 7-bit Slave address.
+    I2C1BRG = 0x27;//39 @100 kHz (9 @400 kHz).
+    
+
+    /***********************************************************************************************
+     * I2C1CON : I2C 1 Control Register :
+     * ---------------------------------     
+     */
+    I2C1CONbits.I2CEN       = 1;//Enables the I2Cx module, SDAx and SCLx pins as serial port pins.
+    I2C1CONbits.I2CSIDL     = 0;//0 = Continues module operation in Idle mode.
+    I2C1CONbits.SCLREL      = 0;//Holds SCLx clock low (clock stretch).
+    I2C1CONbits.IPMIEN      = 0;//IPMI Support mode is disabled.
+    I2C1CONbits.A10M        = 0;//I2CxADD is a 7-bit Slave address.
+    
     //Slew rate control is disabled for Standard Speed mode (100kHz, 1MHz).
-    I2C1CONbits.DISSLW    = 1;
-    I2C1CONbits.SMEN      = 0;//Disables SMBus-specific inputs.
-    I2C1CONbits.STREN     = 0;//Disables clock stretching.
-    I2C1CONbits.ACKDT     = 0;
-    I2C1CONbits.ACKEN     = 0;//Acknowledge sequence is Idle.
-    I2C1CONbits.RCEN      = 0;//Receive sequence is not in progress.
-    I2C1CONbits.PEN       = 0;//Stop condition is Idle (inactif).
-    I2C1CONbits.RSEN      = 0;//Restart condition is Idle.
-    I2C1CONbits.SEN       = 0;//Start condition is Idle.
+    I2C1CONbits.DISSLW      = 0;//Enable (comme ex MPLAB...)
     
-    I2C1STAT = 0;//I2Cx STATUS REGISTER.
+    I2C1CONbits.SMEN        = 0;//Disables SMBus-specific inputs.
     
-    i2c_interrupt_flag.MI2C1IF  = 0;//Clear the master interrupt flag.
-    IEC1bits.MI2C1IE      = 1;//Enable the master interrupt.
-    //INTCON2bits.GIE = 1;
+    //Enables interrupt when a general call address is received in the I2CxRSR 
+    //(module is enabled for reception)
+    I2C1CONbits.GCEN        = 1;
+    
+    I2C1CONbits.STREN       = 0;//Disables clock stretching.
+    I2C1CONbits.ACKDT       = 0;
+    I2C1CONbits.ACKEN       = 0;//Acknowledge sequence is Idle.
+    I2C1CONbits.RCEN        = 0;//Receive sequence is not in progress.
+    I2C1CONbits.PEN         = 0;//Stop condition is Idle (inactif).
+    I2C1CONbits.RSEN        = 0;//Restart condition is Idle.
+    I2C1CONbits.SEN         = 0;//Start condition is Idle.
+    //**********************************************************************************************
+        
+    I2C1STAT = 0;//Reset I2Cx STATUS REGISTER.
+    
+    /* MI2C1 - I2C1 Master Events */
+    IFS1bits.MI2C1IF = 0;// clear the master interrupt flag.
+    IEC1bits.MI2C1IE = 1;// enable the master interrupt.
 }
-//**************************************************************************************************
+//__________________________________________________________________________________________________
 
 void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C2Interrupt ( void )
 {
@@ -73,9 +87,9 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C2Interrupt ( void )
     IEC1bits.MI2C1IE = 0;//disable the master interrupt.
     IFS1bits.MI2C1IF = 0;//Reset flag master I2C 2.
     
-    //led_red = on;
-    //led_blue = on;
-    led_green = on;
+    led_red     = off;
+    led_blue    = off;
+    led_green   = off;
     
     i2c_interrupt_counter++;
     
@@ -182,7 +196,7 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C2Interrupt ( void )
     //INTCON1bits.GIE = 1;
     i2c_int_enable.MI2C1IE = 1;//Enable the master interrupt.
 }
-//**************************************************************************************************
+//__________________________________________________________________________________________________
 
 void i2c_master_start_read_tm(unsigned short address)
 /*
@@ -193,7 +207,7 @@ void i2c_master_start_read_tm(unsigned short address)
     i2c_command     = address;
     
     //!!! Reset le µP, PQ ???
-    //I2C1CONbits.SEN   = 1;//Initiates Start condition on SDAx and SCLx pins.
+    I2C1CONbits.SEN   = 1;//Initiates Start condition on SDAx and SCLx pins.
    
     /*
      * Vérifier si :
@@ -211,7 +225,7 @@ void i2c_master_start_read_tm(unsigned short address)
     */
     //si non attendre ????    
 }
-//**************************************************************************************************
+//__________________________________________________________________________________________________
 
 int i2c_master_get_tm(void)
 /*
@@ -230,4 +244,4 @@ int i2c_master_get_tm(void)
 
     return data;
 };
-//**************************************************************************************************
+//__________________________________________________________________________________________________

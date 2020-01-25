@@ -42,30 +42,22 @@ int main(void) {
     pin_init();
     oscillator_init();
     
-    i2c_master_init();
+    led_red     = off;
+    led_green   = off;
+    led_blue    = off;
     
-   
+    i2c_master_init();
     
     
     //!!! Vérifier Pull-up !!!
     i2c_master_start_read_tm(TM_VIN);
     
     
-    
-    TRISEbits.TRISE7    = 0;//"0" : Output.
-    TRISGbits.TRISG6    = 0;
-    TRISGbits.TRISG7    = 0;
-    
-    
-    led_red     = on;
+    led_red     = off;
     led_green   = off;
     led_blue    = off;
     
-    
-    //LATDbits.LATD9    = 1;
-    //LATDbits.LATD10   = 1;
-   
-     
+ 
     
     while (1)
     {
