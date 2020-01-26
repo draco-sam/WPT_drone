@@ -9,6 +9,7 @@
 void oscillator_init(void);
 void pin_init(void);
 void interrupt_init(void);
+void i2c_bus_high(void);
 
 #endif	/* XC_HEADER_TEMPLATE_H */
 

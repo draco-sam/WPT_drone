@@ -8,6 +8,12 @@
 
 #include "lib_wpt_rx_00.h"
 
+#define led_red         LATGbits.LATG7
+#define led_green       LATGbits.LATG6
+#define led_blue        LATEbits.LATE7
+#define on              0
+#define off             1
+
 
 void oscillator_init(void)
 /*
@@ -45,7 +51,7 @@ void oscillator_init(void)
     __builtin_write_OSCCONH((uint8_t) (0x07));
     __builtin_write_OSCCONL((uint8_t) (0x00));
 }
-//**************************************************************************************************
+//__________________________________________________________________________________________________
 
 void pin_init(void)
 {
@@ -116,7 +122,7 @@ void pin_init(void)
     //Setting UTRDIS bit to use RG2 and RG3 as GPIO 
     U1CNFG2bits.UTRDIS = 1;
 }
-//**************************************************************************************************
+//__________________________________________________________________________________________________
 
 void interrupt_init(void)
 /*
@@ -127,4 +133,26 @@ void interrupt_init(void)
     //SICI: SI2C1 - I2C1 Slave Events. Priority: 1.
     IPC4bits.SI2C1P = 1;
 }
-//**************************************************************************************************
+//__________________________________________________________________________________________________
+
+void i2c_bus_high(void)
+/*
+ * Met les signaux I2C SDA et SCL à "1" avant de démarrer la com.
+ * Ceci est un bug du coté du slave.
+ * Voir si I2C Master configuré en SMbus ???
+ */
+{
+    unsigned long counter   = 0;
+    unsigned long delay     = 1000000; 
+    
+    TRISDbits.TRISD9    = 0;//"0" : Output.
+    TRISDbits.TRISD10   = 0;//"0" : Output.
+    LATDbits.LATD9      = 1;
+    LATDbits.LATD10     = 1;
+    
+    while(counter < delay)
+    {
+        counter++;
+    }
+}
+//__________________________________________________________________________________________________

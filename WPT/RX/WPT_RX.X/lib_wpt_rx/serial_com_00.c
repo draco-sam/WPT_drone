@@ -1,6 +1,6 @@
 /* 
  * File             : serial_com_00.c
- * Date             : 11/01/2020.   
+ * Date             : 25/01/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -14,7 +14,7 @@
  #define on              0
  #define off             1
 
-static unsigned short   i2c_slave_add_write         = 0x00;//Adresse 104 et bit 0 à "0".
+static unsigned short   i2c_slave_add_write         = 0xd0;//Adresse 208 (0xd0) et bit 0 à "0".
 static unsigned short   i2c_slave_add_read          = 0b11010001;//Adresse 104 et bit 0 à "1".
 static int              i2c_data_l                  = 0;//Low 8-bit from 16-bit data.
 static int              i2c_data_h                  = 0;//High 8-bit from 16-bit data.
@@ -52,7 +52,7 @@ void i2c_master_init(void)
     //Slew rate control is disabled for Standard Speed mode (100kHz, 1MHz).
     I2C1CONbits.DISSLW      = 0;//Enable (comme ex MPLAB...)
     
-    I2C1CONbits.SMEN        = 0;//Disables SMBus-specific inputs.
+    I2C1CONbits.SMEN        = 1;//!!!0 : Disables SMBus-specific inputs.
     
     //Enables interrupt when a general call address is received in the I2CxRSR 
     //(module is enabled for reception)
@@ -196,13 +196,13 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C1Interrupt ( void )
 }
 //__________________________________________________________________________________________________
 
-void i2c_master_start_read_tm(unsigned short address)
+void i2c_master_start_read_tm(unsigned short tm_address)
 /*
  * Start i2C master read telemetry from slave IC charger and save it on static variables.
  */
 {
     i2c_flag_read   = 1;//Read ongoing, flag for interrupt.
-    i2c_command     = address;
+    i2c_command     = tm_address;
     
     //!!! Reset le µP, PQ ???
     I2C1CONbits.SEN   = 1;//Initiates Start condition on SDAx and SCLx pins.

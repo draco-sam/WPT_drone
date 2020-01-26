@@ -37,6 +37,7 @@ int main(void) {
     
     Nop();
     
+    i2c_bus_high();
     
     pin_init();
     oscillator_init();
@@ -46,16 +47,25 @@ int main(void) {
     led_blue    = off;
     
     i2c_master_init();
-    
-    
-    //!!! Vérifier Pull-up !!!
+
     i2c_master_start_read_tm(TM_VIN);
     
+    
+//    unsigned long counter = 0;
     
     
     while (1)
     {
-        // Add your application code
+//        if(counter <1000)
+//        {
+//            counter++;
+//        }
+//        else
+//        {
+//            LATDbits.LATD9 = !LATDbits.LATD9;
+//            led_red = !led_red;
+//            counter = 0;
+//        }
     }
     
     return 0;
