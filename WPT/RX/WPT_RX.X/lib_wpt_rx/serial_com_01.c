@@ -1,12 +1,12 @@
 /* 
- * File             : serial_com_00.c
- * Date             : 25/01/2020.   
+ * File             : serial_com_01.c
+ * Date             : 28/01/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
  */
 
-#include "serial_com_00.h"
+#include "serial_com_01.h"
 
  #define led_red         LATGbits.LATG7
  #define led_green       LATGbits.LATG6
@@ -36,7 +36,7 @@ void i2c_master_init(void)
 {
     // Baud Rate Generator Value.
     //Recalculer !!!! changement de PIC dsPIC33 -->PIC24 !!!
-    I2C1BRG = 0x27;//39 @100 kHz (9 @400 kHz).
+    I2C1BRG = 39;//39 (0x27) @100 kHz (9 @400 kHz).
     
 
     /***********************************************************************************************
@@ -44,13 +44,13 @@ void i2c_master_init(void)
      * ---------------------------------     
      */
     I2C1CONbits.I2CEN       = 1;//Enables the I2Cx module, SDAx and SCLx pins as serial port pins.
-    I2C1CONbits.I2CSIDL     = 0;//0 = Continues module operation in Idle mode.
-    I2C1CONbits.SCLREL      = 0;//Holds SCLx clock low (clock stretch).
+    I2C1CONbits.I2CSIDL     = 0;//"0" : Continues module operation in Idle mode.
+    I2C1CONbits.SCLREL      = 0;//"0" : Holds SCLx clock low (clock stretch).
     I2C1CONbits.IPMIEN      = 0;//IPMI Support mode is disabled.
     I2C1CONbits.A10M        = 0;//I2CxADD is a 7-bit Slave address.
     
     //Slew rate control is disabled for Standard Speed mode (100kHz, 1MHz).
-    I2C1CONbits.DISSLW      = 0;//Enable (comme ex MPLAB...)
+    I2C1CONbits.DISSLW      = 0;//"0" : Enable (comme ex MPLAB...)
     
     I2C1CONbits.SMEN        = 1;//!!!0 : Disables SMBus-specific inputs.
     
@@ -58,7 +58,7 @@ void i2c_master_init(void)
     //(module is enabled for reception)
     I2C1CONbits.GCEN        = 1;
     
-    I2C1CONbits.STREN       = 0;//Disables clock stretching.
+    I2C1CONbits.STREN       = 0;//"0" : Disables clock stretching.
     I2C1CONbits.ACKDT       = 0;
     I2C1CONbits.ACKEN       = 0;//Acknowledge sequence is Idle.
     I2C1CONbits.RCEN        = 0;//Receive sequence is not in progress.
@@ -83,11 +83,11 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C1Interrupt ( void )
     
     //INTCON2bits.GIE = 0;
     IEC1bits.MI2C1IE = 0;//disable the master interrupt.
-    IFS1bits.MI2C1IF = 0;//Reset flag master I2C 2.
+    IFS1bits.MI2C1IF = 0;//Reset flag master I2C 1.
     
-    led_red     = off;
-    led_blue    = on;
-    led_green   = off;
+//    led_red     = off;
+//    led_blue    = off;
+//    led_green   = off;
     
     i2c_interrupt_counter++;
     
@@ -129,7 +129,7 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C1Interrupt ( void )
         }
         //5)Master will send 8 clocks to receive the data byte from the slave :
         else if(i2c_interrupt_counter == 5)
-        {
+        {//changer la structure!!!
             if(i2c_1_stat_bits.ACKSTAT == 0)//0 = Acknowledge was received from Slave
             {
                 //1 = Enables Receive mode for I2C.
@@ -141,9 +141,18 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C1Interrupt ( void )
                 i2c_interrupt_counter = 98;
             }
         }
-        //6)Read the I2CxRCV receive buffer and begin the read of the 2th data :
+        /*
+         * 6)Read the I2CxRCV receive buffer.
+         * Prepare master to send a ACK to the slave.
+         * Initiates Acknowledge sequence and transmit ACKDT bit (ACK) to the slave.
+         */
         else if(i2c_interrupt_counter == 6)
         {
+            i2c_data_l          = I2C1RCV;
+            I2C1CONbits.ACKDT   = 0;//"0" : Sends ACK during Acknowledge.
+            I2C1CONbits.ACKEN   = 1;
+            //I2C1CONbits.RCEN  = 1;
+        /*
             if(i2c_1_stat_bits.RBF == 1)//1 = Receive is complete, I2CxRCV is full.
             {
                 i2c_data_l = I2C1RCV;//Read receive buffer I2CxRCV and auto clear RBF bit
@@ -156,10 +165,29 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C1Interrupt ( void )
             {
                 i2c_interrupt_counter = 98;
             }
+         */
         }
-        //7)Read the 2th data on receive buffer and send a NACK to the slave :
+        //7)Vérifier ACK master???
         else if(i2c_interrupt_counter == 7)
         {
+            if(I2C1STATbits.ACKSTAT == 0)//0 = Acknowledge was sent from master to slave.
+            {
+                //1 = Enables Receive mode for I2C.
+                //Hardware is clear at the end of the 8th bit of the master receive data byte.
+                I2C1CONbits.RCEN = 1;
+            }
+            else
+            {
+                i2c_interrupt_counter = 98;
+            }
+        }
+        //8)Read the 2th data on receive buffer and send a NACK to the slave :
+        else if(i2c_interrupt_counter == 8)
+        {
+            i2c_data_h = I2C1RCV;
+            I2C1CONbits.ACKDT = 1;//1 = Sends NACK during Acknowledge.
+            I2C1CONbits.ACKEN = 1;//Initiates Acknowledge sequence,transmits the ACKDT bit to slave.
+            /*
             if(i2c_1_stat_bits.RBF == 1)//1 = Receive is complete, I2CxRCV is full.
             {
                 i2c_data_h = I2C1RCV;//Read receive buffer I2CxRCV and auto clear RBF bit
@@ -172,18 +200,20 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C1Interrupt ( void )
             {
                 i2c_interrupt_counter = 98;
             }
-        }   
-        //8)Initiates Stop condition on SDAx and SCLx pins :
-        else if(i2c_interrupt_counter == 8 || i2c_interrupt_counter == 99)
+             */
+        } 
+        //9)Initiates Stop condition on SDAx and SCLx pins :
+        //!!! Vérifier NACK status bit master envoyé vers slave pour commencer le stop???
+        else if(i2c_interrupt_counter == 9 || i2c_interrupt_counter == 99)
         {
             I2C1CONbits.PEN    = 1; 
         }
-        //9)Reset counter for next communication, SDAx and SCLx pins are at "1" :
-        else if(i2c_interrupt_counter == 9 || i2c_interrupt_counter == 100)
+        //10)Reset counter for next communication, SDAx and SCLx pins are at "1" :
+        else if(i2c_interrupt_counter == 10 || i2c_interrupt_counter == 100)
         {
             //1 = Indicates that a Stop bit has been detected last.
             if(i2c_1_stat_bits.P != 1 || i2c_interrupt_counter == 100)
-            {
+            {led_red = on;
                  i2c_data_l = 0;//Bad data info !!!
                  i2c_data_h = 0;//Bad data info !!!
             }
@@ -192,7 +222,7 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C1Interrupt ( void )
     }
     
     //INTCON1bits.GIE = 1;
-    i2c_int_enable.MI2C1IE = 1;//Enable the master interrupt.
+    IEC1bits.MI2C1IE = 1;//Enable the master interrupt.
 }
 //__________________________________________________________________________________________________
 

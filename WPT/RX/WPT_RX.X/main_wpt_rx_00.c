@@ -37,7 +37,7 @@ int main(void) {
     
     Nop();
     
-    i2c_bus_high();
+    //i2c_bus_high();
     
     pin_init();
     oscillator_init();
