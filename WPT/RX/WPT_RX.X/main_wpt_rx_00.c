@@ -21,23 +21,13 @@ int main(void) {
     #define off             1
     
     
-    //Sub addresses of read register on i2c slave IC charger :
-    #define TM_VBAT           0x3a
-    #define TM_IBAT           0x3d
-    #define TM_VIN            0x3b
-    #define TM_VSYS           0x3c
-    #define TM_I_IN           0x3e
-    #define TM_DIE_TEMP       0x3f
-    #define TM_NTC_RATIO      0x40
-    #define TM_I_CHARGE_DAC   0x44
-    #define TM_V_CHARGE_DAC   0x45
-
     
-      
+
+    unsigned short  flag_i2c_data_ready = 0;//"0" = not ready.
+    float             i2c_analog_measure        = 0;
     
     Nop();
     
-    //i2c_bus_high();
     
     pin_init();
     oscillator_init();
@@ -48,7 +38,11 @@ int main(void) {
     
     i2c_master_init();
 
-    i2c_master_start_read_tm(TM_VIN);
+    //i2c_master_start_read_tm(TM_VIN,&flag_i2c_data_ready);
+    //i2c_master_start_read_tm(TM_VSYS,&flag_i2c_data_ready);
+    //i2c_master_start_read_tm(TM_DIE_TEMP,&flag_i2c_data_ready);
+    //i2c_master_start_read_tm(TM_NTC_RATIO,&flag_i2c_data_ready);
+    i2c_master_start_read_tm(TM_CHEM_CELLS,&flag_i2c_data_ready);
     
     
 //    unsigned long counter = 0;
@@ -56,6 +50,19 @@ int main(void) {
     
     while (1)
     {
+        if(flag_i2c_data_ready == 1)
+        {
+            i2c_analog_measure    = i2c_master_get_tm(TM_VIN);//Analog value of the TM.
+            
+                          
+            if(10e3 + 1 == 10001)
+            {
+                led_red = on;
+            }
+            
+        }
+        
+        
 //        if(counter <1000)
 //        {
 //            counter++;

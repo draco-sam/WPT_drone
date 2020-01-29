@@ -55,6 +55,22 @@ d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.
                               d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(crt0_extended24.o) (__data_init_da)
 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normalda.Leo)
                               (__crt_start_mode_normal)
+d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(divsf3.daeo)
+                              build/default/production/lib_wpt_rx/serial_com_01.o (___divsf3)
+d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(floatunsisf.daeo)
+                              build/default/production/lib_wpt_rx/serial_com_01.o (___floatunsisf)
+d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(fpack.daeo)
+                              d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(divsf3.daeo) (__fpack)
+d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(funpack2.daeo)
+                              d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(divsf3.daeo) (__funpack2)
+d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(futil.daeo)
+                              d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(divsf3.daeo) (__fPropagateNaN)
+d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(mulsf3.daeo)
+                              build/default/production/lib_wpt_rx/serial_com_01.o (___mulsf3)
+d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(floatundisf.daeo)
+                              d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(floatunsisf.daeo) (___floatundisf)
+d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(funpack.daeo)
+                              d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(funpack2.daeo) (__funpack)
 
 
 xc16-ld 1.41 (B)
@@ -67,21 +83,21 @@ Default Scalar Model: Small
 
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
-.text                        0x200               0x200           0x300  (768)
-.text                        0x400               0x162           0x213  (531)
-.dinit                       0x562                0x12            0x1b  (27)
+.text                        0x200               0x414           0x61e  (1566)
+.text                        0x614               0x282           0x3c3  (963)
+.dinit                       0x896                0x12            0x1b  (27)
 
-                 Total "program" memory used (bytes):          0x52e  (1326) 1%
+                 Total "program" memory used (bytes):          0x9fc  (2556) 1%
 
 
 "data" Memory  [Origin = 0x800, Length = 0x2000]
 
 section                    address      alignment gaps    total length  (dec)
 -------                    -------      --------------    -------------------
-.nbss                        0x800                   0            0x12  (18)
-.ndata                       0x812                   0             0x4  (4)
+.nbss                        0x800                   0             0xc  (12)
+.ndata                       0x80c                   0             0x4  (4)
 
-                 Total "data" memory used (bytes):           0x16  (22) <1%
+                 Total "data" memory used (bytes):           0x10  (16) <1%
 
 
 Dynamic Memory Usage
@@ -89,9 +105,9 @@ Dynamic Memory Usage
 region                     address                      maximum length  (dec)
 ------                     -------                      ---------------------
 heap                             0                                   0  (0)
-stack                        0x816                              0x1fea  (8170)
+stack                        0x810                              0x1ff0  (8176)
 
-                 Maximum dynamic memory (bytes):         0x1fea  (8170)
+                 Maximum dynamic memory (bytes):         0x1ff0  (8176)
 
 Note: Project is using a large data memory model when small data memory model is sufficient.
 
@@ -103,32 +119,52 @@ External Symbols in Program Memory (by address):
                   0x000252                  __data_init_da
                   0x000252                  __data_init
                   0x000304                  __MI2C1Interrupt
-                  0x0003fa                  __DefaultInterrupt
-                  0x000400                  _oscillator_init
-                  0x000438                  _pin_init
-                  0x0004a8                  _interrupt_init
-                  0x0004c2                  _i2c_bus_high
-                  0x0004f2                  _i2c_master_init
-                  0x000520                  _i2c_master_start_read_tm
-                  0x000532                  _i2c_master_get_tm
-                  0x00054c                  _main
+                  0x00041a                  __DefaultInterrupt
+                  0x000420                  ___divsf3
+                  0x0004a4                  ___floatunsisf
+                  0x0004a8                  __fpack
+                  0x0004f4                  __funpack2
+                  0x000504                  __fPropagateNaN
+                  0x000516                  __fbopExit
+                  0x00051e                  __fbopReturnNaN
+                  0x000524                  ___mulsf3
+                  0x00058c                  ___floatundisf
+                  0x0005ea                  __funpack
+                  0x000614                  _i2c_master_init
+                  0x000642                  _i2c_master_start_read_tm
+                  0x00065a                  _i2c_master_get_tm
+                  0x000770                  _oscillator_init
+                  0x0007a8                  _pin_init
+                  0x000818                  _interrupt_init
+                  0x000832                  _i2c_bus_high
+                  0x000862                  _main
 
 External Symbols in Program Memory (by name):
 
-                  0x0003fa                  __DefaultInterrupt
+                  0x00041a                  __DefaultInterrupt
                   0x000304                  __MI2C1Interrupt
+                  0x000420                  ___divsf3
+                  0x00058c                  ___floatundisf
+                  0x0004a4                  ___floatunsisf
+                  0x000524                  ___mulsf3
                   0x000252                  __data_init
                   0x000252                  __data_init_da
+                  0x000504                  __fPropagateNaN
+                  0x000516                  __fbopExit
+                  0x00051e                  __fbopReturnNaN
+                  0x0004a8                  __fpack
+                  0x0005ea                  __funpack
+                  0x0004f4                  __funpack2
                   0x00023c                  __psv_init
                   0x000200                  __resetPRI
-                  0x0004c2                  _i2c_bus_high
-                  0x000532                  _i2c_master_get_tm
-                  0x0004f2                  _i2c_master_init
-                  0x000520                  _i2c_master_start_read_tm
-                  0x0004a8                  _interrupt_init
-                  0x00054c                  _main
-                  0x000400                  _oscillator_init
-                  0x000438                  _pin_init
+                  0x000832                  _i2c_bus_high
+                  0x00065a                  _i2c_master_get_tm
+                  0x000614                  _i2c_master_init
+                  0x000642                  _i2c_master_start_read_tm
+                  0x000818                  _interrupt_init
+                  0x000862                  _main
+                  0x000770                  _oscillator_init
+                  0x0007a8                  _pin_init
 
 Memory Configuration
 
@@ -170,7 +206,7 @@ LOAD d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libfx-elf.a
                   0x000002          0x2 SHORT 0x0 ((ABSOLUTE (__reset) >> 0x10) & 0x7f)
                   0x000003          0x2 SHORT 0x0
 
-.text             0x000200        0x200
+.text             0x000200        0x414
  *(.init)
  .init            0x000200         0x4c d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(crt0_extended24.o)
                   0x000200                  __resetPRI
@@ -182,18 +218,44 @@ LOAD d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libfx-elf.a
  *(.user_init)
  *(.handle)
  *(.isr*)
- .isr.text        0x000304         0xf6 build/default/production/lib_wpt_rx/serial_com_01.o
+ .isr.text        0x000304        0x116 build/default/production/lib_wpt_rx/serial_com_01.o
                   0x000304                  __MI2C1Interrupt
- .isr             0x0003fa          0x4 default_isr
-                  0x0003fa                  __DefaultInterrupt
+ .isr             0x00041a          0x4 default_isr
+                  0x00041a                  __DefaultInterrupt
  *(.libc)
  *(.libm)
  *(.libdsp)
  *(.lib*)
  .libpic30_crt_start_mode
-                  0x0003fe          0x2 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normalda.Leo)
-                  0x0003fe                  __crt_start_mode
-                  0x0003fe                  __crt_start_mode_normal
+                  0x00041e          0x2 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(crt_start_mode_normalda.Leo)
+                  0x00041e                  __crt_start_mode
+                  0x00041e                  __crt_start_mode_normal
+ .libm.divfs3     0x000420         0x84 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(divsf3.daeo)
+                  0x000420                  ___divsf3
+ .libm.floatunsisf
+                  0x0004a4          0x4 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(floatunsisf.daeo)
+                  0x0004a4                  ___floatunsisf
+ .libm.fpack      0x0004a8         0x4c d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(fpack.daeo)
+                  0x0004a8                  __fpack
+ .libm.funpack2
+                  0x0004f4         0x10 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(funpack2.daeo)
+                  0x0004f4                  __funpack2
+ .libm.fPropagateNaN
+                  0x000504         0x12 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(futil.daeo)
+                  0x000504                  __fPropagateNaN
+ .libm.fbobExit
+                  0x000516          0x8 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(futil.daeo)
+                  0x000516                  __fbopExit
+ .libm.fbopReturnNaN
+                  0x00051e          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(futil.daeo)
+                  0x00051e                  __fbopReturnNaN
+ .libm.mulsf3     0x000524         0x68 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(mulsf3.daeo)
+                  0x000524                  ___mulsf3
+ .libm.floatundisf
+                  0x00058c         0x5e d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(floatundisf.daeo)
+                  0x00058c                  ___floatundisf
+ .libm.funpack    0x0005ea         0x2a d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(funpack.daeo)
+                  0x0005ea                  __funpack
 
 usercode
  *(usercode)
@@ -213,36 +275,36 @@ __CONFIG1
 .comment
  *(.comment)
 
-.debug_info       0x000000       0x2023
+.debug_info       0x000000       0x1fd0
  *(.debug_info)
- .debug_info      0x000000       0x118c build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
- .debug_info      0x00118c        0x38a build/default/production/main_wpt_rx_00.o
- .debug_info      0x001516        0xb0d build/default/production/lib_wpt_rx/serial_com_01.o
+ .debug_info      0x000000       0x11a2 build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
+ .debug_info      0x0011a2        0x3a1 build/default/production/main_wpt_rx_00.o
+ .debug_info      0x001543        0xa8d build/default/production/lib_wpt_rx/serial_com_01.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev     0x000000        0x2d5
+.debug_abbrev     0x000000        0x2ef
  *(.debug_abbrev)
  .debug_abbrev    0x000000         0xfc build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
- .debug_abbrev    0x0000fc         0xb7 build/default/production/main_wpt_rx_00.o
- .debug_abbrev    0x0001b3        0x122 build/default/production/lib_wpt_rx/serial_com_01.o
+ .debug_abbrev    0x0000fc         0x9d build/default/production/main_wpt_rx_00.o
+ .debug_abbrev    0x000199        0x156 build/default/production/lib_wpt_rx/serial_com_01.o
 
-.debug_line       0x000000        0x2d1
+.debug_line       0x000000        0x2f7
  *(.debug_line)
  .debug_line      0x000000         0xfc build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
- .debug_line      0x0000fc         0xbf build/default/production/main_wpt_rx_00.o
- .debug_line      0x0001bb        0x116 build/default/production/lib_wpt_rx/serial_com_01.o
+ .debug_line      0x0000fc         0xc9 build/default/production/main_wpt_rx_00.o
+ .debug_line      0x0001c5        0x132 build/default/production/lib_wpt_rx/serial_com_01.o
 
-.debug_frame      0x000000        0x140
+.debug_frame      0x000000        0x146
  *(.debug_frame)
  .debug_frame     0x000000         0x84 build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
  .debug_frame     0x000084         0x30 build/default/production/main_wpt_rx_00.o
- .debug_frame     0x0000b4         0x8c build/default/production/lib_wpt_rx/serial_com_01.o
+ .debug_frame     0x0000b4         0x92 build/default/production/lib_wpt_rx/serial_com_01.o
 
-.debug_str        0x000000         0x9d
+.debug_str        0x000000         0xab
  *(.debug_str)
  .debug_str       0x000000         0x4e build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
  .debug_str       0x00004e         0x12 build/default/production/main_wpt_rx_00.o
- .debug_str       0x000060         0x3d build/default/production/lib_wpt_rx/serial_com_01.o
+ .debug_str       0x000060         0x4b build/default/production/lib_wpt_rx/serial_com_01.o
 
 .debug_loc
  *(.debug_loc)
@@ -1990,50 +2052,66 @@ LOAD default_isr
 LOAD data_init
 
 .debug_pubtypes
-                  0x000048        0x236
+                  0x000048        0x219
  .debug_pubtypes
                   0x000048        0x11f build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
  .debug_pubtypes
                   0x000167         0x59 build/default/production/main_wpt_rx_00.o
  .debug_pubtypes
-                  0x0001c0         0xbe build/default/production/lib_wpt_rx/serial_com_01.o
+                  0x0001c0         0xa1 build/default/production/lib_wpt_rx/serial_com_01.o
 
 __c30_signature
-                  0x00027e         0x1e
+                  0x000261         0x4e
  __c30_signature
-                  0x00027e          0x6 build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
+                  0x000261          0x6 build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
  __c30_signature
-                  0x000284          0x6 build/default/production/main_wpt_rx_00.o
+                  0x000267          0x6 build/default/production/main_wpt_rx_00.o
  __c30_signature
-                  0x00028a          0x6 build/default/production/lib_wpt_rx/serial_com_01.o
+                  0x00026d          0x6 build/default/production/lib_wpt_rx/serial_com_01.o
  __c30_signature
-                  0x000290          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(crt0_extended24.o)
+                  0x000273          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(crt0_extended24.o)
  __c30_signature
-                  0x000296          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(data_init_24.o)
+                  0x000279          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\liblega-pic30-elf.a(data_init_24.o)
+ __c30_signature
+                  0x00027f          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(divsf3.daeo)
+ __c30_signature
+                  0x000285          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(floatunsisf.daeo)
+ __c30_signature
+                  0x00028b          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(fpack.daeo)
+ __c30_signature
+                  0x000291          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(funpack2.daeo)
+ __c30_signature
+                  0x000297          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(futil.daeo)
+ __c30_signature
+                  0x00029d          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(mulsf3.daeo)
+ __c30_signature
+                  0x0002a3          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(floatundisf.daeo)
+ __c30_signature
+                  0x0002a9          0x6 d:/program files (x86)/microchip/xc16/v1.41/bin/bin/../../lib\libm-elf.a(funpack.daeo)
 
-.nbss               0x0800         0x12
- .nbss              0x0800         0x12 build/default/production/lib_wpt_rx/serial_com_01.o
+.nbss               0x0800          0xc
+ .nbss              0x0800          0xc build/default/production/lib_wpt_rx/serial_com_01.o
 
-.ndata              0x0812          0x4
- .ndata             0x0812          0x4 build/default/production/lib_wpt_rx/serial_com_01.o
+.ndata              0x080c          0x4
+ .ndata             0x080c          0x4 build/default/production/lib_wpt_rx/serial_com_01.o
 
 .ivt._MI2C1Interrupt
                   0x000036          0x2
  .ivt._MI2C1Interrupt
                   0x000036          0x2 build/default/production/lib_wpt_rx/serial_com_01.o
 
-.text             0x000400        0x162
- .text            0x000400         0xf2 build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
-                  0x000400                  _oscillator_init
-                  0x000438                  _pin_init
-                  0x0004a8                  _interrupt_init
-                  0x0004c2                  _i2c_bus_high
- .text            0x0004f2         0x5a build/default/production/lib_wpt_rx/serial_com_01.o
-                  0x0004f2                  _i2c_master_init
-                  0x000520                  _i2c_master_start_read_tm
-                  0x000532                  _i2c_master_get_tm
- .text            0x00054c         0x16 build/default/production/main_wpt_rx_00.o
-                  0x00054c                  _main
+.text             0x000614        0x282
+ .text            0x000614        0x15c build/default/production/lib_wpt_rx/serial_com_01.o
+                  0x000614                  _i2c_master_init
+                  0x000642                  _i2c_master_start_read_tm
+                  0x00065a                  _i2c_master_get_tm
+ .text            0x000770         0xf2 build/default/production/lib_wpt_rx/lib_wpt_rx_00.o
+                  0x000770                  _oscillator_init
+                  0x0007a8                  _pin_init
+                  0x000818                  _interrupt_init
+                  0x000832                  _i2c_bus_high
+ .text            0x000862         0x34 build/default/production/main_wpt_rx_00.o
+                  0x000862                  _main
 
-.dinit            0x000562         0x12
- .dinit           0x000562         0x12 data_init
+.dinit            0x000896         0x12
+ .dinit           0x000896         0x12 data_init

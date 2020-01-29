@@ -1,6 +1,6 @@
 /* 
  * File             : serial_com_01.c
- * Date             : 28/01/2020.   
+ * Date             : 29/01/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -21,13 +21,7 @@ static int              i2c_data_h                  = 0;//High 8-bit from 16-bit
 static unsigned short   i2c_command                 = 0;
 static unsigned short   i2c_interrupt_counter       = 0;
 static unsigned short   i2c_flag_read               = 0;//Read OFF.
-
-//Déclarations structures :
-static I2C1STATBITS     i2c_1_stat_bits;
-static IFS1BITS         i2c_interrupt_flag;
-static IEC1BITS         i2c_int_enable;
-static I2C1CONBITS      i2c_1_con;//I2Cx CONTROL REGISTER LOW.
-
+static unsigned short   *s_flag_data_ready          = NULL;
 
 void i2c_master_init(void)
 /*
@@ -35,7 +29,6 @@ void i2c_master_init(void)
  */
 {
     // Baud Rate Generator Value.
-    //Recalculer !!!! changement de PIC dsPIC33 -->PIC24 !!!
     I2C1BRG = 39;//39 (0x27) @100 kHz (9 @400 kHz).
     
 
@@ -79,15 +72,9 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C1Interrupt ( void )
 {
 /*
  * 
- */    
-    
-    //INTCON2bits.GIE = 0;
+ */  
     IEC1bits.MI2C1IE = 0;//disable the master interrupt.
     IFS1bits.MI2C1IF = 0;//Reset flag master I2C 1.
-    
-//    led_red     = off;
-//    led_blue    = off;
-//    led_green   = off;
     
     i2c_interrupt_counter++;
     
@@ -101,7 +88,7 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C1Interrupt ( void )
         //2)Send a data command to the slave :
         else if(i2c_interrupt_counter == 2)
         {
-            if(i2c_1_stat_bits.ACKSTAT == 0)//0 = Acknowledge was received from Slave
+            if(I2C1STATbits.ACKSTAT == 0)//0 = Acknowledge was received from Slave
             {
                 I2C1TRN = i2c_command;//Command to the slave.
             }
@@ -113,7 +100,7 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C1Interrupt ( void )
         //3)Restart condition for future read communication :
         else if(i2c_interrupt_counter == 3)
         {
-            if(i2c_1_stat_bits.ACKSTAT == 0)//0 = Acknowledge was received from Slave
+            if(I2C1STATbits.ACKSTAT == 0)//0 = Acknowledge was received from Slave
             {
                 I2C1CONbits.RSEN   = 1;//1 = Initiates Restart condition on SDAx and SCLx pins.
             }
@@ -129,8 +116,8 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C1Interrupt ( void )
         }
         //5)Master will send 8 clocks to receive the data byte from the slave :
         else if(i2c_interrupt_counter == 5)
-        {//changer la structure!!!
-            if(i2c_1_stat_bits.ACKSTAT == 0)//0 = Acknowledge was received from Slave
+        {
+            if(I2C1STATbits.ACKSTAT == 0)//0 = Acknowledge was received from Slave
             {
                 //1 = Enables Receive mode for I2C.
                 //Hardware is clear at the end of the 8th bit of the master receive data byte.
@@ -148,33 +135,24 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C1Interrupt ( void )
          */
         else if(i2c_interrupt_counter == 6)
         {
-            i2c_data_l          = I2C1RCV;
-            I2C1CONbits.ACKDT   = 0;//"0" : Sends ACK during Acknowledge.
-            I2C1CONbits.ACKEN   = 1;
-            //I2C1CONbits.RCEN  = 1;
-        /*
-            if(i2c_1_stat_bits.RBF == 1)//1 = Receive is complete, I2CxRCV is full.
+            if(I2C1STATbits.RBF == 1)//1 = Receive is complete, I2CxRCV is full.
             {
-                i2c_data_l = I2C1RCV;//Read receive buffer I2CxRCV and auto clear RBF bit
-                
-                //Enables Receive mode for the 2th data byte.
-                //Bit hardware cleared.
-                I2C1CONbits.RCEN = 1;
+                i2c_data_l          = I2C1RCV;
+                I2C1CONbits.ACKDT   = 0;//"0" : Sends ACK during Acknowledge.
+                I2C1CONbits.ACKEN   = 1;
             }
             else
             {
                 i2c_interrupt_counter = 98;
             }
-         */
         }
-        //7)Vérifier ACK master???
+        //7)Master sends ACK to slave. (??? vérifier validité data avant d'envoyer ACK ???)
         else if(i2c_interrupt_counter == 7)
         {
             if(I2C1STATbits.ACKSTAT == 0)//0 = Acknowledge was sent from master to slave.
             {
-                //1 = Enables Receive mode for I2C.
                 //Hardware is clear at the end of the 8th bit of the master receive data byte.
-                I2C1CONbits.RCEN = 1;
+                I2C1CONbits.RCEN = 1;//1 = Enables Receive mode for I2C.
             }
             else
             {
@@ -183,24 +161,17 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C1Interrupt ( void )
         }
         //8)Read the 2th data on receive buffer and send a NACK to the slave :
         else if(i2c_interrupt_counter == 8)
-        {
-            i2c_data_h = I2C1RCV;
-            I2C1CONbits.ACKDT = 1;//1 = Sends NACK during Acknowledge.
-            I2C1CONbits.ACKEN = 1;//Initiates Acknowledge sequence,transmits the ACKDT bit to slave.
-            /*
-            if(i2c_1_stat_bits.RBF == 1)//1 = Receive is complete, I2CxRCV is full.
+        {   
+            if(I2C1STATbits.RBF == 1)//1 = Receive is complete, I2CxRCV is full.
             {
-                i2c_data_h = I2C1RCV;//Read receive buffer I2CxRCV and auto clear RBF bit
-                
-                //1 = Initiates Acknowledge sequence on SDAx and SCLx pins
-                //and transmits NACK bit on 9th clock,ACKDT =1.
-                I2C1CONbits.ACKEN = 1;
+                i2c_data_h = I2C1RCV;
+                I2C1CONbits.ACKDT = 1;//1 = Sends NACK during Acknowledge.
+                I2C1CONbits.ACKEN = 1;//Initiates ACK sequence,transmits the ACKDT bit to slave.
             }
             else
             {
                 i2c_interrupt_counter = 98;
             }
-             */
         } 
         //9)Initiates Stop condition on SDAx and SCLx pins :
         //!!! Vérifier NACK status bit master envoyé vers slave pour commencer le stop???
@@ -212,27 +183,28 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C1Interrupt ( void )
         else if(i2c_interrupt_counter == 10 || i2c_interrupt_counter == 100)
         {
             //1 = Indicates that a Stop bit has been detected last.
-            if(i2c_1_stat_bits.P != 1 || i2c_interrupt_counter == 100)
-            {led_red = on;
+            if(I2C1STATbits.P != 1 || i2c_interrupt_counter == 100)
+            {
                  i2c_data_l = 0;//Bad data info !!!
                  i2c_data_h = 0;//Bad data info !!!
             }
-            i2c_interrupt_counter = 0;//Reset.  
+            *s_flag_data_ready      = 1;//Rising flag data ready for the main.
+            i2c_interrupt_counter   = 0;//Reset.  
         }
     }
     
-    //INTCON1bits.GIE = 1;
     IEC1bits.MI2C1IE = 1;//Enable the master interrupt.
 }
 //__________________________________________________________________________________________________
 
-void i2c_master_start_read_tm(unsigned short tm_address)
+void i2c_master_start_read_tm(unsigned short tm_address,unsigned short *f_data_ready)
 /*
  * Start i2C master read telemetry from slave IC charger and save it on static variables.
  */
 {
-    i2c_flag_read   = 1;//Read ongoing, flag for interrupt.
-    i2c_command     = tm_address;
+    i2c_flag_read       = 1;//Read ongoing, flag for interrupt.
+    i2c_command         = tm_address;
+    s_flag_data_ready   = f_data_ready;//Copier adresse du flag dans variable statique.
     
     //!!! Reset le µP, PQ ???
     I2C1CONbits.SEN   = 1;//Initiates Start condition on SDAx and SCLx pins.
@@ -243,7 +215,7 @@ void i2c_master_start_read_tm(unsigned short tm_address)
      *      - Stop bit anciennement détecté.
      */
     /*
-    if(i2c_1_stat_bits.TRSTAT == 0 && i2c_1_stat_bits.P == 1)
+    if(I2C1STATbits.TRSTAT == 0 && I2C1STATbits.P == 1)
     {
         LATG = 0b01000000;
         i2c_flag_read   = 1;//Read ongoing, flag for interrupt.
@@ -255,21 +227,68 @@ void i2c_master_start_read_tm(unsigned short tm_address)
 }
 //__________________________________________________________________________________________________
 
-int i2c_master_get_tm(void)
+float i2c_master_get_tm(unsigned short tm_address)
 /*
  * I2C master get telemetry to main program .
  * The 16-bit data is decomposed into 2 bytes.
  */
 {
-    int data = 0;
+    unsigned short  digital_data    = 0;
     
-    data        = i2c_data_h << 8;//High 8-bit of data 16-bit.
-    data        = data | i2c_data_l;//Low 8-bit add on final data 16-bit.
+    /********************************************
+     * Structure for i2c TM data :
+     * --------------------------
+     */
+    typedef struct Analog_data
+    {
+         float           analog_data_1;
+         float           analog_data_2;
+    }Analog_data;
+    Analog_data analog_data;
+    analog_data.analog_data_1 = 0.0;//Reset value.
+    analog_data.analog_data_2 = 0.0;//Reset value.
+    //*******************************************
+    
+    digital_data        = i2c_data_h << 8;//High 8-bit of data 16-bit.
+    digital_data        = digital_data | i2c_data_l;//Low 8-bit add on final data 16-bit.
+    
+    if(tm_address == TM_VBAT)
+    {
+        analog_data.analog_data_1 = digital_data * 192.264e-6 * CELL_COUNT;//192.264 µV.
+    }
+    else if(tm_address == TM_VIN || tm_address == TM_VSYS)
+    {
+        analog_data.analog_data_1 = digital_data * 0.001648;//LSB = 1.648 mV.
+    }
+    else if(tm_address == TM_IBAT)
+    {
+        analog_data.analog_data_1 = (digital_data * 1.46487e-6)/R_SENS_BATTERY;
+    }
+    else if(tm_address == TM_I_IN)
+    {
+        analog_data.analog_data_1 = (digital_data * 1.46487e-6)/R_SENS_IN;
+    }
+    else if(tm_address == TM_DIE_TEMP)
+    {
+        analog_data.analog_data_1 = (digital_data - 12010)/45.6;//45.6 °C.
+    }
+    else if(tm_address == TM_NTC_RATIO)
+    {
+        analog_data.analog_data_1 = (digital_data * R_NTC_BIAS)/(21845 - digital_data);
+    }
+    else if (tm_address == TM_CHEM_CELLS)
+    {
+        analog_data.analog_data_1 = 0.0;//!!! A coder !!!
+        analog_data.analog_data_2 = digital_data && 0x0F;//bits 3:0 = 4 bits for number of cells.
+    }
+    
     
     //Clear variables for next TM.
     i2c_data_h  = 0;
-    i2c_data_l  =0;
+    i2c_data_l  = 0;
 
-    return data;
+    return analog_data.analog_data_1;
 };
 //__________________________________________________________________________________________________
+
+

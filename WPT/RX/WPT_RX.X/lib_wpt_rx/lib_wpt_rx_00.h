@@ -5,6 +5,7 @@
 #define	XC_HEADER_TEMPLATE_H
 
 #include "PIC24FJ128GC006.h"  
+#include "serial_com_01.h"
 
 void oscillator_init(void);
 void pin_init(void);
