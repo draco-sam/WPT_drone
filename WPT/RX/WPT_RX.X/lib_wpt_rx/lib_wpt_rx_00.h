@@ -4,6 +4,7 @@
 #ifndef XC_HEADER_TEMPLATE_H
 #define	XC_HEADER_TEMPLATE_H
 
+#include <stdio.h>
 #include "PIC24FJ128GC006.h"  
 #include "serial_com_01.h"
 

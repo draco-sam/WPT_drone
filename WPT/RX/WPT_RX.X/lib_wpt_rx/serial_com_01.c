@@ -227,59 +227,64 @@ void i2c_master_start_read_tm(unsigned short tm_address,unsigned short *f_data_r
 }
 //__________________________________________________________________________________________________
 
-float i2c_master_get_tm(unsigned short tm_address)
+I2c_tm_analog i2c_master_get_tm(unsigned short tm_address)
 /*
  * I2C master get telemetry to main program .
  * The 16-bit data is decomposed into 2 bytes.
  */
 {
-    unsigned short  digital_data    = 0;
+    unsigned short  digital_data        = 0;
+    //unsigned short  digital_data_old    = 0;
+    I2c_tm_analog i2c_tm_analog;
     
-    /********************************************
-     * Structure for i2c TM data :
-     * --------------------------
-     */
-    typedef struct Analog_data
-    {
-         float           analog_data_1;
-         float           analog_data_2;
-    }Analog_data;
-    Analog_data analog_data;
-    analog_data.analog_data_1 = 0.0;//Reset value.
-    analog_data.analog_data_2 = 0.0;//Reset value.
-    //*******************************************
+    //Reset value :
+    i2c_tm_analog.data_1 = 0.0;
+    i2c_tm_analog.data_2 = 0.0;
+    i2c_tm_analog.data_3 = 0.0;
+    i2c_tm_analog.data_4 = 0.0;
+    i2c_tm_analog.data_5 = 0.0;
     
     digital_data        = i2c_data_h << 8;//High 8-bit of data 16-bit.
     digital_data        = digital_data | i2c_data_l;//Low 8-bit add on final data 16-bit.
     
     if(tm_address == TM_VBAT)
     {
-        analog_data.analog_data_1 = digital_data * 192.264e-6 * CELL_COUNT;//192.264 µV.
+        i2c_tm_analog.data_1 = digital_data * 192.264e-6 * CELL_COUNT;//192.264 µV.
     }
     else if(tm_address == TM_VIN || tm_address == TM_VSYS)
     {
-        analog_data.analog_data_1 = digital_data * 0.001648;//LSB = 1.648 mV.
+        i2c_tm_analog.data_1 = digital_data * 0.001648;//LSB = 1.648 mV.
     }
     else if(tm_address == TM_IBAT)
     {
-        analog_data.analog_data_1 = (digital_data * 1.46487e-6)/R_SENS_BATTERY;
+        i2c_tm_analog.data_1 = (digital_data * 1.46487e-6)/R_SENS_BATTERY;
     }
     else if(tm_address == TM_I_IN)
     {
-        analog_data.analog_data_1 = (digital_data * 1.46487e-6)/R_SENS_IN;
+        i2c_tm_analog.data_1 = (digital_data * 1.46487e-6)/R_SENS_IN;
     }
     else if(tm_address == TM_DIE_TEMP)
     {
-        analog_data.analog_data_1 = (digital_data - 12010)/45.6;//45.6 °C.
+        i2c_tm_analog.data_1 = (digital_data - 12010)/45.6;//45.6 °C.
     }
     else if(tm_address == TM_NTC_RATIO)
     {
-        analog_data.analog_data_1 = (digital_data * R_NTC_BIAS)/(21845 - digital_data);
+        i2c_tm_analog.data_1 = (digital_data * R_NTC_BIAS)/(21845 - digital_data);
     }
     else if (tm_address == TM_CHEM_CELLS)
     {
-        analog_data.analog_data_1 = 0.0;//!!! A coder !!!
-        analog_data.analog_data_2 = digital_data && 0x0F;//bits 3:0 = 4 bits for number of cells.
+        i2c_tm_analog.data_1 = 0.0;//!!! A coder !!!
+        i2c_tm_analog.data_2 = digital_data && 0x0F;//bits 3:0 = 4 bits for number of cells.
+    }
+    else if (tm_address == TM_CHARGER_STATE)
+    {
+        //digital_data_old = digital_data;
+        
+        i2c_tm_analog.data_1 = ((digital_data && 0x100) >> 8);//bit 8  : charger_suspended.
+        i2c_tm_analog.data_2 = ((digital_data && 0x80) >> 7);//bit 7   : precharge.
+        i2c_tm_analog.data_3 = ((digital_data && 0x40) >> 6);//bit 6   : cc_cv_charge.
+        i2c_tm_analog.data_4 = ((digital_data && 0x02) >> 1);//bit 1   : bat_missing_fault.
+        i2c_tm_analog.data_5 = digital_data ;//bit 0   : bat_short_fault.
     }
     
     
@@ -287,7 +292,7 @@ float i2c_master_get_tm(unsigned short tm_address)
     i2c_data_h  = 0;
     i2c_data_l  = 0;
 
-    return analog_data.analog_data_1;
+    return i2c_tm_analog;
 };
 //__________________________________________________________________________________________________
 

@@ -57,17 +57,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=lib_wpt_rx/lib_wpt_rx_00.c main_wpt_rx_00.c lib_wpt_rx/serial_com_01.c
+SOURCEFILES_QUOTED_IF_SPACED=lib_wpt_rx/lib_wpt_rx_00.c lib_wpt_rx/serial_com_01.c main_wpt_rx_00.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o ${OBJECTDIR}/main_wpt_rx_00.o ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o.d ${OBJECTDIR}/main_wpt_rx_00.o.d ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o ${OBJECTDIR}/main_wpt_rx_00.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o.d ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o.d ${OBJECTDIR}/main_wpt_rx_00.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o ${OBJECTDIR}/main_wpt_rx_00.o ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o
+OBJECTFILES=${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o ${OBJECTDIR}/main_wpt_rx_00.o
 
 # Source Files
-SOURCEFILES=lib_wpt_rx/lib_wpt_rx_00.c main_wpt_rx_00.c lib_wpt_rx/serial_com_01.c
+SOURCEFILES=lib_wpt_rx/lib_wpt_rx_00.c lib_wpt_rx/serial_com_01.c main_wpt_rx_00.c
 
 
 
@@ -102,19 +102,19 @@ ${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o: lib_wpt_rx/lib_wpt_rx_00.c  nbproject/M
 	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/lib_wpt_rx_00.c  -o ${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
 	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
-${OBJECTDIR}/main_wpt_rx_00.o: main_wpt_rx_00.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/main_wpt_rx_00.o.d 
-	@${RM} ${OBJECTDIR}/main_wpt_rx_00.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE)  main_wpt_rx_00.c  -o ${OBJECTDIR}/main_wpt_rx_00.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/main_wpt_rx_00.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
-	@${FIXDEPS} "${OBJECTDIR}/main_wpt_rx_00.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
-	
 ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o: lib_wpt_rx/serial_com_01.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx" 
 	@${RM} ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o.d 
 	@${RM} ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o 
 	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/serial_com_01.c  -o ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/serial_com_01.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
 	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/serial_com_01.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/main_wpt_rx_00.o: main_wpt_rx_00.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/main_wpt_rx_00.o.d 
+	@${RM} ${OBJECTDIR}/main_wpt_rx_00.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  main_wpt_rx_00.c  -o ${OBJECTDIR}/main_wpt_rx_00.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/main_wpt_rx_00.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/main_wpt_rx_00.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
 else
 ${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o: lib_wpt_rx/lib_wpt_rx_00.c  nbproject/Makefile-${CND_CONF}.mk
@@ -124,19 +124,19 @@ ${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o: lib_wpt_rx/lib_wpt_rx_00.c  nbproject/M
 	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/lib_wpt_rx_00.c  -o ${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
 	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
-${OBJECTDIR}/main_wpt_rx_00.o: main_wpt_rx_00.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/main_wpt_rx_00.o.d 
-	@${RM} ${OBJECTDIR}/main_wpt_rx_00.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE)  main_wpt_rx_00.c  -o ${OBJECTDIR}/main_wpt_rx_00.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/main_wpt_rx_00.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
-	@${FIXDEPS} "${OBJECTDIR}/main_wpt_rx_00.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
-	
 ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o: lib_wpt_rx/serial_com_01.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx" 
 	@${RM} ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o.d 
 	@${RM} ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o 
 	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/serial_com_01.c  -o ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/serial_com_01.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
 	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/serial_com_01.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/main_wpt_rx_00.o: main_wpt_rx_00.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/main_wpt_rx_00.o.d 
+	@${RM} ${OBJECTDIR}/main_wpt_rx_00.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  main_wpt_rx_00.c  -o ${OBJECTDIR}/main_wpt_rx_00.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/main_wpt_rx_00.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/main_wpt_rx_00.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
 endif
 
