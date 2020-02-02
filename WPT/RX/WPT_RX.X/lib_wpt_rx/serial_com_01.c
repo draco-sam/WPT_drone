@@ -278,13 +278,23 @@ I2c_tm_analog i2c_master_get_tm(unsigned short tm_address)
     }
     else if (tm_address == TM_CHARGER_STATE)
     {
+        /*
+         * CHARGER_STATE :
+         * --------------
+         * Sub-address      : 0x34.
+         * R/W              : Read.
+         * Number of bit    : 16 bits (15:0).
+         * 
+         * bit at "1"       : state bit = ON.
+         * bit at "0"       : state bit = OFF.
+         */
         //digital_data_old = digital_data;
         
-        i2c_tm_analog.data_1 = ((digital_data && 0x100) >> 8);//bit 8  : charger_suspended.
-        i2c_tm_analog.data_2 = ((digital_data && 0x80) >> 7);//bit 7   : precharge.
-        i2c_tm_analog.data_3 = ((digital_data && 0x40) >> 6);//bit 6   : cc_cv_charge.
-        i2c_tm_analog.data_4 = ((digital_data && 0x02) >> 1);//bit 1   : bat_missing_fault.
-        i2c_tm_analog.data_5 = digital_data ;//bit 0   : bat_short_fault.
+        i2c_tm_analog.data_1 = ((digital_data & 0x100) >> 8);//bit 8  : charger_suspended.
+        i2c_tm_analog.data_2 = ((digital_data & 0x80) >> 7);//bit 7   : precharge.
+        i2c_tm_analog.data_3 = ((digital_data & 0x40) >> 6);//bit 6   : cc_cv_charge.
+        i2c_tm_analog.data_4 = ((digital_data & 0x02) >> 1);//bit 1   : bat_missing_fault.
+        i2c_tm_analog.data_5 = digital_data & 0x01;//bit 0   : bat_short_fault.
     }
     
     

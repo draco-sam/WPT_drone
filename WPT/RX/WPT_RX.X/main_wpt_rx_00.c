@@ -31,9 +31,9 @@ int main(void) {
     float               i2c_slave_cc_cv_charge          = 0;
     float               i2c_slave_bat_missing           = 0;
     float               i2c_slave_bat_short             = 0;
-    unsigned short      counter_while                   = 0;
+    short               counter_while                   = 0;//Signed for a trick in while loop.
     unsigned short      tm_address                      = 0;
-    unsigned short      counter_max                     = 0;
+    unsigned short      timer_counter                   = 0;
     I2c_tm_analog       i2c_tm_analog;
     
     Nop();
@@ -48,29 +48,46 @@ int main(void) {
     
     i2c_master_init();
 
-    i2c_master_start_read_tm(TM_VIN,&flag_i2c_data_ready);
+    //i2c_master_start_read_tm(TM_VIN,&flag_i2c_data_ready);
     //i2c_master_start_read_tm(TM_VSYS,&flag_i2c_data_ready);
     //i2c_master_start_read_tm(TM_DIE_TEMP,&flag_i2c_data_ready);
     //i2c_master_start_read_tm(TM_NTC_RATIO,&flag_i2c_data_ready);
     //i2c_master_start_read_tm(TM_CHEM_CELLS,&flag_i2c_data_ready);
     
     
-//    unsigned long counter = 0;
-    
     //printf("hello");
     
     
+    
+    //counter_max = 1;
+    
     while (1)
-    {        
+    {
         /********************************************************************************
-         * Get analog compute TM from slave to master :
-         * ------------------------------------
+         * Prepare TM address for function "i2c_master_start_read_tm(...)" :
+         * ----------------------------------------------------------------
+         */
+        if(flag_i2c_data_ready == 0 && tm_address == 0)
+        {   
+            if(counter_while == 0)
+            {
+               tm_address = TM_VIN;
+            }
+            else if(counter_while == 1)
+            {
+                tm_address = TM_CHARGER_STATE;
+            }
+            i2c_master_start_read_tm(tm_address,&flag_i2c_data_ready);
+        }
+        //*******************************************************************************
+        
+        /********************************************************************************
+         * If com I2C completed, get analog compute TM from slave to master :
+         * -----------------------------------------------------------------
          */
         if(flag_i2c_data_ready == 1)
         {
             i2c_tm_analog = i2c_master_get_tm(tm_address);//Analog value of the TM.
-            led_red = on;
-            
             
             if(counter_while == 0)//TM_VIN.
             {
@@ -85,49 +102,37 @@ int main(void) {
                 i2c_slave_bat_missing           = i2c_tm_analog.data_4;
                 i2c_slave_bat_short             = i2c_tm_analog.data_5;
                 
-                //led_red     = off;
-                //led_green   = on;
+                //counter_while == -1;//-1 + 1 = 0 : Trick for new loop while and TM cycle.
+                
+                led_red     = off;
+                led_green   = on;
             }
             
+            tm_address = 0;//Reset address.
+            flag_i2c_data_ready = 0;//Reset main flag.
             counter_while++;
             
-            /***************************************************************************
-             * Prepare TM address for function "i2c_master_start_read_tm(...)" :
-             * ----------------------------------------------------------------
-             */
-            if(counter_while == 1)
+            //!!! A retirer !!!
+            if(counter_while > 1)
             {
-                tm_address = TM_CHARGER_STATE;
+                tm_address = 0xff;//Lancer une seule fois les 2 TM.
             }
-            //**************************************************************************
-
-            if(counter_while <= counter_max)
-            {
-                i2c_master_start_read_tm(tm_address,&flag_i2c_data_ready);
-            }
-             else
-            {
-                counter_while = 0;//Reset counter in other cases.
-            }
-            
-            flag_i2c_data_ready = 0;//Reset main flag.
-            //counter_while++;
             
         }
         //*******************************************************************************
         
         
         
-        
-//        if(counter <1000)
+//        
+//        if(timer_counter <50000)
 //        {
-//            counter++;
+//            timer_counter++;
 //        }
 //        else
 //        {
-//            LATDbits.LATD9 = !LATDbits.LATD9;
-//            led_red = !led_red;
-//            counter = 0;
+//            //LATDbits.LATD9 = !LATDbits.LATD9;
+//            led_blue = !led_blue;
+//            timer_counter = 0;
 //        }
     }
     
