@@ -1,6 +1,6 @@
 /* 
  * File             : main_wpt_rx_00.c
- * Date             : 25/01/2020.   
+ * Date             : 02/02/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -25,6 +25,7 @@ int main(void) {
     
 
     unsigned short      flag_i2c_data_ready             = 0;//"0" = not ready.
+    unsigned short      flag_i2c_end_writing            = 0;//"0" = write not ending.
     float               i2c_slave_v_in                  = 0;
     float               i2c_slave_charger_suspended     = 0;
     float               i2c_slave_precharge             = 0;
@@ -33,7 +34,8 @@ int main(void) {
     float               i2c_slave_bat_short             = 0;
     short               counter_while                   = 0;//Signed for a trick in while loop.
     unsigned short      tm_address                      = 0;
-    unsigned short      timer_counter                   = 0;
+    unsigned short      tx_address                      = 0;
+    unsigned long       timer_counter                   = 0;
     I2c_tm_analog       i2c_tm_analog;
     
     Nop();
@@ -47,28 +49,31 @@ int main(void) {
     led_blue    = off;
     
     i2c_master_init();
-
-    //i2c_master_start_read_tm(TM_VIN,&flag_i2c_data_ready);
-    //i2c_master_start_read_tm(TM_VSYS,&flag_i2c_data_ready);
-    //i2c_master_start_read_tm(TM_DIE_TEMP,&flag_i2c_data_ready);
-    //i2c_master_start_read_tm(TM_NTC_RATIO,&flag_i2c_data_ready);
-    //i2c_master_start_read_tm(TM_CHEM_CELLS,&flag_i2c_data_ready);
     
     
     //printf("hello");
     
+    tm_address  = 0xff;//Mauvaise adresse pour pas rentrer dans if TM.
+    tx_address  = TX_CONFIG_BITS;
     
+    /*
+     * Write a 16-bit data on the slave LiPo charger :
+     * ----------------------------------------------
+     * data = 0x0100    : Suspend battery charger operation.
+     * data = 0x0000    : Start new battery charge cycle.
+     */
+    i2c_master_start_write_data(tx_address,0x0100,&flag_i2c_end_writing);
     
-    //counter_max = 1;
+    led_red = on;
+    wait(1000000);
+    led_red = off;
     
-    while (1)
-    {
+    while (1){
         /********************************************************************************
          * Prepare TM address for function "i2c_master_start_read_tm(...)" :
          * ----------------------------------------------------------------
          */
-        if(flag_i2c_data_ready == 0 && tm_address == 0)
-        {   
+        if(flag_i2c_data_ready == 0 && tm_address == 0){   
             if(counter_while == 0)
             {
                tm_address = TM_VIN;
@@ -85,8 +90,7 @@ int main(void) {
          * If com I2C completed, get analog compute TM from slave to master :
          * -----------------------------------------------------------------
          */
-        if(flag_i2c_data_ready == 1)
-        {
+        if(flag_i2c_data_ready == 1){
             i2c_tm_analog = i2c_master_get_tm(tm_address);//Analog value of the TM.
             
             if(counter_while == 0)//TM_VIN.
@@ -117,23 +121,35 @@ int main(void) {
             {
                 tm_address = 0xff;//Lancer une seule fois les 2 TM.
             }
-            
         }
         //*******************************************************************************
         
         
+//        wait(1000000);
+//        led_red = !led_red;
         
-//        
-//        if(timer_counter <50000)
-//        {
-//            timer_counter++;
-//        }
-//        else
-//        {
-//            //LATDbits.LATD9 = !LATDbits.LATD9;
-//            led_blue = !led_blue;
-//            timer_counter = 0;
-//        }
+        
+        if(flag_i2c_end_writing != 0){
+            if(flag_i2c_end_writing == 1){
+                if(counter_while == 0){
+                    led_blue    = on;
+                    i2c_master_start_write_data(tx_address,0x0100,&flag_i2c_end_writing);
+                }
+                else if (counter_while == 1){
+                    led_blue    = off;
+                    led_green   = on;
+                    i2c_master_start_write_data(tx_address,0x0000,&flag_i2c_end_writing);
+                }   
+                counter_while++;
+            flag_i2c_end_writing = 0;//Reset flag.
+            }
+            Nop();
+            Nop();
+        }
+        
+        
+         
+        
     }
     
     return 0;

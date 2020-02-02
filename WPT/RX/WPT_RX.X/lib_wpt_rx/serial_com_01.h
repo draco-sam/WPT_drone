@@ -10,6 +10,7 @@
 #include <stddef.h>
 
 //Sub addresses of read register on i2c slave IC charger :
+#define TX_CONFIG_BITS      0x14
 #define TM_CHARGER_STATE    0x34
 #define TM_VBAT             0x3a
 #define TM_IBAT             0x3d
@@ -44,3 +45,5 @@ typedef struct I2c_tm_analog
 void i2c_master_start_read_tm(unsigned short tm_address,unsigned short *f_data_ready);
 void i2c_master_init(void);
 I2c_tm_analog i2c_master_get_tm(unsigned short tm_address);
+void i2c_master_start_write_data(   unsigned short tx_address,unsigned short data,
+                                    unsigned short *f_end_writing);

@@ -156,3 +156,15 @@ void i2c_bus_high(void)
     }
 }
 //__________________________________________________________________________________________________
+
+void wait(unsigned long count){
+/*
+ * 
+ */
+    unsigned long timer_counter = 0;
+    
+    while(timer_counter < count){
+            timer_counter++;
+    }
+    
+}

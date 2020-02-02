@@ -1,6 +1,6 @@
 /* 
  * File             : serial_com_01.c
- * Date             : 29/01/2020.   
+ * Date             : 02/02/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -20,8 +20,10 @@ static int              i2c_data_l                  = 0;//Low 8-bit from 16-bit 
 static int              i2c_data_h                  = 0;//High 8-bit from 16-bit data.
 static unsigned short   i2c_command                 = 0;
 static unsigned short   i2c_interrupt_counter       = 0;
-static unsigned short   i2c_flag_read               = 0;//Read OFF.
+static unsigned short   i2c_flag_read               = 0;//Flag read off for interrupt.
+static unsigned short   i2c_flag_write              = 0;//Flag write off for interrupt.
 static unsigned short   *s_flag_data_ready          = NULL;
+static unsigned short   *s_flag_end_writing         = NULL;
 
 void i2c_master_init(void)
 /*
@@ -78,8 +80,7 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C1Interrupt ( void )
     
     i2c_interrupt_counter++;
     
-    if(i2c_flag_read == 1)//Read value from slave :
-    {
+    if(i2c_flag_read == 1){//Read value from slave :
         //1)Send slave address with a future write communication :
         if(i2c_interrupt_counter == 1)
         {
@@ -192,16 +193,68 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C1Interrupt ( void )
             i2c_interrupt_counter   = 0;//Reset.  
         }
     }
+    /*
+     * Master writes a byte to the slave LiPo charger :
+     * -----------------------------------------------
+     */
+    else if(i2c_flag_write == 1){
+        //1)Send slave address with a future write communication :
+        if(i2c_interrupt_counter == 1){
+            I2C1TRN = i2c_slave_add_write;//Write address in buffeur out.
+        }
+        //2)Send a data command to the slave :
+        else if(i2c_interrupt_counter == 2){
+            if(I2C1STATbits.ACKSTAT == 0){//0 = Acknowledge was received from Slave
+                I2C1TRN = i2c_command;//Address of one register on the slave.
+            }
+            else{
+                i2c_interrupt_counter = 98;
+            }
+        }
+        //3)If ACK, send data byte low :
+        else if(i2c_interrupt_counter == 3){
+            if(I2C1STATbits.ACKSTAT == 0){//0 = Acknowledge was received from Slave
+                I2C1TRN = i2c_data_l;
+            }
+            else{
+                i2c_interrupt_counter = 98;
+            }
+        }
+        //4)If ACK, send data byte high :
+        else if(i2c_interrupt_counter == 4){
+            if(I2C1STATbits.ACKSTAT == 0){//0 = Acknowledge was received from Slave
+                I2C1TRN = i2c_data_h;
+            }
+            else{
+                i2c_interrupt_counter = 98;
+            }
+        }
+        //5)Check if ACK has been sent from the slave for the reception of the byte high :
+        else if(i2c_interrupt_counter == 5 || i2c_interrupt_counter == 99){
+            if(I2C1STATbits.ACKSTAT != 0){//0 = Acknowledge was received from Slave
+               *s_flag_end_writing = 2;//2 = bad code for main loop.
+            }
+            I2C1CONbits.PEN    = 1;
+        }
+        //6)Reset counter for next communication, SDAx and SCLx pins are at "1" :
+        else if(i2c_interrupt_counter == 6 || i2c_interrupt_counter == 100){
+            //1 = Indicates that a Stop bit has been detected last.
+            if(I2C1STATbits.P != 1 || i2c_interrupt_counter == 100){
+                 *s_flag_end_writing    = 3;//3 = bad code for main loop.
+            }
+            *s_flag_end_writing         = 1;//1 = end of writing ok for main loop.
+            i2c_interrupt_counter       = 0;//Reset.  
+        }
+    }
     
     IEC1bits.MI2C1IE = 1;//Enable the master interrupt.
 }
 //__________________________________________________________________________________________________
 
-void i2c_master_start_read_tm(unsigned short tm_address,unsigned short *f_data_ready)
+void i2c_master_start_read_tm(unsigned short tm_address,unsigned short *f_data_ready){
 /*
  * Start i2C master read telemetry from slave IC charger and save it on static variables.
  */
-{
     i2c_flag_read       = 1;//Read ongoing, flag for interrupt.
     i2c_command         = tm_address;
     s_flag_data_ready   = f_data_ready;//Copier adresse du flag dans variable statique.
@@ -227,14 +280,12 @@ void i2c_master_start_read_tm(unsigned short tm_address,unsigned short *f_data_r
 }
 //__________________________________________________________________________________________________
 
-I2c_tm_analog i2c_master_get_tm(unsigned short tm_address)
+I2c_tm_analog i2c_master_get_tm(unsigned short tm_address){
 /*
  * I2C master get telemetry to main program .
  * The 16-bit data is decomposed into 2 bytes.
  */
-{
     unsigned short  digital_data        = 0;
-    //unsigned short  digital_data_old    = 0;
     I2c_tm_analog i2c_tm_analog;
     
     //Reset value :
@@ -287,8 +338,9 @@ I2c_tm_analog i2c_master_get_tm(unsigned short tm_address)
          * 
          * bit at "1"       : state bit = ON.
          * bit at "0"       : state bit = OFF.
+         * 
+         * Comment          : Not all bits are stored on the structure "i2c_tm_analog".
          */
-        //digital_data_old = digital_data;
         
         i2c_tm_analog.data_1 = ((digital_data & 0x100) >> 8);//bit 8  : charger_suspended.
         i2c_tm_analog.data_2 = ((digital_data & 0x80) >> 7);//bit 7   : precharge.
@@ -303,7 +355,25 @@ I2c_tm_analog i2c_master_get_tm(unsigned short tm_address)
     i2c_data_l  = 0;
 
     return i2c_tm_analog;
-};
+}
 //__________________________________________________________________________________________________
 
-
+void i2c_master_start_write_data(   unsigned short tx_address,unsigned short data,
+                                    unsigned short *f_end_writing){
+/*
+ * Start i2C master read telemetry from slave IC charger and save it on static variables.
+ */
+    s_flag_end_writing      = f_end_writing;//Copy the address of the flag on static variable.
+    
+    //Check if Master transmit is not in progress ("0") :
+    if(I2C1STATbits.TRSTAT == 0){
+        i2c_flag_write      = 1;//Read ongoing, flag for interrupt.
+        i2c_command         = tx_address;
+        
+        i2c_data_l          = data & 0x00ff;
+        i2c_data_h          = data >> 8;
+        
+        I2C1CONbits.SEN     = 1;//Initiates Start condition on SDAx and SCLx pins.
+    }
+}
+//__________________________________________________________________________________________________
