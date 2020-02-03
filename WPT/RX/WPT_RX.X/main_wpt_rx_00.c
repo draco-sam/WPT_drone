@@ -53,7 +53,7 @@ int main(void) {
     
     //printf("hello");
     
-    tm_address  = 0xff;//Mauvaise adresse pour pas rentrer dans if TM.
+    //tm_address  = 0xff;//Mauvaise adresse pour pas rentrer dans if TM.
     tx_address  = TX_CONFIG_BITS;
     
     /*
@@ -62,18 +62,19 @@ int main(void) {
      * data = 0x0100    : Suspend battery charger operation.
      * data = 0x0000    : Start new battery charge cycle.
      */
-    i2c_master_start_write_data(tx_address,0x0100,&flag_i2c_end_writing);
+    //i2c_master_start_write_data(tx_address,0x0100,&flag_i2c_end_writing);
     
-    led_red = on;
-    wait(1000000);
-    led_red = off;
+//    led_red = on;
+//    wait(1000000);
+//    led_red = off;
     
     while (1){
         /********************************************************************************
          * Prepare TM address for function "i2c_master_start_read_tm(...)" :
          * ----------------------------------------------------------------
          */
-        if(flag_i2c_data_ready == 0 && tm_address == 0){   
+//        if(flag_i2c_data_ready == 0 && tm_address == 0){//!! Enlever tm_address=0 dans le futur!!
+        if(flag_i2c_data_ready == 0){
             if(counter_while == 0)
             {
                tm_address = TM_VIN;
@@ -96,31 +97,33 @@ int main(void) {
             if(counter_while == 0)//TM_VIN.
             {
                 i2c_slave_v_in = i2c_tm_analog.data_1;
-                led_red = on;
+                led_red     = on;
+                led_green   = off;
             }
-            else if(counter_while == 1)//TM_CHARGER_STATE.
-            {
+            else if(counter_while == 1){//TM_CHARGER_STATE.
                 i2c_slave_charger_suspended     = i2c_tm_analog.data_1;
                 i2c_slave_precharge             = i2c_tm_analog.data_2;
                 i2c_slave_cc_cv_charge          = i2c_tm_analog.data_3;
                 i2c_slave_bat_missing           = i2c_tm_analog.data_4;
                 i2c_slave_bat_short             = i2c_tm_analog.data_5;
                 
-                //counter_while == -1;//-1 + 1 = 0 : Trick for new loop while and TM cycle.
+                counter_while = -1;//-1 + 1 = 0 : Trick for new loop while and TM cycle.
                 
-                led_red     = off;
-                led_green   = on;
+                led_red     = on;
+                led_green   = off;
             }
             
             tm_address = 0;//Reset address.
             flag_i2c_data_ready = 0;//Reset main flag.
             counter_while++;
             
-            //!!! A retirer !!!
-            if(counter_while > 1)
-            {
-                tm_address = 0xff;//Lancer une seule fois les 2 TM.
-            }
+            wait(500000);
+            
+//            //!!! A retirer !!!
+//            if(counter_while >= 1)
+//            {
+//                tm_address = 0xff;//Lancer une seule fois les 2 TM.
+//            }
         }
         //*******************************************************************************
         
@@ -128,7 +131,10 @@ int main(void) {
 //        wait(1000000);
 //        led_red = !led_red;
         
-        
+        /*************************************************************************************
+         * I2C write data from Master to slave LiPo charger :
+         * -------------------------------------------------
+         */
         if(flag_i2c_end_writing != 0){
             if(flag_i2c_end_writing == 1){
                 if(counter_while == 0){
@@ -146,7 +152,7 @@ int main(void) {
             Nop();
             Nop();
         }
-        
+        //************************************************************************************
         
          
         

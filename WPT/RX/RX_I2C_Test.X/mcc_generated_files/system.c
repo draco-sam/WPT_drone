@@ -45,22 +45,18 @@
 #include "pin_manager.h"
 #include "clock.h"
 #include "system.h"
-#include "i2c1.h"
 #include "interrupt_manager.h"
 #include "traps.h"
-
-#define led_red         LATGbits.LATG7
-#define led_green       LATGbits.LATG6
-#define led_blue        LATEbits.LATE7
-#define on              0
-#define off             1
-
+#include "i2c1.h"
+#include "usb/usb.h"
 
 void SYSTEM_Initialize(void)
-{     
+{
     PIN_MANAGER_Initialize();
-    CLOCK_Initialize();
     INTERRUPT_Initialize();
+    CLOCK_Initialize();
+    USBDeviceInit();
+    USBDeviceAttach();
     I2C1_Initialize();
 }
 
