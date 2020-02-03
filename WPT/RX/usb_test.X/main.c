@@ -81,9 +81,13 @@ int main(void)
     ANSGbits.ANSELG7 = 0;
     /*****************************************************/
 
+    led_red     = on;
+    led_green   = off;
+    led_blue    = off;
+    
     while (1)
     {
-        // Add your application code
+        MCC_USB_CDC_DemoTasks();
     }
 
     return 1;
