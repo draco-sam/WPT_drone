@@ -47,6 +47,7 @@
 */
 #include "mcc_generated_files/system.h"
 #include "mcc_generated_files/PIC24FJ128GC006.h"
+#include "mcc_generated_files/usb/usb_device_cdc.h"
 
 /*
                          Main application
@@ -61,6 +62,9 @@ int main(void)
     #define led_blue        LATEbits.LATE7
     #define on              0
     #define off             1
+    
+    unsigned long       counter_while           = 0;
+    char                data_com                = "USB Virtual COM3";
     
     // initialize the device
     SYSTEM_Initialize();
@@ -81,13 +85,54 @@ int main(void)
     ANSGbits.ANSELG7 = 0;
     /*****************************************************/
 
-    led_red     = on;
+    led_red     = off;
     led_green   = off;
     led_blue    = off;
     
-    while (1)
-    {
-        MCC_USB_CDC_DemoTasks();
+    while(counter_while < 1e+6){
+        counter_while++; 
+    }
+    led_red     = on;
+    led_green   = off;
+   
+      
+    unsigned short flag_tx      = 0;
+    unsigned short flag_tx_2    = 0;
+    unsigned short flag_tx_3    = 0;
+    
+    int data_2[1] = {0x0d};//0x0D : Carriage return.
+    int data_3[1] = {0x0a};//0x0A : Line feed.
+    
+    while (1){
+        //MCC_USB_CDC_DemoTasks();
+        
+        if(flag_tx == 0){
+            if(USBUSARTIsTxTrfReady() == true){
+                char data[] = "Hello World :";
+                putsUSBUSART(data);
+                flag_tx     = 1;
+                flag_tx_2   = 1;
+            }
+        }
+        if(flag_tx_2 == 1){
+            if(USBUSARTIsTxTrfReady() == true){
+                putsUSBUSART(data_2);
+                flag_tx_2 = 0;
+                flag_tx_3 = 1;
+            }
+        }
+        if(flag_tx_3 == 1){
+            if(USBUSARTIsTxTrfReady() == true){
+                putsUSBUSART(data_3);
+                flag_tx_3 = 0;
+            }
+        }
+        
+        CDCTxService();
+        
+
+        
+        
     }
 
     return 1;

@@ -43,7 +43,7 @@ static uint8_t writeBuffer[64];
 
 void MCC_USB_CDC_DemoTasks(void)
 {
-    if( USBGetDeviceState() < CONFIGURED_STATE )
+   if( USBGetDeviceState() < CONFIGURED_STATE )
     {
         return;
     }
@@ -53,55 +53,39 @@ void MCC_USB_CDC_DemoTasks(void)
         return;
     }
 
-    if( USBUSARTIsTxTrfReady() == true){
+    if( USBUSARTIsTxTrfReady() == true)
+    {
         led_red     = off;
         led_blue    = on;
         
-        /*
-         * Exemple pour envoyer un texte sur COM3 avec Putty :
-         * --------------------------------------------------
-         * Speed : 115200 bauds , Data bits : 8 bits ;
-         * Parity : None ; Flow control : None.
-         * 
-         * Voir exemple dans fichier "usb_device_cdc.c".
-         * 
-         * !!! Envoie "Hello World" en boucle !!!
-         * 
-         * Il faudra gérer les caractères ASCII comme 0x40 <-> A.
-         */
-        char data[] = "Hello World";
-        putsUSBUSART(data);
-        
-//        uint8_t i;
-//        uint8_t numBytesRead;
-//
-//        numBytesRead = getsUSBUSART(readBuffer, sizeof(readBuffer));
-//
-//        for(i=0; i<numBytesRead; i++){
-//            switch(readBuffer[i]){
-//                /* echo line feeds and returns without modification. */
-//                case 0x0A://LF (Line Feed, saut de ligne).
-//                case 0x0D://CR (Carriage return, retour à la ligne) ??
-//                    writeBuffer[i] = readBuffer[i];
-//                    break;
-//
-//                /* all other characters get +1 (e.g. 'a' -> 'b') */
-//                default:
-//                    //writeBuffer[i] = readBuffer[i] + 1;
-//                    //writeBuffer[i] = readBuffer[i];
-//                    writeBuffer[0] = 0x55;
-//                    writeBuffer[1] = 0x53;
-//                    writeBuffer[2] = 0x42;
-////                    writeBuffer[1] = 1;
-////                    writeBuffer[2] = 2;
-//                    break;
-//            }
-//        }
-//
-//        if(numBytesRead > 0){
-//            putUSBUSART(writeBuffer,numBytesRead);
-//        }
+        uint8_t i;
+        uint8_t numBytesRead;
+
+        numBytesRead = getsUSBUSART(readBuffer, sizeof(readBuffer));
+
+        for(i=0; i<numBytesRead; i++)
+        {
+            switch(readBuffer[i])
+            {
+                /* echo line feeds and returns without modification. */
+                case 0x0A:
+                case 0x0D:
+                    writeBuffer[i] = readBuffer[i];
+                    break;
+
+                /* all other characters get +1 (e.g. 'a' -> 'b') */
+                default:
+                    writeBuffer[i] = readBuffer[i];
+                    break;
+            }
+        }
+
+        if(numBytesRead > 0)
+        {
+            putUSBUSART(writeBuffer,numBytesRead);
+        }
     }
 
     CDCTxService();
+    
 }
