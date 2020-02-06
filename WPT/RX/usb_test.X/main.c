@@ -54,6 +54,7 @@
  */
 
 void integer_to_ascii(unsigned short data,char *table);
+void get_menu(char *data);
 
 int main(void){
     #define led_red         LATGbits.LATG7
@@ -88,9 +89,13 @@ int main(void){
     led_green   = off;
     led_blue    = off;
     
-    while(counter_while < 500e+3){
-        counter_while++; 
-    }
+//    while(counter_while < 500e+3){
+//        counter_while++; 
+//    }
+    
+    //Plugger l'USB pour démarrer le code.
+    while(USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended()== true){};
+    
     led_red     = on;
     led_green   = off;
    
@@ -103,19 +108,80 @@ int main(void){
     Nop();
     Nop();
     
-    char            data_com[]      = "USB Virtual COM3 :\n\r-----------------\n\r";
-    unsigned int    flag_tx         = 0;
+    //char data_com[]     = "USB Virtual COM3 :\n\r-----------------\n\r";
+   
+    char data_com1[]    = "Menu I2C...";
+    char vbat_com[]     = "16.82 V\r\n";
+    char ibat_com[]     = "1.8 A\r\n\n";
     
-    while(USBUSARTIsTxTrfReady() != true){}
-    putsUSBUSART(data_com);
+    unsigned short flag_v   = 1;
+    unsigned short flag_i   = 0;
+    
+    unsigned short  flag_menu       = 1;//"1" : Bloquer le menu.
+    unsigned short  numBytesRead    = 0;
+    unsigned short  i               = 0;
+    //char            data_write_com[64];
+    //char            data_read_com[64];
+    unsigned int    data_write_com[64];
+    unsigned int    data_read_com[64];
+    char            menu_com[64];
+    
+//    while(USBUSARTIsTxTrfReady() != true){}
+//    putsUSBUSART(data_com);
+    
+    get_menu(menu_com);
     
     while (1){
         //MCC_USB_CDC_DemoTasks();
+        
+//        if(flag_v == 1){
+//            if(USBUSARTIsTxTrfReady() == true){
+//                putsUSBUSART(vbat_com);
+//                flag_v = 0;
+//                flag_i = 1;
+//            }
+//        }
+//        else if(flag_i == 1){
+//            if(USBUSARTIsTxTrfReady() == true){
+//                putsUSBUSART(ibat_com);
+//                flag_v = 1;
+//                flag_i = 0;
+//            }
+//        }
+        
+        if(flag_menu == 0){
+            if(USBUSARTIsTxTrfReady() == true){
+                putsUSBUSART(menu_com);
+                flag_menu = 1;//Bloquer le menu.
+            }
+        }
+            
+        if(USBUSARTIsTxTrfReady() == true){
+            numBytesRead = getsUSBUSART(data_read_com, sizeof(data_read_com));
+
+            for(i=0; i<numBytesRead; i++){
+                if(data_read_com[i] == 0x0a){
+                    data_write_com[i] = 0x0a;
+                    flag_menu = 0;//Relancer le menu.
+                }
+                else{
+                    data_write_com[i] = data_read_com[i];
+                }
+            }
+            if(numBytesRead > 0){
+                //putsUSBUSART(data_write_com);
+                putUSBUSART(data_write_com,numBytesRead);
+                flag_menu = 0;//Relancer le menu.
+            }
+        }
+        
+        
+        
         CDCTxService();
         
-
-        
-        
+//        while(counter_while < 1e+6){
+//        counter_while++; 
+//        } 
     }
 
     return 1;
@@ -150,5 +216,21 @@ void integer_to_ascii(unsigned short data,char *table){
     table[1]    = table_ascii[data_1 - data_2]; //54 - 50 = 4.
     
     table[0]    = table_ascii[data_1 / 10]; //54 / 10 = 5.
+}
+//__________________________________________________________________________________________________
+
+void get_menu(char *data_com){
+/*
+ * 
+ */
+    char data[]     = "\n\nMain Menu :\r\n----------\r\n"
+    "1 : Vbat \r\n"
+    "2 : Ibat \r\n"
+    "----------\r\n";
+    
+    strcpy(data_com,data);
+    
+   
+                           
 }
 //__________________________________________________________________________________________________
