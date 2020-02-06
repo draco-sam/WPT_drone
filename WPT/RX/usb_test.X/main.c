@@ -89,33 +89,14 @@ int main(void){
     led_green   = off;
     led_blue    = off;
     
-//    while(counter_while < 500e+3){
-//        counter_while++; 
-//    }
-    
-    //Plugger l'USB pour démarrer le code.
-    while(USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended()== true){};
-    
-    led_red     = on;
-    led_green   = off;
-   
     //0x0D : Carriage return.
     //0x0A : Line feed.
     char data_4[]   = {0x0d,0x0a};
     char table[5]   = {'0'};//Tableau pour tester la conversion vers ascii.
-    
-    integer_to_ascii(54321,table);
-    Nop();
-    Nop();
-    
-    //char data_com[]     = "USB Virtual COM3 :\n\r-----------------\n\r";
-   
+        
     char data_com1[]    = "Menu I2C...";
     char vbat_com[]     = "16.82 V\r\n";
     char ibat_com[]     = "1.8 A\r\n\n";
-    
-    unsigned short flag_v   = 1;
-    unsigned short flag_i   = 0;
     
     unsigned short  flag_menu       = 1;//"1" : Bloquer le menu.
     unsigned short  numBytesRead    = 0;
@@ -126,43 +107,46 @@ int main(void){
     unsigned int    data_read_com[64];
     char            menu_com[64];
     
-//    while(USBUSARTIsTxTrfReady() != true){}
-//    putsUSBUSART(data_com);
+    integer_to_ascii(54321,table);
+    Nop();
+    Nop();
+    
+    //Plugger l'USB pour démarrer le code.
+    while(USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended()== true){};
+    
+    led_red     = on;
+    led_green   = off;
     
     get_menu(menu_com);
     
     while (1){
         //MCC_USB_CDC_DemoTasks();
         
-//        if(flag_v == 1){
-//            if(USBUSARTIsTxTrfReady() == true){
-//                putsUSBUSART(vbat_com);
-//                flag_v = 0;
-//                flag_i = 1;
-//            }
-//        }
-//        else if(flag_i == 1){
-//            if(USBUSARTIsTxTrfReady() == true){
-//                putsUSBUSART(ibat_com);
-//                flag_v = 1;
-//                flag_i = 0;
-//            }
-//        }
-        
+        /********************************************************************************
+         * Display menu if USB COM ready :
+         * ------------------------------
+         */
         if(flag_menu == 0){
             if(USBUSARTIsTxTrfReady() == true){
                 putsUSBUSART(menu_com);
                 flag_menu = 1;//Bloquer le menu.
             }
         }
+        /*******************************************************************************/
             
+        /********************************************************************************
+         * Read buffer if USB COM ready :
+         * -----------------------------
+         */
         if(USBUSARTIsTxTrfReady() == true){
             numBytesRead = getsUSBUSART(data_read_com, sizeof(data_read_com));
 
             for(i=0; i<numBytesRead; i++){
-                if(data_read_com[i] == 0x0a){
-                    data_write_com[i] = 0x0a;
+                if(data_read_com[i] == 0x0d){
+                    data_write_com[i] = 0x0d;
                     flag_menu = 0;//Relancer le menu.
+                    led_red = off;
+                    led_blue = on;
                 }
                 else{
                     data_write_com[i] = data_read_com[i];
@@ -171,10 +155,10 @@ int main(void){
             if(numBytesRead > 0){
                 //putsUSBUSART(data_write_com);
                 putUSBUSART(data_write_com,numBytesRead);
-                flag_menu = 0;//Relancer le menu.
+                //flag_menu = 0;//Relancer le menu.
             }
         }
-        
+        /*******************************************************************************/
         
         
         CDCTxService();
