@@ -42,7 +42,7 @@
     TERMS.
 */
 
-#include "xc.h"
+//#include "xc.h"
 #include "stdint.h"
 
 #ifndef SYSTEM_H

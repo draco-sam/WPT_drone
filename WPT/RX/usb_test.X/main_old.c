@@ -101,11 +101,14 @@ int main(void){
     unsigned short  flag_menu       = 1;//"1" : Bloquer le menu.
     unsigned short  numBytesRead    = 0;
     unsigned short  i               = 0;
+    unsigned short  i_a               = 0;
     //char            data_write_com[64];
     //char            data_read_com[64];
     unsigned int    data_write_com[64];
     unsigned int    data_read_com[64];
     char            menu_com[64];
+    //unsigned short  menu_sam     = 0;
+
     
     integer_to_ascii(54321,table);
     Nop();
@@ -152,6 +155,11 @@ int main(void){
                     data_write_com[i] = data_read_com[i];
                 }
             }
+            
+//            if(data_read_com[0] != 0x0d){
+//                menu_number = data_read_com[0];
+//            }
+            
             if(numBytesRead > 0){
                 //putsUSBUSART(data_write_com);
                 putUSBUSART(data_write_com,numBytesRead);
