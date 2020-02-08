@@ -14,6 +14,7 @@
 #include <string.h>
 
 void get_menu(char *data);
+void get_data_i2c(char *t_data);
 
 #define led_red         LATGbits.LATG7
 #define led_green       LATGbits.LATG6
@@ -28,13 +29,15 @@ int main(void) {
     // initialize the device
     SYSTEM_Initialize();
     
-    unsigned short  flag_menu       = 1;//"1" : Bloquer le menu.
     unsigned short  numBytesRead    = 0;
     unsigned short  i               = 0;
     unsigned short  menu_number     = 0xffff;//Bad menu number.
+    unsigned long   counter_while   = 0;
     uint8_t         data_write_com[64];
     uint8_t         data_read_com[64];
     char            menu_com[64];
+    char            t_data_i2c[64];
+    //char            t_data_i2c      = "Vbat = 3.97 V ; Ibat = 0.965 A ; T = 36 \r";
     
     /******************************************************
      * Configuration des IO pour les 3 leds :
@@ -69,10 +72,10 @@ int main(void) {
          * Display menu if USB COM ready :
          * ------------------------------
          */
-        if(flag_menu == 0){
+        if(menu_number == 0xffff){
             if(USBUSARTIsTxTrfReady() == true){
                 putsUSBUSART(menu_com);
-                flag_menu = 1;//Bloquer le menu.
+                menu_number = 0xfffe;//Bloquer le menu.
             }
         }
         /*******************************************************************************/
@@ -87,7 +90,7 @@ int main(void) {
             for(i=0; i<numBytesRead; i++){
                 if(data_read_com[i] == 0x0d){
                     data_write_com[i] = 0x0d;
-                    flag_menu = 0;//Relancer le menu.
+                    menu_number = 0xffff;//Relancer le menu.
                     led_red     = off;
                     led_green   = off;
                     led_blue    = on;
@@ -104,7 +107,6 @@ int main(void) {
                 if(data_read_com[0] != 0x0d){
                     menu_number = ascii_to_integer(data_read_com);
                 }
-                
             }
         }
         /*******************************************************************************/
@@ -115,12 +117,37 @@ int main(void) {
             led_blue    = off;
             led_green   = off;
             led_red     = on;
+            menu_number = 0;//Reset.
         }
         else if (menu_number == 2){
             led_red     = off;
             led_blue    = off;
             led_green   = on;
+            menu_number = 0;//Reset.
         }
+//        else if (menu_number == 3){
+//            led_red     = off;
+//            led_blue    = on;
+//            led_green   = on;
+//            
+//            if(USBUSARTIsTxTrfReady() == true){
+//                while(counter_while < 500000){
+//                    counter_while++;
+//                }
+//                counter_while = 0;//Reset.
+//                
+//                numBytesRead = getsUSBUSART(data_read_com, sizeof(data_read_com));
+//                if(numBytesRead > 0){
+//                    menu_number = 0;//Utile ???
+//                    flag_menu   = 0;
+//                }
+//                else{
+//                    get_data_i2c(t_data_i2c);
+//                    putsUSBUSART(t_data_i2c);
+//                }
+//                
+//            }
+//        }
         
     }//End of principal while.
     
@@ -139,6 +166,16 @@ void get_menu(char *data_com){
     "----------\r\n";
     
     strcpy(data_com,data); 
+}
+//__________________________________________________________________________________________________
+
+void get_data_i2c(char *t_data){
+/*
+ * 
+ */
+    char data[]     = "Vbat = 3.94 V ; Ibat = 0.912 A ; T = 36 \r";
+    
+    strcpy(t_data,data); 
 }
 //__________________________________________________________________________________________________
 
