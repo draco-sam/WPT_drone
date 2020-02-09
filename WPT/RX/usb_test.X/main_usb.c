@@ -17,6 +17,9 @@ void get_menu(char *data);
 void get_data_i2c(char *t_data);
 unsigned short ascii_to_integer(unsigned char *table);
 void integer_to_ascii(unsigned short data,uint8_t *table);
+void write_usb_com(char *t_data,unsigned short *flag_sending);
+
+
 
 
 #define led_red         LATGbits.LATG7
@@ -28,21 +31,35 @@ void integer_to_ascii(unsigned short data,uint8_t *table);
 
 
 int main(void) {
-    
-    // initialize the device
-    SYSTEM_Initialize();
-    
     unsigned short  numBytesRead    = 0;
     unsigned short  i               = 0;
-    unsigned short  menu_number     = 0xffff;//Bad menu number.
+    unsigned short  menu_number     = 0xfffe;//Bad menu number.
+    unsigned short  f_data_sending  = 0;//Flag for write USB COM and main loop.
     unsigned long   counter_while   = 0;
+    char            t_empty[64]     = "";//Pour effacer les 64 bytes.<-> à NULL.
+    char            t_data_i2c[64]  = "";
     uint8_t         data_write_com[64];
     uint8_t         data_read_com[64];
     uint8_t         menu_com[64];
     //char            menu_com[64];
     //char            t_data_i2c[64];
-    uint8_t         t_data_i2c[7];
+    
     //char            t_data_i2c      = "Vbat = 3.97 V ; Ibat = 0.965 A ; T = 36 \r";
+    
+    //    unsigned char   t_data_usb_com_3[] = " : T die = 36 deg Celicuuuuuuuuuuuuus";
+    //    unsigned short  i_3 = 0;
+    //    unsigned short  counter_max = 27;
+    //    
+    //    strcpy(t_data_i2c,t_data_usb_com_3);
+    //    
+    //    for(i_3=0 ; i_3 < (64-38); i_3++){
+    //        t_data_i2c[39 + i_3] = 0;
+    //    }
+    
+    // initialize the device
+    SYSTEM_Initialize();
+    
+    
     
     /******************************************************
      * Configuration des IO pour les 3 leds :
@@ -63,6 +80,7 @@ int main(void) {
     led_green   = off;
     led_blue    = off;
     
+
     
     //Plugger l'USB pour démarrer le code.
     while(USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended()== true){};
@@ -130,51 +148,98 @@ int main(void) {
             led_blue    = off;
             led_green   = off;
             led_red     = on;
-            menu_number = 0;//Reset.
+            
+            //write_usb_com(" : test bonjour",&f_data_sending);
+            
+            
+            //unsigned char t_data_usb_com[] = " : Vbattery = 3.97 V \r\n";
+            //strcpy(t_data_i2c,"1 : Vbattery = 3.97 V \r\n");
+            
+            unsigned short  i_1         = 0;
+            
+            //Nettoyer le tableau avant utilisation :
+            for(i_1=0 ; i_1 < sizeof(t_data_i2c) ; i_1++){
+                    t_data_i2c[i_1] = 0;//NULL.
+            }
+            
+            
+            strcpy(t_data_i2c," : Vbattery = 3.97 Vvvvvvvvvvvvvvvvvvv \r\n");
+            
+            if(USBUSARTIsTxTrfReady() == true){
+                putUSBUSART(t_data_i2c,sizeof(t_data_i2c));
+                //strcpy(t_data_i2c,t_empty);//Empty de table for next Tx.
+                menu_number = 0xfffe;//Reset.
+            }
         }
         else if (menu_number == 2){
             led_red     = off;
             led_blue    = off;
             led_green   = on;
-            menu_number = 0;//Reset.
+            
+//            strcpy(t_data_i2c," : Ibattery = 1387 mA \r\n");
+            
+            unsigned short  i_2         = 0;
+            
+            //Nettoyer le tableau avant utilisation :
+            for(i_2=0 ; i_2 < sizeof(t_data_i2c) ; i_2++){
+                    t_data_i2c[i_2] = 0;//NULL.
+            }
+            
+            //unsigned char t_data_usb_com_2[] = " : Ibattery = 1387 mA";
+            //strcpy(t_data_i2c,t_data_usb_com_2);
+            strcpy(t_data_i2c," : Ibattery = 1387 mA \r\n");
+
+            
+//            unsigned short  offset_2    = 0;
+//            offset_2  = sizeof(t_data_usb_com_2) + 1; 
+//            for(i_2=0 ; i_2 < (64 - sizeof(t_data_usb_com_2)); i_2++){
+//                t_data_i2c[offset_2 + i_2] = 0;
+//            }
+            
+            if(USBUSARTIsTxTrfReady() == true){
+                putUSBUSART(t_data_i2c,sizeof(t_data_i2c));
+                
+                menu_number = 0xfffe;//Reset.
+                //f_data_sending = 1;
+            }
         }
         else if (menu_number == 3){
             led_red     = off;
             led_blue    = on;
             led_green   = on;
-//            
+           
             if(USBUSARTIsTxTrfReady() == true){
-////                while(counter_while < 500000){
-////                    counter_while++;
-////                }
-////                counter_while = 0;//Reset.
-//                
-//                //get_data_i2c(t_data_i2c);
-//                //putsUSBUSART(t_data_i2c);
-                //t_data_i2c[0] = '\n\r';
-                t_data_i2c[0] = 0x0d;//Carriage return.
-                t_data_i2c[1] = 0x0a;//Line Feed.
-                t_data_i2c[2] = 'V';
-                t_data_i2c[3] = 'b';
-                t_data_i2c[4] = 'a';
-                t_data_i2c[5] = 0x0d;//Carriage return.
-                t_data_i2c[6] = 0x0a;//Line Feed.
-                putUSBUSART(t_data_i2c,7);
-                menu_number = 0xffff;
-//              
-//////                numBytesRead = getsUSBUSART(data_read_com, sizeof(data_read_com));
-//////                if(numBytesRead > 0){
-//////                    menu_number = 0xffff;//Utile ???
-//////                }
-//////                else{
-//////                    get_data_i2c(t_data_i2c);
-//////                    putsUSBUSART(t_data_i2c);
-//////                }
-////                
+                
+                //unsigned char t_data_usb_com_3[] = " : T die = 36 deg Celicuuuuuuuuuuuuus";
+                
+                unsigned short  i_3         = 0;
+            
+                //Nettoyer le tableau avant utilisation :
+                for(i_3=0 ; i_3 < sizeof(t_data_i2c) ; i_3++){
+                        t_data_i2c[i_3] = 0;//NULL.
+                }
+
+
+                strcpy(t_data_i2c," : T die = 36 deg Celicuuuuuuuuuuuuus \r\n");
+                
+                //integer_to_ascii(sizeof(t_data_usb_com_3),t_data_i2c);//38.
+                //integer_to_ascii(43,t_data_i2c);
+            
+                if(USBUSARTIsTxTrfReady() == true){
+                    //putUSBUSART(t_data_i2c,sizeof(t_data_i2c));
+                    putUSBUSART(t_data_i2c,64);
+                    //strcpy(t_data_i2c,t_empty);//Empty de table for next Tx.
+                    menu_number = 0xfffe;//Reset.
+                }   
+
             }
-////            //menu_number = 0xffff;//Reset.
-        }
-//        
+        }//End if n°3.
+        
+//        if(f_data_sending == 1){
+//            menu_number     = 0xfffe;
+//            f_data_sending  = 0;//Reset flag.
+//        }
+        
     }//End of principal while.
     
     
@@ -227,7 +292,7 @@ unsigned short ascii_to_integer(unsigned char *table){
 }
 //__________________________________________________________________________________________________
 
-void integer_to_ascii(unsigned short data,uint8_t *table){
+void integer_to_ascii(unsigned short data,uint8_t *t_table){
 /*
  * data max : 65535.
  */
@@ -239,24 +304,38 @@ void integer_to_ascii(unsigned short data,uint8_t *table){
     //table_lenght = sizeof(table);
     
     //Ex : 54321.
-    data_1      = data / 10;    //54321 / 10 = 5432.
-    data_2      = data_1 * 10;  //5432 * 10 = 54320.
-    table[4]    = table_ascii[data - data_2]; //54321 - 54320 = 1.
-
-    data_2      = (data_1 / 10) * 10;//(5432 / 10) * 10 = 5430.
-    table[3]    = table_ascii[data_1 - data_2]; //5432 - 5430 = 2.
+    data_1      = data / 10;                    //54321 / 10        = 5432.
+    data_2      = data_1 * 10;                  //5432 * 10         = 54320.
+    t_table[4]    = table_ascii[data - data_2];   //54321 - 54320     = 1.
     
-    data_1      = data_1 / 10;//5432 / 10 = 543.
-    data_2      = (data_1 / 10) * 10;//(543 / 10) * 10 = 540.
-    table[2]    = table_ascii[data_1 - data_2]; //543 - 540 = 3.
+    data_2      = (data_1 / 10) * 10;           //(5432 / 10) * 10  = 5430.
+    t_table[3]    = table_ascii[data_1 - data_2]; //4532 - 5430       = 2.
+    data_1      = data_1 / 10;                  //5432 / 10         = 543.
     
-    data_1      = data_1 / 10;//543 / 10 = 54.
-    data_2      = (data_1 / 10) * 10;//(54 / 10) * 10 = 50.
-    table[1]    = table_ascii[data_1 - data_2]; //54 - 50 = 4.
+    data_2      = (data_1 / 10) * 10;           //(543 /10) * 10    = 540.  
+    t_table[2]    = table_ascii[data_1 - data_2]; //543 - 540         = 3.
+    data_1      = data_1 / 10;                  //543 / 10          = 54.
     
-    table[0]    = table_ascii[data_1 / 10]; //54 / 10 = 5.
+    data_2      = (data_1 / 10) * 10;           //(54/10) * 10      = 50.
+    t_table[1]    = table_ascii[data_1 - data_2]; //54 - 50           = 4.
+    data_1      = data_1 / 10;                  //54 / 10           = 5.
+    
+    t_table[0]    = table_ascii[data_1];
 }
 //__________________________________________________________________________________________________
 
-
+void write_usb_com(char *t_data,unsigned short *flag_sending){
+/*
+ * !!! Bug sur le port COM. Au lieu de "Bonjour" on a "@?jour" !!!
+ */
+    char t_data_usb_com[64] = "";
+    strcpy(t_data_usb_com,t_data);
+            
+    if(USBUSARTIsTxTrfReady() == true){
+        putUSBUSART(t_data_usb_com,sizeof(t_data_usb_com));
+        //putUSBUSART(" : _____Bonjour_________________________________________________",64);
+        *flag_sending = 1;//Set for main loop.
+    }
+}
+//__________________________________________________________________________________________________
 
