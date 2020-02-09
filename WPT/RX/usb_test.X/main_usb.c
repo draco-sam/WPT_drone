@@ -98,7 +98,6 @@ int main(void) {
     menu_com[5] = 'u';
     menu_com[6] = 0x0d;//Carriage return.
     menu_com[7] = 0x0a;//Line Feed.
-
     
     while(1){
         /********************************************************************************
@@ -106,11 +105,13 @@ int main(void) {
          * ------------------------------
          */
         if(menu_number == 0xffff){
-            if(USBUSARTIsTxTrfReady() == true){
-                //putsUSBUSART(menu_com);
-                putUSBUSART(menu_com,8);
-                menu_number = 0xfffe;//Bloquer le menu.
-            }
+            write_usb_com("\r\nMenu : \r\n",&f_data_sending);//Bug si M collé,ancienne data??
+            
+//            if(USBUSARTIsTxTrfReady() == true){
+//                //putsUSBUSART(menu_com);
+//                putUSBUSART(menu_com,8);
+//                menu_number = 0xfffe;//Bloquer le menu.
+//            }
         }
         /*******************************************************************************/
             
@@ -149,96 +150,33 @@ int main(void) {
             led_green   = off;
             led_red     = on;
             
-            //write_usb_com(" : test bonjour",&f_data_sending);
-            
-            
-            //unsigned char t_data_usb_com[] = " : Vbattery = 3.97 V \r\n";
-            //strcpy(t_data_i2c,"1 : Vbattery = 3.97 V \r\n");
-            
-            unsigned short  i_1         = 0;
-            
-            //Nettoyer le tableau avant utilisation :
-            for(i_1=0 ; i_1 < sizeof(t_data_i2c) ; i_1++){
-                    t_data_i2c[i_1] = 0;//NULL.
-            }
-            
-            
-            strcpy(t_data_i2c," : Vbattery = 3.97 Vvvvvvvvvvvvvvvvvvv \r\n");
-            
-            if(USBUSARTIsTxTrfReady() == true){
-                putUSBUSART(t_data_i2c,sizeof(t_data_i2c));
-                //strcpy(t_data_i2c,t_empty);//Empty de table for next Tx.
-                menu_number = 0xfffe;//Reset.
-            }
+            write_usb_com(" : Vbattery = 3.97 Vvvvvvvvvvvvvvvvvvv \r\n",&f_data_sending);
         }
         else if (menu_number == 2){
             led_red     = off;
             led_blue    = off;
             led_green   = on;
             
-//            strcpy(t_data_i2c," : Ibattery = 1387 mA \r\n");
-            
-            unsigned short  i_2         = 0;
-            
-            //Nettoyer le tableau avant utilisation :
-            for(i_2=0 ; i_2 < sizeof(t_data_i2c) ; i_2++){
-                    t_data_i2c[i_2] = 0;//NULL.
-            }
-            
-            //unsigned char t_data_usb_com_2[] = " : Ibattery = 1387 mA";
-            //strcpy(t_data_i2c,t_data_usb_com_2);
-            strcpy(t_data_i2c," : Ibattery = 1387 mA \r\n");
-
-            
-//            unsigned short  offset_2    = 0;
-//            offset_2  = sizeof(t_data_usb_com_2) + 1; 
-//            for(i_2=0 ; i_2 < (64 - sizeof(t_data_usb_com_2)); i_2++){
-//                t_data_i2c[offset_2 + i_2] = 0;
-//            }
-            
-            if(USBUSARTIsTxTrfReady() == true){
-                putUSBUSART(t_data_i2c,sizeof(t_data_i2c));
-                
-                menu_number = 0xfffe;//Reset.
-                //f_data_sending = 1;
-            }
+            write_usb_com(" : Ibattery = 1387 mA \r\n",&f_data_sending);
         }
         else if (menu_number == 3){
             led_red     = off;
             led_blue    = on;
             led_green   = on;
            
-            if(USBUSARTIsTxTrfReady() == true){
-                
-                //unsigned char t_data_usb_com_3[] = " : T die = 36 deg Celicuuuuuuuuuuuuus";
-                
-                unsigned short  i_3         = 0;
+            write_usb_com(" : T die = 36 deg Celicuuuuuuuuuuuuus \r\n",&f_data_sending);
             
-                //Nettoyer le tableau avant utilisation :
-                for(i_3=0 ; i_3 < sizeof(t_data_i2c) ; i_3++){
-                        t_data_i2c[i_3] = 0;//NULL.
-                }
-
-
-                strcpy(t_data_i2c," : T die = 36 deg Celicuuuuuuuuuuuuus \r\n");
-                
-                //integer_to_ascii(sizeof(t_data_usb_com_3),t_data_i2c);//38.
-                //integer_to_ascii(43,t_data_i2c);
-            
-                if(USBUSARTIsTxTrfReady() == true){
-                    //putUSBUSART(t_data_i2c,sizeof(t_data_i2c));
-                    putUSBUSART(t_data_i2c,64);
-                    //strcpy(t_data_i2c,t_empty);//Empty de table for next Tx.
-                    menu_number = 0xfffe;//Reset.
-                }   
-
-            }
-        }//End if n°3.
+        }
         
-//        if(f_data_sending == 1){
-//            menu_number     = 0xfffe;
-//            f_data_sending  = 0;//Reset flag.
-//        }
+        /************************************************************
+         * If data USB COM is sending with "write_usb_com()", 
+         * bad menu_number to not display the menu.
+         */
+        if(f_data_sending == 1){
+            menu_number     = 0xfffe;
+            f_data_sending  = 0;//Reset flag.
+        }
+        /***********************************************************/
         
     }//End of principal while.
     
@@ -247,7 +185,7 @@ int main(void) {
 }
 
 
-void get_menu(char *data_com){
+void get_menu(char *data_menu){
 /*
  * 
  */
@@ -257,7 +195,7 @@ void get_menu(char *data_com){
     "3 : Vbat ; Ibat ; T \r\n"
     "----------\r\n";
     
-    strcpy(data_com,data); 
+    strcpy(data_menu,data); 
 }
 //__________________________________________________________________________________________________
 
@@ -326,15 +264,22 @@ void integer_to_ascii(unsigned short data,uint8_t *t_table){
 
 void write_usb_com(char *t_data,unsigned short *flag_sending){
 /*
- * !!! Bug sur le port COM. Au lieu de "Bonjour" on a "@?jour" !!!
+ * 
  */
-    char t_data_usb_com[64] = "";
-    strcpy(t_data_usb_com,t_data);
+    unsigned short  i               = 0;
+    char            t_data_com[64]  = "";
+    
             
+    //Nettoyer le tableau avant utilisation :
+    for(i=0 ; i < sizeof(t_data_com) ; i++){
+            t_data_com[i] = 0;//NULL.
+    }
+
+    strcpy(t_data_com,t_data);
+
     if(USBUSARTIsTxTrfReady() == true){
-        putUSBUSART(t_data_usb_com,sizeof(t_data_usb_com));
-        //putUSBUSART(" : _____Bonjour_________________________________________________",64);
-        *flag_sending = 1;//Set for main loop.
+        putUSBUSART(t_data_com,sizeof(t_data_com));
+        *flag_sending = 1;
     }
 }
 //__________________________________________________________________________________________________
