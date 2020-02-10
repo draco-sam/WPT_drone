@@ -16,8 +16,10 @@
 void get_menu(char *data);
 void get_data_i2c(char *t_data);
 unsigned short ascii_to_integer(unsigned char *table);
-void integer_to_ascii(unsigned short data,uint8_t *table);
+//void integer_to_ascii(unsigned short data,uint8_t *table);
+void integer_to_ascii(unsigned short data_integer,unsigned short data_decimal,char *t_table);
 void write_usb_com(char *t_data,unsigned short *flag_sending);
+void extract_integer_decimal(float data,unsigned short *data_integer,unsigned short *data_decimal);
 
 
 
@@ -36,7 +38,6 @@ int main(void) {
     unsigned short  menu_number     = 0xfffe;//Bad menu number.
     unsigned short  f_data_sending  = 0;//Flag for write USB COM and main loop.
     unsigned long   counter_while   = 0;
-    char            t_empty[64]     = "";//Pour effacer les 64 bytes.<-> à NULL.
     char            t_data_i2c[64]  = "";
     uint8_t         data_write_com[64];
     uint8_t         data_read_com[64];
@@ -44,18 +45,11 @@ int main(void) {
     //char            menu_com[64];
     //char            t_data_i2c[64];
     
-    //char            t_data_i2c      = "Vbat = 3.97 V ; Ibat = 0.965 A ; T = 36 \r";
-    
-    //    unsigned char   t_data_usb_com_3[] = " : T die = 36 deg Celicuuuuuuuuuuuuus";
-    //    unsigned short  i_3 = 0;
-    //    unsigned short  counter_max = 27;
-    //    
-    //    strcpy(t_data_i2c,t_data_usb_com_3);
-    //    
-    //    for(i_3=0 ; i_3 < (64-38); i_3++){
-    //        t_data_i2c[39 + i_3] = 0;
-    //    }
-    
+    char t_ascii[64] = {0};
+    integer_to_ascii(54,321,t_ascii);
+    Nop();
+    Nop();
+   
     // initialize the device
     SYSTEM_Initialize();
     
@@ -145,12 +139,25 @@ int main(void) {
         
         CDCTxService();
         
+        unsigned short i2c_data_integer     = 0;
+        unsigned short i2c_data_decimal     = 0;
+        
         if(menu_number == 1){
             led_blue    = off;
             led_green   = off;
             led_red     = on;
             
-            write_usb_com(" : Vbattery = 3.97 Vvvvvvvvvvvvvvvvvvv \r\n",&f_data_sending);
+            extract_integer_decimal(3.965,&i2c_data_integer,&i2c_data_decimal);
+            
+            char t_data_1[] = " : Vbat = ";                
+            char t_data_2[] = "3.79";
+            char t_data_3[] = " VvvvvvvvvvVVVVV \r\n";
+            
+            strcat(t_data_1,t_data_2);
+            strcat(t_data_1,t_data_3);
+            write_usb_com(t_data_1,&f_data_sending);
+            
+            //write_usb_com(" : Vbattery = 3.97 Vvvvvvvvvvvvvvvvvvv \r\n",&f_data_sending);
         }
         else if (menu_number == 2){
             led_red     = off;
@@ -230,35 +237,81 @@ unsigned short ascii_to_integer(unsigned char *table){
 }
 //__________________________________________________________________________________________________
 
-void integer_to_ascii(unsigned short data,uint8_t *t_table){
+//void integer_to_ascii(unsigned short data,uint8_t *t_table){
+void integer_to_ascii(unsigned short data_integer,unsigned short data_decimal,char *t_table){
 /*
  * data max : 65535.
  */
-    //unsigned short  table_lenght        = 0;
     unsigned short  data_1              = 0;
     unsigned short  data_2              = 0;
+    unsigned short  i                   = 0;
     char            table_ascii[11]     = {'0','1','2','3','4','5','6','7','8','9'};
+    char            t_integer[6]        = {0};
+    char            t_decimal[5]        = {0};
     
-    //table_lenght = sizeof(table);
+//    //Clean tables :
+//    for(i=0 ; i < sizeof(t_integer) ; i++){
+//            t_integer[i] = 0;//NULL.
+//    }
+//    for(i=0 ; i < sizeof(t_decimal) ; i++){
+//            t_decimal[i] = 0;//NULL.
+//    }
+//    for(i=0 ; i < sizeof(t_table) ; i++){
+//            t_table[i] = 0;//NULL.
+//    }
     
-    //Ex : 54321.
-    data_1      = data / 10;                    //54321 / 10        = 5432.
-    data_2      = data_1 * 10;                  //5432 * 10         = 54320.
-    t_table[4]    = table_ascii[data - data_2];   //54321 - 54320     = 1.
+    if(data_integer > 0){
+        t_integer[5] = '\0';
+        //Ex : 54321.
+        data_1          = data_integer / 10;                    //54321 / 10        = 5432.
+        data_2          = data_1 * 10;                  //5432 * 10         = 54320.
+        t_integer[4]    = table_ascii[data_integer - data_2];   //54321 - 54320     = 1.
+
+        data_2          = (data_1 / 10) * 10;           //(5432 / 10) * 10  = 5430.
+        t_integer[3]    = table_ascii[data_1 - data_2]; //4532 - 5430       = 2.
+        data_1          = data_1 / 10;                  //5432 / 10         = 543.
+
+        data_2          = (data_1 / 10) * 10;           //(543 /10) * 10    = 540.  
+        t_integer[2]    = table_ascii[data_1 - data_2]; //543 - 540         = 3.
+        data_1          = data_1 / 10;                  //543 / 10          = 54.
+
+        data_2          = (data_1 / 10) * 10;           //(54/10) * 10      = 50.
+        t_integer[1]    = table_ascii[data_1 - data_2]; //54 - 50           = 4.
+        data_1          = data_1 / 10;                  //54 / 10           = 5.
+
+        t_integer[0]    = table_ascii[data_1];//5.
+    }
+    else{
+       t_integer[0] = '0';
+    }
     
-    data_2      = (data_1 / 10) * 10;           //(5432 / 10) * 10  = 5430.
-    t_table[3]    = table_ascii[data_1 - data_2]; //4532 - 5430       = 2.
-    data_1      = data_1 / 10;                  //5432 / 10         = 543.
+    if(data_decimal > 0){//Ex : 728 mA.
+        t_decimal[4] = '\0';
+        
+        data_1 = 0;//Reset.
+        data_2 = 0;//Reset.
+        
+        data_1          = data_decimal / 10;                
+        data_2          = data_1 * 10;                 
+        t_decimal[3]    = table_ascii[data_decimal - data_2];//8.  
+
+        data_2          = (data_1 / 10) * 10;
+        t_decimal[2]    = table_ascii[data_1 - data_2];
+        data_1          = data_1 / 10;//2.
+        
+        t_decimal[1]    = table_ascii[data_1];//7.
+        
+        t_decimal[0]    = ',';
+    }
     
-    data_2      = (data_1 / 10) * 10;           //(543 /10) * 10    = 540.  
-    t_table[2]    = table_ascii[data_1 - data_2]; //543 - 540         = 3.
-    data_1      = data_1 / 10;                  //543 / 10          = 54.
+//    char t_test[64] = {0};
+//    
+//    strcpy(t_test,t_integer);
+//    strcat(t_test,t_decimal);
+//    strcpy(t_table,t_test);
     
-    data_2      = (data_1 / 10) * 10;           //(54/10) * 10      = 50.
-    t_table[1]    = table_ascii[data_1 - data_2]; //54 - 50           = 4.
-    data_1      = data_1 / 10;                  //54 / 10           = 5.
-    
-    t_table[0]    = table_ascii[data_1];
+    strcpy(t_table,t_integer);
+    strcat(t_table,t_decimal);
 }
 //__________________________________________________________________________________________________
 
@@ -283,4 +336,24 @@ void write_usb_com(char *t_data,unsigned short *flag_sending){
     }
 }
 //__________________________________________________________________________________________________
+
+void extract_integer_decimal(float data,unsigned short *data_integer,unsigned short *data_decimal){
+/*
+ * Extraire la partie entière et décimale d'un nombre float.
+ * Ne fonctionne que jusque 10^-3.
+ * 
+ * Ex avec 248 mA :
+ *      data_integer = 0.
+ *      data_decimal = 248 - 0 = 248.
+ * 
+ * Ex avec 23.746 V :
+ *      data_integer = 23.
+ *      data_decimal = 23746 - 23000 = 746.
+ */
+    *data_integer   = data;
+    *data_decimal   = (data * 1000) - (*data_integer * 1000);
+}
+//__________________________________________________________________________________________________
+
+
 
