@@ -16,10 +16,11 @@
 void get_menu(char *data);
 void get_data_i2c(char *t_data);
 unsigned short ascii_to_integer(unsigned char *table);
-//void integer_to_ascii(unsigned short data,uint8_t *table);
-void integer_to_ascii(unsigned short data_integer,unsigned short data_decimal,char *t_table);
+//void integer_to_ascii(unsigned short data_integer,unsigned short data_decimal,char *t_table);
+void float_to_ascii(float data_float,char *t_table);
 void write_usb_com(char *t_data,unsigned short *flag_sending);
 void extract_integer_decimal(float data,unsigned short *data_integer,unsigned short *data_decimal);
+void empty_table(char *table);
 
 
 
@@ -38,17 +39,27 @@ int main(void) {
     unsigned short  menu_number     = 0xfffe;//Bad menu number.
     unsigned short  f_data_sending  = 0;//Flag for write USB COM and main loop.
     unsigned long   counter_while   = 0;
-    char            t_data_i2c[64]  = "";
+    char            t_data_i2c[64]  = "";//!!! Changer taille car 16 bits max !!!
+    char            t_data_usb_com[64]  = "";
+    char            t_data_1[64]    = "";
     uint8_t         data_write_com[64];
     uint8_t         data_read_com[64];
     uint8_t         menu_com[64];
     //char            menu_com[64];
-    //char            t_data_i2c[64];
     
-    char t_ascii[64] = {0};
-    integer_to_ascii(54,321,t_ascii);
-    Nop();
-    Nop();
+    
+//    char t_ascii[64] = {0};
+//    integer_to_ascii(0,321,t_ascii);
+    
+    
+//    char a[64] = " : Vbat = ";
+//    char b[64] = " Vvvvvvvvvvolts \r\n";
+//     
+//    float_to_ascii(4.567,t_data_i2c);
+//    strcat(a,t_data_i2c);
+//    strcat(a,b);
+//    Nop();
+//    Nop();
    
     // initialize the device
     SYSTEM_Initialize();
@@ -142,37 +153,54 @@ int main(void) {
         unsigned short i2c_data_integer     = 0;
         unsigned short i2c_data_decimal     = 0;
         
+        empty_table(t_data_i2c);
+        empty_table(t_data_usb_com);
+        empty_table(t_data_1);
+        
         if(menu_number == 1){
             led_blue    = off;
             led_green   = off;
             led_red     = on;
             
-            extract_integer_decimal(3.965,&i2c_data_integer,&i2c_data_decimal);
+            float_to_ascii(4.567,t_data_i2c);
             
-            char t_data_1[] = " : Vbat = ";                
-            char t_data_2[] = "3.79";
-            char t_data_3[] = " VvvvvvvvvvVVVVV \r\n";
+            //Prepare data COM with string copy and concatenation :            
+            strcpy(t_data_usb_com," : Vbat = ");
+            strcpy(t_data_1," Vvvvvolts \r\n");
+            strcat(t_data_usb_com,t_data_i2c);
+            strcat(t_data_usb_com,t_data_1);
             
-            strcat(t_data_1,t_data_2);
-            strcat(t_data_1,t_data_3);
-            write_usb_com(t_data_1,&f_data_sending);
-            
-            //write_usb_com(" : Vbattery = 3.97 Vvvvvvvvvvvvvvvvvvv \r\n",&f_data_sending);
+            write_usb_com(t_data_usb_com,&f_data_sending);
         }
         else if (menu_number == 2){
             led_red     = off;
             led_blue    = off;
             led_green   = on;
             
-            write_usb_com(" : Ibattery = 1387 mA \r\n",&f_data_sending);
+            float_to_ascii(0.783,t_data_i2c);
+            
+            //Prepare data COM with string copy and concatenation :            
+            strcpy(t_data_usb_com," : Ibat = ");
+            strcpy(t_data_1," mA \r\n");
+            strcat(t_data_usb_com,t_data_i2c);
+            strcat(t_data_usb_com,t_data_1);
+            
+            write_usb_com(t_data_usb_com,&f_data_sending);
         }
         else if (menu_number == 3){
             led_red     = off;
             led_blue    = on;
             led_green   = on;
            
-            write_usb_com(" : T die = 36 deg Celicuuuuuuuuuuuuus \r\n",&f_data_sending);
+            float_to_ascii(36.413,t_data_i2c);
             
+            //Prepare data COM with string copy and concatenation :            
+            strcpy(t_data_usb_com," : Die temperature = ");
+            strcpy(t_data_1," deg C \r\n");
+            strcat(t_data_usb_com,t_data_i2c);
+            strcat(t_data_usb_com,t_data_1);
+            
+            write_usb_com(t_data_usb_com,&f_data_sending);
         }
         
         /************************************************************
@@ -237,11 +265,13 @@ unsigned short ascii_to_integer(unsigned char *table){
 }
 //__________________________________________________________________________________________________
 
-//void integer_to_ascii(unsigned short data,uint8_t *t_table){
-void integer_to_ascii(unsigned short data_integer,unsigned short data_decimal,char *t_table){
+//void integer_to_ascii(unsigned short data_integer,unsigned short data_decimal,char *t_table){
+void float_to_ascii(float data_float,char *t_table){
 /*
  * data max : 65535.
  */
+    unsigned short  data_integer        = 0;
+    unsigned short  data_decimal        = 0;
     unsigned short  data_1              = 0;
     unsigned short  data_2              = 0;
     unsigned short  i                   = 0;
@@ -249,16 +279,7 @@ void integer_to_ascii(unsigned short data_integer,unsigned short data_decimal,ch
     char            t_integer[6]        = {0};
     char            t_decimal[5]        = {0};
     
-//    //Clean tables :
-//    for(i=0 ; i < sizeof(t_integer) ; i++){
-//            t_integer[i] = 0;//NULL.
-//    }
-//    for(i=0 ; i < sizeof(t_decimal) ; i++){
-//            t_decimal[i] = 0;//NULL.
-//    }
-//    for(i=0 ; i < sizeof(t_table) ; i++){
-//            t_table[i] = 0;//NULL.
-//    }
+    extract_integer_decimal(data_float,&data_integer,&data_decimal);
     
     if(data_integer > 0){
         t_integer[5] = '\0';
@@ -355,5 +376,16 @@ void extract_integer_decimal(float data,unsigned short *data_integer,unsigned sh
 }
 //__________________________________________________________________________________________________
 
-
+void empty_table(char *table){
+/*
+ * Empty the table :
+ * ----------------
+ */
+    unsigned short i_empty = 0;
+    
+    for(i_empty=0 ; i_empty < sizeof(table) ; i_empty++){
+        table[i_empty] = "";//NULL.
+    }
+}
+//__________________________________________________________________________________________________
 
