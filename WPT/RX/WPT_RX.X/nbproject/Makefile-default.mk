@@ -57,17 +57,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=lib_wpt_rx/lib_wpt_rx_00.c lib_wpt_rx/serial_com_01.c main_wpt_rx_00.c
+SOURCEFILES_QUOTED_IF_SPACED=lib_wpt_rx/lib_wpt_rx_00.c main_wpt_rx_00.c lib_wpt_rx/lib_com/serial_com_01.c lib_wpt_rx/clock.c lib_wpt_rx/interrupt_manager.c lib_wpt_rx/pin_manager.c lib_wpt_rx/system.c lib_wpt_rx/traps.c lib_wpt_rx/lib_com/usb/example_mcc_usb_cdc.c lib_wpt_rx/lib_com/usb/usb_descriptors.c lib_wpt_rx/lib_com/usb/usb_device.c lib_wpt_rx/lib_com/usb/usb_device_cdc.c lib_wpt_rx/lib_com/usb/usb_device_events.c lib_wpt_rx/lib_com/usb/usb_hal_16bit.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o ${OBJECTDIR}/main_wpt_rx_00.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o.d ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o.d ${OBJECTDIR}/main_wpt_rx_00.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o ${OBJECTDIR}/main_wpt_rx_00.o ${OBJECTDIR}/lib_wpt_rx/lib_com/serial_com_01.o ${OBJECTDIR}/lib_wpt_rx/clock.o ${OBJECTDIR}/lib_wpt_rx/interrupt_manager.o ${OBJECTDIR}/lib_wpt_rx/pin_manager.o ${OBJECTDIR}/lib_wpt_rx/system.o ${OBJECTDIR}/lib_wpt_rx/traps.o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/example_mcc_usb_cdc.o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_descriptors.o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device.o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_cdc.o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_events.o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_hal_16bit.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o.d ${OBJECTDIR}/main_wpt_rx_00.o.d ${OBJECTDIR}/lib_wpt_rx/lib_com/serial_com_01.o.d ${OBJECTDIR}/lib_wpt_rx/clock.o.d ${OBJECTDIR}/lib_wpt_rx/interrupt_manager.o.d ${OBJECTDIR}/lib_wpt_rx/pin_manager.o.d ${OBJECTDIR}/lib_wpt_rx/system.o.d ${OBJECTDIR}/lib_wpt_rx/traps.o.d ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/example_mcc_usb_cdc.o.d ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_descriptors.o.d ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device.o.d ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_cdc.o.d ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_events.o.d ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_hal_16bit.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o ${OBJECTDIR}/main_wpt_rx_00.o
+OBJECTFILES=${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o ${OBJECTDIR}/main_wpt_rx_00.o ${OBJECTDIR}/lib_wpt_rx/lib_com/serial_com_01.o ${OBJECTDIR}/lib_wpt_rx/clock.o ${OBJECTDIR}/lib_wpt_rx/interrupt_manager.o ${OBJECTDIR}/lib_wpt_rx/pin_manager.o ${OBJECTDIR}/lib_wpt_rx/system.o ${OBJECTDIR}/lib_wpt_rx/traps.o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/example_mcc_usb_cdc.o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_descriptors.o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device.o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_cdc.o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_events.o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_hal_16bit.o
 
 # Source Files
-SOURCEFILES=lib_wpt_rx/lib_wpt_rx_00.c lib_wpt_rx/serial_com_01.c main_wpt_rx_00.c
+SOURCEFILES=lib_wpt_rx/lib_wpt_rx_00.c main_wpt_rx_00.c lib_wpt_rx/lib_com/serial_com_01.c lib_wpt_rx/clock.c lib_wpt_rx/interrupt_manager.c lib_wpt_rx/pin_manager.c lib_wpt_rx/system.c lib_wpt_rx/traps.c lib_wpt_rx/lib_com/usb/example_mcc_usb_cdc.c lib_wpt_rx/lib_com/usb/usb_descriptors.c lib_wpt_rx/lib_com/usb/usb_device.c lib_wpt_rx/lib_com/usb/usb_device_cdc.c lib_wpt_rx/lib_com/usb/usb_device_events.c lib_wpt_rx/lib_com/usb/usb_hal_16bit.c
 
 
 
@@ -102,19 +102,96 @@ ${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o: lib_wpt_rx/lib_wpt_rx_00.c  nbproject/M
 	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/lib_wpt_rx_00.c  -o ${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
 	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
-${OBJECTDIR}/lib_wpt_rx/serial_com_01.o: lib_wpt_rx/serial_com_01.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx" 
-	@${RM} ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o.d 
-	@${RM} ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/serial_com_01.c  -o ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/serial_com_01.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
-	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/serial_com_01.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
-	
 ${OBJECTDIR}/main_wpt_rx_00.o: main_wpt_rx_00.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/main_wpt_rx_00.o.d 
 	@${RM} ${OBJECTDIR}/main_wpt_rx_00.o 
 	${MP_CC} $(MP_EXTRA_CC_PRE)  main_wpt_rx_00.c  -o ${OBJECTDIR}/main_wpt_rx_00.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/main_wpt_rx_00.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
 	@${FIXDEPS} "${OBJECTDIR}/main_wpt_rx_00.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/lib_com/serial_com_01.o: lib_wpt_rx/lib_com/serial_com_01.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx/lib_com" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/serial_com_01.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/serial_com_01.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/lib_com/serial_com_01.c  -o ${OBJECTDIR}/lib_wpt_rx/lib_com/serial_com_01.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/lib_com/serial_com_01.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/lib_com/serial_com_01.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/clock.o: lib_wpt_rx/clock.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/clock.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/clock.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/clock.c  -o ${OBJECTDIR}/lib_wpt_rx/clock.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/clock.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/clock.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/interrupt_manager.o: lib_wpt_rx/interrupt_manager.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/interrupt_manager.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/interrupt_manager.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/interrupt_manager.c  -o ${OBJECTDIR}/lib_wpt_rx/interrupt_manager.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/interrupt_manager.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/interrupt_manager.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/pin_manager.o: lib_wpt_rx/pin_manager.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/pin_manager.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/pin_manager.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/pin_manager.c  -o ${OBJECTDIR}/lib_wpt_rx/pin_manager.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/pin_manager.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/pin_manager.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/system.o: lib_wpt_rx/system.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/system.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/system.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/system.c  -o ${OBJECTDIR}/lib_wpt_rx/system.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/system.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/system.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/traps.o: lib_wpt_rx/traps.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/traps.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/traps.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/traps.c  -o ${OBJECTDIR}/lib_wpt_rx/traps.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/traps.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/traps.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/lib_com/usb/example_mcc_usb_cdc.o: lib_wpt_rx/lib_com/usb/example_mcc_usb_cdc.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/example_mcc_usb_cdc.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/example_mcc_usb_cdc.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/lib_com/usb/example_mcc_usb_cdc.c  -o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/example_mcc_usb_cdc.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/example_mcc_usb_cdc.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/example_mcc_usb_cdc.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_descriptors.o: lib_wpt_rx/lib_com/usb/usb_descriptors.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_descriptors.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_descriptors.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/lib_com/usb/usb_descriptors.c  -o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_descriptors.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_descriptors.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_descriptors.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device.o: lib_wpt_rx/lib_com/usb/usb_device.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/lib_com/usb/usb_device.c  -o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_cdc.o: lib_wpt_rx/lib_com/usb/usb_device_cdc.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_cdc.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_cdc.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/lib_com/usb/usb_device_cdc.c  -o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_cdc.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_cdc.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_cdc.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_events.o: lib_wpt_rx/lib_com/usb/usb_device_events.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_events.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_events.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/lib_com/usb/usb_device_events.c  -o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_events.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_events.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_events.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_hal_16bit.o: lib_wpt_rx/lib_com/usb/usb_hal_16bit.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_hal_16bit.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_hal_16bit.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/lib_com/usb/usb_hal_16bit.c  -o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_hal_16bit.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_hal_16bit.o.d"      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_hal_16bit.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
 else
 ${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o: lib_wpt_rx/lib_wpt_rx_00.c  nbproject/Makefile-${CND_CONF}.mk
@@ -124,19 +201,96 @@ ${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o: lib_wpt_rx/lib_wpt_rx_00.c  nbproject/M
 	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/lib_wpt_rx_00.c  -o ${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
 	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/lib_wpt_rx_00.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
-${OBJECTDIR}/lib_wpt_rx/serial_com_01.o: lib_wpt_rx/serial_com_01.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx" 
-	@${RM} ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o.d 
-	@${RM} ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o 
-	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/serial_com_01.c  -o ${OBJECTDIR}/lib_wpt_rx/serial_com_01.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/serial_com_01.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
-	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/serial_com_01.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
-	
 ${OBJECTDIR}/main_wpt_rx_00.o: main_wpt_rx_00.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/main_wpt_rx_00.o.d 
 	@${RM} ${OBJECTDIR}/main_wpt_rx_00.o 
 	${MP_CC} $(MP_EXTRA_CC_PRE)  main_wpt_rx_00.c  -o ${OBJECTDIR}/main_wpt_rx_00.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/main_wpt_rx_00.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
 	@${FIXDEPS} "${OBJECTDIR}/main_wpt_rx_00.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/lib_com/serial_com_01.o: lib_wpt_rx/lib_com/serial_com_01.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx/lib_com" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/serial_com_01.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/serial_com_01.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/lib_com/serial_com_01.c  -o ${OBJECTDIR}/lib_wpt_rx/lib_com/serial_com_01.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/lib_com/serial_com_01.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/lib_com/serial_com_01.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/clock.o: lib_wpt_rx/clock.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/clock.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/clock.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/clock.c  -o ${OBJECTDIR}/lib_wpt_rx/clock.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/clock.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/clock.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/interrupt_manager.o: lib_wpt_rx/interrupt_manager.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/interrupt_manager.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/interrupt_manager.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/interrupt_manager.c  -o ${OBJECTDIR}/lib_wpt_rx/interrupt_manager.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/interrupt_manager.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/interrupt_manager.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/pin_manager.o: lib_wpt_rx/pin_manager.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/pin_manager.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/pin_manager.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/pin_manager.c  -o ${OBJECTDIR}/lib_wpt_rx/pin_manager.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/pin_manager.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/pin_manager.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/system.o: lib_wpt_rx/system.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/system.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/system.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/system.c  -o ${OBJECTDIR}/lib_wpt_rx/system.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/system.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/system.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/traps.o: lib_wpt_rx/traps.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/traps.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/traps.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/traps.c  -o ${OBJECTDIR}/lib_wpt_rx/traps.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/traps.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/traps.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/lib_com/usb/example_mcc_usb_cdc.o: lib_wpt_rx/lib_com/usb/example_mcc_usb_cdc.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/example_mcc_usb_cdc.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/example_mcc_usb_cdc.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/lib_com/usb/example_mcc_usb_cdc.c  -o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/example_mcc_usb_cdc.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/example_mcc_usb_cdc.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/example_mcc_usb_cdc.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_descriptors.o: lib_wpt_rx/lib_com/usb/usb_descriptors.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_descriptors.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_descriptors.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/lib_com/usb/usb_descriptors.c  -o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_descriptors.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_descriptors.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_descriptors.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device.o: lib_wpt_rx/lib_com/usb/usb_device.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/lib_com/usb/usb_device.c  -o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_cdc.o: lib_wpt_rx/lib_com/usb/usb_device_cdc.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_cdc.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_cdc.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/lib_com/usb/usb_device_cdc.c  -o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_cdc.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_cdc.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_cdc.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_events.o: lib_wpt_rx/lib_com/usb/usb_device_events.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_events.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_events.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/lib_com/usb/usb_device_events.c  -o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_events.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_events.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_device_events.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_hal_16bit.o: lib_wpt_rx/lib_com/usb/usb_hal_16bit.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb" 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_hal_16bit.o.d 
+	@${RM} ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_hal_16bit.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  lib_wpt_rx/lib_com/usb/usb_hal_16bit.c  -o ${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_hal_16bit.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_hal_16bit.o.d"      -mno-eds-warn  -g -omf=elf -DXPRJ_default=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp=${DFP_DIR}/xc16
+	@${FIXDEPS} "${OBJECTDIR}/lib_wpt_rx/lib_com/usb/usb_hal_16bit.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
 endif
 

@@ -5,9 +5,29 @@
                    displayName="Header Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="lib_wpt_rx" projectFiles="true">
+        <logicalFolder name="f1" displayName="lib_com" projectFiles="true">
+          <logicalFolder name="f1" displayName="usb" projectFiles="true">
+            <itemPath>lib_wpt_rx/lib_com/usb/usb.h</itemPath>
+            <itemPath>lib_wpt_rx/lib_com/usb/usb_ch9.h</itemPath>
+            <itemPath>lib_wpt_rx/lib_com/usb/usb_common.h</itemPath>
+            <itemPath>lib_wpt_rx/lib_com/usb/usb_device.h</itemPath>
+            <itemPath>lib_wpt_rx/lib_com/usb/usb_device_cdc.h</itemPath>
+            <itemPath>lib_wpt_rx/lib_com/usb/usb_device_config.h</itemPath>
+            <itemPath>lib_wpt_rx/lib_com/usb/usb_device_local.h</itemPath>
+            <itemPath>lib_wpt_rx/lib_com/usb/usb_hal.h</itemPath>
+            <itemPath>lib_wpt_rx/lib_com/usb/usb_hal_pic24f.h</itemPath>
+          </logicalFolder>
+          <itemPath>lib_wpt_rx/lib_com/serial_com_01.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="system" projectFiles="true">
+          <itemPath>lib_wpt_rx/clock.h</itemPath>
+          <itemPath>lib_wpt_rx/interrupt_manager.h</itemPath>
+          <itemPath>lib_wpt_rx/pin_manager.h</itemPath>
+          <itemPath>lib_wpt_rx/system.h</itemPath>
+          <itemPath>lib_wpt_rx/traps.h</itemPath>
+        </logicalFolder>
         <itemPath>lib_wpt_rx/lib_wpt_rx_00.h</itemPath>
         <itemPath>lib_wpt_rx/PIC24FJ128GC006.h</itemPath>
-        <itemPath>lib_wpt_rx/serial_com_01.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -18,8 +38,25 @@
                    displayName="Source Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="lib_wpt_rx" projectFiles="true">
+        <logicalFolder name="f1" displayName="lib_com" projectFiles="true">
+          <logicalFolder name="f1" displayName="usb" projectFiles="true">
+            <itemPath>lib_wpt_rx/lib_com/usb/example_mcc_usb_cdc.c</itemPath>
+            <itemPath>lib_wpt_rx/lib_com/usb/usb_descriptors.c</itemPath>
+            <itemPath>lib_wpt_rx/lib_com/usb/usb_device.c</itemPath>
+            <itemPath>lib_wpt_rx/lib_com/usb/usb_device_cdc.c</itemPath>
+            <itemPath>lib_wpt_rx/lib_com/usb/usb_device_events.c</itemPath>
+            <itemPath>lib_wpt_rx/lib_com/usb/usb_hal_16bit.c</itemPath>
+          </logicalFolder>
+          <itemPath>lib_wpt_rx/lib_com/serial_com_01.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="system" projectFiles="true">
+          <itemPath>lib_wpt_rx/clock.c</itemPath>
+          <itemPath>lib_wpt_rx/interrupt_manager.c</itemPath>
+          <itemPath>lib_wpt_rx/pin_manager.c</itemPath>
+          <itemPath>lib_wpt_rx/system.c</itemPath>
+          <itemPath>lib_wpt_rx/traps.c</itemPath>
+        </logicalFolder>
         <itemPath>lib_wpt_rx/lib_wpt_rx_00.c</itemPath>
-        <itemPath>lib_wpt_rx/serial_com_01.c</itemPath>
       </logicalFolder>
       <itemPath>main_wpt_rx_00.c</itemPath>
     </logicalFolder>

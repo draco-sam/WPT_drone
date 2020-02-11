@@ -6,7 +6,8 @@
 
 #include <stdio.h>
 #include "PIC24FJ128GC006.h"  
-#include "serial_com_01.h"
+#include "lib_com/serial_com_01.h"
+#include "system.h"
 
 void oscillator_init(void);
 void pin_init(void);

@@ -1,12 +1,12 @@
-/* 
+/*************************************************************************************************** 
  * File             : serial_com_00.h
- * Date             : 05/01/2020.   
+ * Date             : 11/02/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
- */
+ **************************************************************************************************/
 
-#include "PIC24FJ128GC006.h"
+#include "../PIC24FJ128GC006.h"
 #include <stddef.h>
 
 //Sub addresses of read register on i2c slave IC charger :

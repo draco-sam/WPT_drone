@@ -1,10 +1,10 @@
-/* 
+/*************************************************************************************************** 
  * File             : main_wpt_rx_00.c
- * Date             : 02/02/2020.   
+ * Date             : 11/02/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
- */
+ **************************************************************************************************/
 
 //D:\Program Files (x86)\Microchip\xc16\v1.41\support\PIC24F\h.
 
@@ -41,8 +41,11 @@ int main(void) {
     Nop();
     
     
-    pin_init();
-    oscillator_init();
+    //pin_init();
+    //oscillator_init();
+    
+    // initialize the device
+    SYSTEM_Initialize();
     
     led_red     = off;
     led_green   = off;
