@@ -1,9 +1,10 @@
-/*
- * File:   main_usb.c
- * Author: Draco
- *
- * Created on 7 février 2020, 21:15
- */
+/*************************************************************************************************** 
+ * File             : main_usb.c
+ * Date             : 11/02/2020.   
+ * Author           : Samuel LORENZINO.
+ * Comments         :
+ * Revision history : 
+ **************************************************************************************************/
 
 #include <xc.h>
 #include "mcc_generated_files/system.h"
@@ -16,7 +17,6 @@
 void get_menu(char *data);
 void get_data_i2c(char *t_data);
 unsigned short ascii_to_integer(unsigned char *table);
-//void integer_to_ascii(unsigned short data_integer,unsigned short data_decimal,char *t_table);
 void float_to_ascii(float data_float,char *t_table);
 void write_usb_com(char *t_data,unsigned short *flag_sending);
 void extract_integer_decimal(float data,unsigned short *data_integer,unsigned short *data_decimal);
@@ -48,18 +48,7 @@ int main(void) {
     //char            menu_com[64];
     
     
-//    char t_ascii[64] = {0};
-//    integer_to_ascii(0,321,t_ascii);
-    
-    
-//    char a[64] = " : Vbat = ";
-//    char b[64] = " Vvvvvvvvvvolts \r\n";
-//     
-//    float_to_ascii(4.567,t_data_i2c);
-//    strcat(a,t_data_i2c);
-//    strcat(a,b);
-//    Nop();
-//    Nop();
+
    
     // initialize the device
     SYSTEM_Initialize();
@@ -200,6 +189,17 @@ int main(void) {
             strcat(t_data_usb_com,t_data_i2c);
             strcat(t_data_usb_com,t_data_1);
             
+//            t_data_usb_com[0] = "T";
+//            t_data_usb_com[1] = " ";
+//            t_data_usb_com[2] = ":";
+//            t_data_usb_com[3] = "";
+//            t_data_usb_com[4] = "";
+//            t_data_usb_com[5] = "";
+//            t_data_usb_com[6] = "0";
+//            t_data_usb_com[7] = ",";
+//            t_data_usb_com[8] = "4";
+//            t_data_usb_com[9] = "\0";
+            
             write_usb_com(t_data_usb_com,&f_data_sending);
         }
         
@@ -325,11 +325,6 @@ void float_to_ascii(float data_float,char *t_table){
         t_decimal[0]    = ',';
     }
     
-//    char t_test[64] = {0};
-//    
-//    strcpy(t_test,t_integer);
-//    strcat(t_test,t_decimal);
-//    strcpy(t_table,t_test);
     
     strcpy(t_table,t_integer);
     strcat(t_table,t_decimal);
