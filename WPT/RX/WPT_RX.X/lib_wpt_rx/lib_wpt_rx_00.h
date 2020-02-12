@@ -5,9 +5,12 @@
 #define	XC_HEADER_TEMPLATE_H
 
 #include <stdio.h>
+#include <string.h>
 #include "PIC24FJ128GC006.h"  
 #include "lib_com/serial_com_01.h"
 #include "system.h"
+#include "lib_com/usb/usb_sam_00.h"
+
 
 void oscillator_init(void);
 void pin_init(void);

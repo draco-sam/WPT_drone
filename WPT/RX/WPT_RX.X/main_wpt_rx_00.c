@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : main_wpt_rx_00.c
- * Date             : 11/02/2020.   
+ * Date             : 12/02/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -36,7 +36,15 @@ int main(void) {
     unsigned short      tm_address                      = 0;
     unsigned short      tx_address                      = 0;
     unsigned long       timer_counter                   = 0;
-    I2c_tm_analog       i2c_tm_analog;
+    I2c_tm_analog       i2c_tm_analog;//Structure for I2C TM.
+    
+    /************************************************************************************
+     * USB COM variables declaration :
+     * ------------------------------
+     */
+    unsigned short      menu_number     = 0xfffe;//Bad menu number.
+    unsigned short      f_data_sending  = 0;//Flag for write USB COM and main loop.
+    /***********************************************************************************/
     
     Nop();
     
@@ -72,6 +80,25 @@ int main(void) {
 //    led_red = off;
     
     while (1){
+        if(menu_number == 0xffff){
+            write_usb_com("\r\nMenu : \r\n",&f_data_sending);//Bug si M collé,ancienne data??
+        }
+        
+        read_usb_com(&menu_number);
+        
+        /************************************************************
+         * If data USB COM is sending with "write_usb_com()", 
+         * bad menu_number to not display the menu.
+         */
+        if(f_data_sending == 1){
+            menu_number     = 0xfffe;
+            f_data_sending  = 0;//Reset flag.
+        }
+        /***********************************************************/
+        
+        CDCTxService();
+        
+        
         /********************************************************************************
          * Prepare TM address for function "i2c_master_start_read_tm(...)" :
          * ----------------------------------------------------------------
@@ -112,13 +139,13 @@ int main(void) {
                 
                 counter_while = -1;//-1 + 1 = 0 : Trick for new loop while and TM cycle.
                 
-                led_red     = on;
-                led_green   = off;
+                led_red     = off;
+                led_green   = on;
             }
             
             tm_address = 0;//Reset address.
             flag_i2c_data_ready = 0;//Reset main flag.
-            counter_while++;
+            //counter_while++;
             
             wait(500000);
             

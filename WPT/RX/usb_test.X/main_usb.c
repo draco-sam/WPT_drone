@@ -12,7 +12,7 @@
 //#include "mcc_generated_files/PIC24FJ128GC006.h"
 #include "mcc_generated_files/usb/usb_device_cdc.h"
 #include "mcc_generated_files/PIC24FJ128GC006.h"
-#include <string.h>
+
 
 void get_menu(char *data);
 void get_data_i2c(char *t_data);

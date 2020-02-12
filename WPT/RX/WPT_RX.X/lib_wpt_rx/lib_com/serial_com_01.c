@@ -31,7 +31,7 @@ void i2c_master_init(void)
  */
 {
     // Baud Rate Generator Value.
-    I2C1BRG = 39;//39 (0x27) @100 kHz (9 @400 kHz).
+    I2C1BRG = 157;//157 at 100 kHz (f_cy = 16 MHz, f_usb = 48 MHz).
     
 
     /***********************************************************************************************

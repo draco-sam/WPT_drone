@@ -16,6 +16,7 @@
             <itemPath>lib_wpt_rx/lib_com/usb/usb_device_local.h</itemPath>
             <itemPath>lib_wpt_rx/lib_com/usb/usb_hal.h</itemPath>
             <itemPath>lib_wpt_rx/lib_com/usb/usb_hal_pic24f.h</itemPath>
+            <itemPath>lib_wpt_rx/lib_com/usb/usb_sam_00.h</itemPath>
           </logicalFolder>
           <itemPath>lib_wpt_rx/lib_com/serial_com_01.h</itemPath>
         </logicalFolder>
@@ -46,6 +47,7 @@
             <itemPath>lib_wpt_rx/lib_com/usb/usb_device_cdc.c</itemPath>
             <itemPath>lib_wpt_rx/lib_com/usb/usb_device_events.c</itemPath>
             <itemPath>lib_wpt_rx/lib_com/usb/usb_hal_16bit.c</itemPath>
+            <itemPath>lib_wpt_rx/lib_com/usb/usb_sam.c</itemPath>
           </logicalFolder>
           <itemPath>lib_wpt_rx/lib_com/serial_com_01.c</itemPath>
         </logicalFolder>

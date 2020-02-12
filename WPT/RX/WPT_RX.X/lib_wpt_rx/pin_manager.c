@@ -60,8 +60,7 @@
 /**
  Section: Driver Interface Function Definitions
 */
-void PIN_MANAGER_Initialize (void)
-{
+void PIN_MANAGER_Initialize (void){
     /****************************************************************************
      * Setting the Output Latch SFR(s)
      ***************************************************************************/
@@ -81,6 +80,11 @@ void PIN_MANAGER_Initialize (void)
     TRISE = 0x00FF;
     TRISF = 0x00BB;
     TRISG = 0x03CC;
+    
+    //Configurer les IO des leds en output :
+    TRISEbits.TRISE7    = 0;//"0" : Output.
+    TRISGbits.TRISG6    = 0;
+    TRISGbits.TRISG7    = 0;
 
     /****************************************************************************
      * Setting the Weak Pull Up and Weak Pull Down SFR(s)
@@ -117,7 +121,13 @@ void PIN_MANAGER_Initialize (void)
     ANSF = 0x00B9;
     ANSG = 0x03C0;
 
-
+    //Pour les leds en digital io.    
+    ANSEbits.ANSELE7 = 0;
+    ANSGbits.ANSELG6 = 0;
+    ANSGbits.ANSELG7 = 0;
+    
+    //Setting UTRDIS bit to use RG2 and RG3 as GPIO 
+    U1CNFG2bits.UTRDIS = 1;
 
 }
 
