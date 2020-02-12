@@ -1,23 +1,23 @@
 /**
-  Generated main.c file from MPLAB Code Configurator
+  @Generated PIC24 / dsPIC33 / PIC32MM MCUs Source File
 
-  @Company
+  @Company:
     Microchip Technology Inc.
 
-  @File Name
-    main.c
+  @File Name:
+    system.h
 
-  @Summary
-    This is the generated main.c using PIC24 / dsPIC33 / PIC32MM MCUs.
+  @Summary:
+    This is the sysetm.h file generated using PIC24 / dsPIC33 / PIC32MM MCUs
 
-  @Description
-    This source file provides main entry point for system initialization and application code development.
+  @Description:
+    This header file provides implementations for driver APIs for all modules selected in the GUI.
     Generation Information :
         Product Revision  :  PIC24 / dsPIC33 / PIC32MM MCUs - 1.166.0
         Device            :  PIC24FJ128GC006
     The generated drivers are tested against the following:
         Compiler          :  XC16 v1.41
-        MPLAB 	          :  MPLAB X v5.30
+        MPLAB             :  MPLAB X v5.30
 */
 
 /*
@@ -42,27 +42,26 @@
     TERMS.
 */
 
-/**
-  Section: Included Files
-*/
-#include "mcc_generated_files/system.h"
+#include "pin_manager.h"
+#include "clock.h"
+#include "system.h"
+//#include "usb/usb.h"
+#include "../lib_com/usb/usb_mplab/usb.h"
+#include "interrupt_manager.h"
+#include "traps.h"
+//#include "i2c1.h"
+#include "../lib_com/i2c/i2c1.h"
 
-/*
-                         Main application
- */
-int main(void)
+void SYSTEM_Initialize(void)
 {
-    // initialize the device
-    SYSTEM_Initialize();
-
-    while (1)
-    {
-        // Add your application code
-    }
-
-    return 1;
+    PIN_MANAGER_Initialize();
+    INTERRUPT_Initialize();
+    CLOCK_Initialize();
+    USBDeviceInit();
+    USBDeviceAttach();
+    I2C1_Initialize();
 }
+
 /**
  End of File
 */
-

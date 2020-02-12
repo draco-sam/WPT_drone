@@ -65,7 +65,7 @@ void MCC_USB_CDC_DemoTasks(void)
 
                 /* all other characters get +1 (e.g. 'a' -> 'b') */
                 default:
-                    writeBuffer[i] = readBuffer[i] + 1;
+                    writeBuffer[i] = readBuffer[i];
                     break;
             }
         }

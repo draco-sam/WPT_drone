@@ -12,7 +12,11 @@
             <asminc-extensions/>
             <sourceEncoding>ISO-8859-1</sourceEncoding>
             <make-dep-projects/>
-            <sourceRootList/>
+            <sourceRootList>
+                <sourceRootElem>01_lib_wpt_rx/lib_mplab</sourceRootElem>
+                <sourceRootElem>01_lib_wpt_rx/lib_com/usb</sourceRootElem>
+                <sourceRootElem>01_lib_wpt_rx/lib_com/i2c</sourceRootElem>
+            </sourceRootList>
             <confList>
                 <confElem>
                     <name>default</name>
