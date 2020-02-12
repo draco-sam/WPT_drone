@@ -34,6 +34,7 @@
           <itemPath>01_lib_wpt_rx/lib_mplab/system.h</itemPath>
           <itemPath>01_lib_wpt_rx/lib_mplab/traps.h</itemPath>
         </logicalFolder>
+        <itemPath>01_lib_wpt_rx/lib_wpt_usb_i2c.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -44,7 +45,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <logicalFolder name="MCC Generated Files"
-                     displayName="lib_wpt_rx"
+                     displayName="01_lib_wpt_rx"
                      projectFiles="true">
         <logicalFolder name="usb" displayName="lib_com" projectFiles="true">
           <logicalFolder name="f2" displayName="i2c" projectFiles="true">

@@ -133,10 +133,10 @@ void write_usb_com(char *t_data,unsigned short *flag_sending){
     char            t_data_com[64]  = "";
     
             
-    //Nettoyer le tableau avant utilisation :
-    for(i=0 ; i < sizeof(t_data_com) ; i++){
-            t_data_com[i] = 0;//NULL.
-    }
+//    //Nettoyer le tableau avant utilisation :
+//    for(i=0 ; i < sizeof(t_data_com) ; i++){
+//            t_data_com[i] = 0;//NULL.
+//    }
 
     strcpy(t_data_com,t_data);
 
@@ -174,7 +174,7 @@ void read_usb_com(unsigned short  *menu_number){
             putUSBUSART(data_write_com,numBytesRead);
 
             if(data_read_com[0] != 0x0d){
-                menu_number = ascii_to_integer(data_read_com);
+                *menu_number = ascii_to_integer(data_read_com);
             }
         }
     }
