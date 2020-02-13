@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : main_rx_usb_i2c_00.c
- * Date             : 12/02/2020.   
+ * Date             : 13/02/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -30,6 +30,17 @@ int main(void)
     char                t_data_usb_com[64]  = "";
     char                t_data_1[64]    = "";
     /***********************************************************************************/
+    
+    /************************************************************************************
+     * Master I2C 1 variables declaration :
+     * ----------------------------------- 
+     */
+    unsigned short      tm_address              = 0;
+    unsigned short      flag_i2c_data_ready     = 0;//"0" = Data i2c not ready.
+    float               i2c_slave_v_in          = 0;
+    I2c_tm_analog       i2c_tm_analog;//Structure for I2C TM.
+    /***********************************************************************************/
+    
     
     // initialize the device
     SYSTEM_Initialize();
@@ -62,15 +73,28 @@ int main(void)
             led_green   = off;
             led_red     = on;
             
-            float_to_ascii(4.567,t_data_i2c);
+            if(flag_i2c_data_ready == 0 && tm_address == 0){
+                tm_address = TM_VIN;
+                i2c_master_start_read_tm(tm_address,&flag_i2c_data_ready);
+            }
+            if(flag_i2c_data_ready == 1){
+                i2c_tm_analog   = i2c_master_get_tm(tm_address);//Analog value of the TM.
+                i2c_slave_v_in  = i2c_tm_analog.data_1;
+                
+                led_red     = off;
+                led_green   = on;
+                led_blue    = on;
+            }
             
-            //Prepare data COM with string copy and concatenation :            
-            strcpy(t_data_usb_com," : Vbat = ");
-            strcpy(t_data_1," Vvvvvolts \r\n");
-            strcat(t_data_usb_com,t_data_i2c);
-            strcat(t_data_usb_com,t_data_1);
-            
-            write_usb_com(t_data_usb_com,&f_data_sending);
+//            float_to_ascii(4.567,t_data_i2c);
+//            
+//            //Prepare data COM with string copy and concatenation :            
+//            strcpy(t_data_usb_com," : Vbat = ");
+//            strcpy(t_data_1," Vvvvvolts \r\n");
+//            strcat(t_data_usb_com,t_data_i2c);
+//            strcat(t_data_usb_com,t_data_1);
+//            
+//            write_usb_com(t_data_usb_com,&f_data_sending);
         }
         
         

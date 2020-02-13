@@ -1,12 +1,12 @@
 /* 
- * File             : serial_com_01.c
- * Date             : 02/02/2020.   
+ * File             : i2c_sam_01.c
+ * Date             : 13/02/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
  */
 
-#include "serial_com_01.h"
+#include "i2c_sam_01.h"
 
  #define led_red         LATGbits.LATG7
  #define led_green       LATGbits.LATG6

@@ -51,6 +51,7 @@
 #include "traps.h"
 //#include "i2c1.h"
 #include "../lib_com/i2c/i2c1.h"
+#include "../lib_com/i2c/i2c_sam_01.h"
 
 void SYSTEM_Initialize(void)
 {
@@ -59,7 +60,8 @@ void SYSTEM_Initialize(void)
     CLOCK_Initialize();
     USBDeviceInit();
     USBDeviceAttach();
-    I2C1_Initialize();
+    //I2C1_Initialize();
+    i2c_master_init();
 }
 
 /**
