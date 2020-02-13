@@ -131,12 +131,6 @@ void write_usb_com(char *t_data,unsigned short *flag_sending){
  */
     unsigned short  i               = 0;
     char            t_data_com[64]  = "";
-    
-            
-//    //Nettoyer le tableau avant utilisation :
-//    for(i=0 ; i < sizeof(t_data_com) ; i++){
-//            t_data_com[i] = 0;//NULL.
-//    }
 
     strcpy(t_data_com,t_data);
 

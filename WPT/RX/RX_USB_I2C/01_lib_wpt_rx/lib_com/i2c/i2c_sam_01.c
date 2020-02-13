@@ -255,27 +255,17 @@ void i2c_master_start_read_tm(unsigned short tm_address,unsigned short *f_data_r
 /*
  * Start i2C master read telemetry from slave IC charger and save it on static variables.
  */
-    i2c_flag_read       = 1;//Read ongoing, flag for interrupt.
-    i2c_command         = tm_address;
-    s_flag_data_ready   = f_data_ready;//Copier adresse du flag dans variable statique.
-    
-    //!!! Reset le µP, PQ ???
-    I2C1CONbits.SEN   = 1;//Initiates Start condition on SDAx and SCLx pins.
-   
-    /*
-     * Vérifier si :
-     *      - Bus libre.
-     *      - Stop bit anciennement détecté.
-     */
-    /*
-    if(I2C1STATbits.TRSTAT == 0 && I2C1STATbits.P == 1)
+    if(I2C1STATbits.TRSTAT == 0)
     {
-        LATG = 0b01000000;
+        //LATG = 0b01000000;
         i2c_flag_read   = 1;//Read ongoing, flag for interrupt.
-        i2c_command     = address;
+        i2c_command     = tm_address;
+        s_flag_data_ready   = f_data_ready;//Copier adresse du flag dans variable statique.
+        *f_data_ready       = 2;//"2" = TM ongoing.
+        
         I2C1CONbits.SEN   = 1;//Initiates Start condition on SDAx and SCLx pins.
     }
-    */
+    
     //si non attendre ????    
 }
 //__________________________________________________________________________________________________
