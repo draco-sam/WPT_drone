@@ -49,6 +49,8 @@ int main(void)
     led_green   = off;
     led_blue    = off;
     
+
+    
     //Plugger l'USB pour démarrer le code.
     while(USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended()== true){};
     led_red     = on;
@@ -78,10 +80,6 @@ int main(void)
                 i2c_master_start_read_tm(TM_VIN,&flag_i2c_data_ready);
             }
             else if(flag_i2c_data_ready == 1){//Data is ready.
-                led_red     = off;
-                led_green   = on;
-                led_blue    = on;
-                
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_VIN);
                 i2c_tm_analog_data  = s_i2c_tm_analog.data_1;//Analog value of the TM.
                 flag_i2c_data_ready = 0;//Reset flag.
@@ -102,10 +100,6 @@ int main(void)
                 i2c_master_start_read_tm(TM_DIE_TEMP,&flag_i2c_data_ready);
             }
             else if(flag_i2c_data_ready == 1){//Data is ready.
-                led_red     = off;
-                led_green   = on;
-                led_blue    = on;
-                
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_DIE_TEMP);
                 i2c_tm_analog_data  = s_i2c_tm_analog.data_1;//Analog value of the TM.
                 flag_i2c_data_ready = 0;//Reset flag.
@@ -126,10 +120,6 @@ int main(void)
                 i2c_master_start_read_tm(TM_VBAT,&flag_i2c_data_ready);
             }
             else if(flag_i2c_data_ready == 1){//Data is ready.
-                led_red     = off;
-                led_green   = on;
-                led_blue    = on;
-                
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_VBAT);
                 i2c_tm_analog_data  = s_i2c_tm_analog.data_1;//Analog value of the TM.
                 flag_i2c_data_ready = 0;//Reset flag.
@@ -150,10 +140,6 @@ int main(void)
                 i2c_master_start_read_tm(TM_IBAT,&flag_i2c_data_ready);
             }
             else if(flag_i2c_data_ready == 1){//Data is ready.
-                led_red     = off;
-                led_green   = on;
-                led_blue    = on;
-                
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_IBAT);
                 i2c_tm_analog_data  = s_i2c_tm_analog.data_1;//Analog value of the TM.
                 flag_i2c_data_ready = 0;//Reset flag.

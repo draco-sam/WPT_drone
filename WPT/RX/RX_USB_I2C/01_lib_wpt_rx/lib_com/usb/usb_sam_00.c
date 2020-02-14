@@ -43,13 +43,12 @@ unsigned short ascii_to_integer(unsigned char *table){
 /*
  * 
  */
-    char            table_ascii[11]     = {'0','1','2','3','4','5','6','7','8','9'};
+    char            table_ascii[11]     = {0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39};
     unsigned short  table_integer[11]   = {0,1,2,3,4,5,6,7,8,9};
     unsigned short  i                   = 0;
     unsigned short  data_integer        = 0;
-    
-    //for(i=0 ; i < strlen(table) ; i++){
-    for(i=0 ; i < 64 ; i++){
+
+    for(i=0 ; i < sizeof(table_ascii) ; i++){
         if(table_ascii[i] == table[0]){
             data_integer = table_integer[i];
         }
