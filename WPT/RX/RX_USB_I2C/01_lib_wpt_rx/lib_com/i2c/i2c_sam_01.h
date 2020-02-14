@@ -26,7 +26,7 @@
 #define R_SENS_BATTERY      16e-3//16m ohms.
 #define R_SENS_IN           32e-3//32m ohms.
 #define R_NTC_BIAS          10e+3
-#define CELL_COUNT          4
+#define CELL_COUNT          1
 
 typedef struct I2c_tm_analog
 /*

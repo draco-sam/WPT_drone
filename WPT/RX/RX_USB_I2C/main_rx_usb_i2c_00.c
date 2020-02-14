@@ -28,7 +28,6 @@ int main(void)
     unsigned short      f_data_sending  = 0;//Flag for write USB COM and main loop.
     char                t_data_i2c[64]  = "";//!!! Changer taille car 16 bits max !!!
     char                t_data_usb_com[64]  = "";
-    char                t_data_1[64]    = "";
     /***********************************************************************************/
     
     /************************************************************************************
@@ -64,7 +63,6 @@ int main(void)
         
         empty_table(t_data_i2c);
         empty_table(t_data_usb_com);
-        empty_table(t_data_1);
         
         i2c_tm_analog_data = 0;//Reset variable.
         
@@ -89,8 +87,7 @@ int main(void)
                 //Prepare data COM with string copy and concatenation :            
                 strcpy(t_data_usb_com," : Vin = ");
                 strcat(t_data_usb_com,t_data_i2c);
-                strcpy(t_data_1," Vvvvvolts \r\n");
-                strcat(t_data_usb_com,t_data_1);
+                strcat(t_data_usb_com," Vvvvvolts \r\n");
             
                 write_usb_com(t_data_usb_com,&f_data_sending);
             }
@@ -109,8 +106,7 @@ int main(void)
                 //Prepare data COM with string copy and concatenation :            
                 strcpy(t_data_usb_com," : Temp Die = ");
                 strcat(t_data_usb_com,t_data_i2c);
-                strcpy(t_data_1," deg C \r\n");
-                strcat(t_data_usb_com,t_data_1);
+                strcat(t_data_usb_com," deg C \r\n");
             
                 write_usb_com(t_data_usb_com,&f_data_sending);
             }
@@ -129,8 +125,7 @@ int main(void)
                 //Prepare data COM with string copy and concatenation :            
                 strcpy(t_data_usb_com," : Vbat = ");
                 strcat(t_data_usb_com,t_data_i2c);
-                strcpy(t_data_1," V \r\n");
-                strcat(t_data_usb_com,t_data_1);
+                strcat(t_data_usb_com," V \r\n");
             
                 write_usb_com(t_data_usb_com,&f_data_sending);
             }
@@ -149,8 +144,7 @@ int main(void)
                 //Prepare data COM with string copy and concatenation :            
                 strcpy(t_data_usb_com," : Ibat = ");
                 strcat(t_data_usb_com,t_data_i2c);
-                strcpy(t_data_1," A \r\n");
-                strcat(t_data_usb_com,t_data_1);
+                strcat(t_data_usb_com," A \r\n");
             
                 write_usb_com(t_data_usb_com,&f_data_sending);
             }

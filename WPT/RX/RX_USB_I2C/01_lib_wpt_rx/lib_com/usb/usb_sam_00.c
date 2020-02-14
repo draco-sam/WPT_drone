@@ -144,10 +144,13 @@ void read_usb_com(unsigned short  *menu_number){
 /*
  * If bus USB COM ready, check if a byte is placed on the read buffer.
  */
-    unsigned short  numBytesRead    = 0;
-    unsigned short  i               = 0;
+    unsigned short  numBytesRead        = 0;
+    unsigned short  i                   = 0;
     uint8_t         data_read_com[64];
     uint8_t         data_write_com[64];
+    
+    static unsigned short   st_i_1          = 0;
+    static char             st_data_write[3] = "";
     
     if(USBUSARTIsTxTrfReady() == true){
         numBytesRead = getsUSBUSART(data_read_com, sizeof(data_read_com));
@@ -158,17 +161,40 @@ void read_usb_com(unsigned short  *menu_number){
                 led_red     = off;
                 led_green   = off;
                 led_blue    = on;
+                
+                data_write_com[i] = 0x0a;
             }
-            data_write_com[i] = data_read_com[i];
+            else{
+                data_write_com[i] = data_read_com[i];
+            }
         }
 
         if(numBytesRead > 0){
             //putsUSBUSART(data_write_com);
             putUSBUSART(data_write_com,numBytesRead);
 
-            if(data_read_com[0] != 0x0d){
+            if(data_read_com[0] != 0x0d){//Si pas CR, sauvegarder le chiffre.
                 *menu_number = ascii_to_integer(data_read_com);
             }
+//                if(st_i_1 < sizeof(st_data_write)){
+//                    st_data_write[st_i_1] = data_read_com[0];
+//                    st_i_1++;
+//                }
+//                else{
+//                    //Reset table and variable :
+//                    empty_table(st_data_write);
+//                    st_i_1 = 0;
+//                }
+//            }
+//            else if(data_read_com[0] == 0x0d){
+//                if(st_data_write[1] != ""){
+//                    *menu_number = ascii_to_integer(st_data_write[0]);
+//                    *menu_number = (*menu_number * 10) + ascii_to_integer(st_data_write[1]);
+//                }
+//                else{
+//                    *menu_number = ascii_to_integer(st_data_write[0]);
+//                }
+//            }
         }
     }
 }

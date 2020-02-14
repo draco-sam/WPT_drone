@@ -290,6 +290,7 @@ I2c_tm_analog i2c_master_get_tm(unsigned short tm_address){
     
     if(tm_address == TM_VBAT)
     {
+        //!!! Lancer d'abord TM "TM_CHEM_CELLS" pour connaitre la valeur de "CELL_COUNT" !!!
         i2c_tm_analog.data_1 = digital_data * 192.264e-6 * CELL_COUNT;//192.264 µV.
     }
     else if(tm_address == TM_VIN || tm_address == TM_VSYS)
