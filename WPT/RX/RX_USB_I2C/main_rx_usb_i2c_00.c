@@ -24,10 +24,10 @@ int main(void)
      * USB COM variables declaration :
      * ------------------------------
      */
-    unsigned short      menu_number     = 0xfffe;//Bad menu number.
-    unsigned short      f_data_sending  = 0;//Flag for write USB COM and main loop.
-    char                t_data_i2c[64]  = "";//!!! Changer taille car 16 bits max !!!
-    char                t_data_usb_com[64]  = "";
+    unsigned short      menu_number         = 0xfffe;//Bad menu number.
+    unsigned short      f_data_sending      = 0;//Flag for write USB COM and main loop.
+    char                t_data_i2c[64]      = "";//!!! Changer taille car 16 bits max !!!
+    char                t_data_usb_com[250] = "";
     /***********************************************************************************/
     
     /************************************************************************************
@@ -146,6 +146,51 @@ int main(void)
                 strcat(t_data_usb_com,t_data_i2c);
                 strcat(t_data_usb_com," A \r\n");
             
+                write_usb_com(t_data_usb_com,&f_data_sending);
+            }
+        }
+        else if(menu_number == 5){
+            if(flag_i2c_data_ready == 0){
+                i2c_master_start_read_tm(TM_CHARGER_STATE,&flag_i2c_data_ready);
+            }
+            else if(flag_i2c_data_ready == 1){//Data is ready.
+                flag_i2c_data_ready = 0;//Reset flag.
+                s_i2c_tm_analog     = i2c_master_get_tm(TM_CHARGER_STATE);
+                
+                strcpy(t_data_usb_com," : STATE -> ");
+                
+                if(s_i2c_tm_analog.data_1 == 0){//OFF.
+                    strcat(t_data_usb_com,"ch susp : off ; ");
+                }
+                else{
+                    strcat(t_data_usb_com,"ch susp : on ; ");
+                }
+                if(s_i2c_tm_analog.data_2 == 0){//OFF.
+                    strcat(t_data_usb_com,"prech : off ; ");
+                }
+                else{
+                    strcat(t_data_usb_com,"prech : on ; ");
+                }
+                if(s_i2c_tm_analog.data_3 == 0){//OFF.
+                    strcat(t_data_usb_com,"cc_cv : off ; ");
+                }
+                else{
+                    strcat(t_data_usb_com,"cc_cv : on ; ");
+                }
+                if(s_i2c_tm_analog.data_4 == 0){//OFF.
+                    strcat(t_data_usb_com,"bat_miss : off ; ");
+                }
+                else{
+                    strcat(t_data_usb_com,"bat_miss : on ; ");
+                }
+                if(s_i2c_tm_analog.data_5 == 0){//OFF.
+                    strcat(t_data_usb_com,"bat_short : off \r\n");
+                }
+                else{
+                    strcat(t_data_usb_com,"bat_short : on \r\n");
+                }
+//                strcpy(t_data_usb_com," : STATE -> ");
+//                strcat(t_data_usb_com,"ch susp : off \r\n");
                 write_usb_com(t_data_usb_com,&f_data_sending);
             }
         }

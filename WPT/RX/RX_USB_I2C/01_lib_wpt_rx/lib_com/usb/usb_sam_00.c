@@ -129,7 +129,7 @@ void write_usb_com(char *t_data,unsigned short *flag_sending){
  * 
  */
     unsigned short  i               = 0;
-    char            t_data_com[64]  = "";
+    char            t_data_com[250]  = "";
 
     strcpy(t_data_com,t_data);
 
@@ -146,8 +146,10 @@ void read_usb_com(unsigned short  *menu_number){
  */
     unsigned short  numBytesRead        = 0;
     unsigned short  i                   = 0;
-    uint8_t         data_read_com[64];
-    uint8_t         data_write_com[64];
+    uint8_t         data_read_com[250];
+    uint8_t         data_write_com[250];
+//    char            data_read_com[250]  = "";
+//    char            data_write_com[250]  = "";
     
     static unsigned short   st_i_1          = 0;
     static char             st_data_write[3] = "";
@@ -173,7 +175,7 @@ void read_usb_com(unsigned short  *menu_number){
             //putsUSBUSART(data_write_com);
             putUSBUSART(data_write_com,numBytesRead);
 
-            if(data_read_com[0] != 0x0d){//Si pas CR, sauvegarder le chiffre.
+            if(data_read_com[0] != 0x0d){
                 *menu_number = ascii_to_integer(data_read_com);
             }
 //                if(st_i_1 < sizeof(st_data_write)){
