@@ -190,6 +190,7 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C1Interrupt ( void )
                  i2c_data_h = 0;//Bad data info !!!
             }
             *s_flag_data_ready      = 1;//Rising flag data ready for the main.
+            i2c_flag_read           = 0;//Reset flag for if interrupt.
             i2c_interrupt_counter   = 0;//Reset.  
         }
     }
@@ -243,6 +244,7 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C1Interrupt ( void )
                  *s_flag_end_writing    = 3;//3 = bad code for main loop.
             }
             *s_flag_end_writing         = 1;//1 = end of writing ok for main loop.
+            i2c_flag_write              = 0;//Reset flag for if interrupt.
             i2c_interrupt_counter       = 0;//Reset.  
         }
     }
@@ -358,7 +360,7 @@ void i2c_master_start_write_data(   unsigned short tx_address,unsigned short dat
     
     //Check if Master transmit is not in progress ("0") :
     if(I2C1STATbits.TRSTAT == 0){
-        i2c_flag_write      = 1;//Read ongoing, flag for interrupt.
+        i2c_flag_write      = 1;//Write ongoing, flag for interrupt.
         i2c_command         = tx_address;
         
         i2c_data_l          = data & 0x00ff;

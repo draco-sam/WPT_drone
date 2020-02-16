@@ -70,10 +70,6 @@ int main(void)
             write_usb_com("\r\nMenu : \r\n",&f_data_sending);//Bug si M collé,ancienne data??
         }
         else if(menu_number == 1){
-            led_blue    = off;
-            led_green   = off;
-            led_red     = on;
-            
             if(flag_i2c_data_ready == 0){
                 i2c_master_start_read_tm(TM_VIN,&flag_i2c_data_ready);
             }
@@ -189,10 +185,31 @@ int main(void)
                 else{
                     strcat(t_data_usb_com,"bat_short : on \r\n");
                 }
-//                strcpy(t_data_usb_com," : STATE -> ");
-//                strcat(t_data_usb_com,"ch susp : off \r\n");
+
                 write_usb_com(t_data_usb_com,&f_data_sending);
             }
+        }
+        else if(menu_number == 6){
+            led_blue    = off;
+            led_green   = off;
+            led_red     = on;
+            
+            strcpy(t_data_usb_com," : Suspend battery \r\n ");
+            write_usb_com(t_data_usb_com,&f_data_sending);
+            
+            unsigned short flag_i2c_end_writing = 1;
+            i2c_master_start_write_data(TX_CONFIG_BITS,0x0100,&flag_i2c_end_writing);
+        }
+        else if(menu_number == 7){
+            led_blue    = off;
+            led_green   = off;
+            led_red     = on;
+            
+            strcpy(t_data_usb_com," : Restart charge battery \r\n ");
+            write_usb_com(t_data_usb_com,&f_data_sending);
+            
+            unsigned short flag_i2c_end_writing = 1;
+            i2c_master_start_write_data(TX_CONFIG_BITS,0x0000,&flag_i2c_end_writing);
         }
         
         
