@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : main_usb.c
- * Date             : 18/02/2020.   
+ * Date             : 17/02/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -20,7 +20,7 @@ unsigned short ascii_to_integer(unsigned char *table);
 void float_to_ascii(float data_float,char *t_table);
 void write_usb_com(char *t_data,unsigned short *flag_sending);
 void extract_integer_decimal(float data,unsigned short *data_integer,unsigned short *data_decimal);
-void empty_table(char *table,unsigned short t_size);
+void empty_table(char *table);
 
 
 
@@ -74,87 +74,150 @@ int main(void) {
     led_green   = off;
     led_blue    = off;
     
-    //unsigned char menuB[10] = "";
-//    char menuB[10] = "";
-//    menuB[0] = '1';
-//    menuB[1] = '2';
-//    menuB[2] = '3';
-//    menuB[3] = '4';
-//    menuB[4] = '\0';
-//    menu_number = sizeof(menuB);
-//    menu_number =  ascii_to_integer(menuB);
-//    Nop();
-    
-//    empty_table(menuB,sizeof(menuB));
-//    Nop();
 
+    
+    //Plugger l'USB pour démarrer le code.
+    while(USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended()== true){};
+    
+    led_red     = on;
+    led_green   = off;
+    
+    //get_menu(menu_com);
+    
+    menu_com[0] = 0x0d;//Carriage return.
+    menu_com[1] = 0x0a;//Line Feed.
+    menu_com[2] = 'M';
+    menu_com[3] = 'e';
+    menu_com[4] = 'n';
+    menu_com[5] = 'u';
+    menu_com[6] = 0x0d;//Carriage return.
+    menu_com[7] = 0x0a;//Line Feed.
     
     while(1){
-        if( USBGetDeviceState() < CONFIGURED_STATE ){
+        /********************************************************************************
+         * Display menu if USB COM ready :
+         * ------------------------------
+         */
+        if(menu_number == 0xffff){
+            //write_usb_com("Menu : \r\n",&f_data_sending);//Bug si M collé,ancienne data??
+            //write_usb_com(menu_com,&f_data_sending);
+            if(USBUSARTIsTxTrfReady() == true){
+                //putsUSBUSART(menu_com);
+                char test_menu[200] = "\nMenu : \r\n";
+                putUSBUSART(test_menu,sizeof(test_menu));
+                menu_number = 0xfffe;//Bloquer le menu.
+            }
         }
-        if( USBIsDeviceSuspended()== true ){
-        }
-        if( USBUSARTIsTxTrfReady() == true){
-            uint8_t i;
-            uint8_t numBytesRead;
-            //uint8_t readBuffer[64];
-            //uint8_t writeBuffer[64];
-            unsigned char readBuffer[64]        = "";
-            unsigned char writeBuffer[64]       = "";
-            static unsigned char menuBuffer[5] = "";//max 9999.
-            static unsigned short i_menu        = 0;
-
-            numBytesRead = getsUSBUSART(readBuffer, sizeof(readBuffer));
+        /*******************************************************************************/
+            
+        /********************************************************************************
+         * Read buffer if USB COM ready :
+         * -----------------------------
+         */
+        if(USBUSARTIsTxTrfReady() == true){
+            char data_read_com[64]  = "";
+            char data_write_com[64] = "";
+            numBytesRead = getsUSBUSART(data_read_com, sizeof(data_read_com));
 
             for(i=0; i<numBytesRead; i++){
-                if(readBuffer[i] == 0x0d){//0x0d = CR (0x0a = LF).
+                if(data_read_com[i] == 0x0d){
+                    menu_number = 0xffff;//Relancer le menu.
                     led_red     = off;
                     led_green   = off;
                     led_blue    = on;
                 }
-                else if(readBuffer[i] != 0x0a){//Diff de LF.
-                    /*******************************************
-                     * Save menu number :
-                     * -----------------
-                     */
-                    if(i_menu < sizeof(menuBuffer)){
-                        menuBuffer[i_menu] = readBuffer[i];
-                        i_menu++;//For next tour.
-                    }
-                    else{
-                        i_menu = 0;//Reset.
-                    }
-                    /******************************************/
-                }
-                writeBuffer[i] = readBuffer[i];
-            }//End for.
+                data_write_com[i] = data_read_com[i];
+            }
             
-            if(numBytesRead > 0){
-                if(writeBuffer[0] == 0x0d){//Détecter le CR (ENTER dans console).
-                    writeBuffer[1] = 0x0a;//LF
-                    
-                    //!!! Bug car tableau déja rempli avec valeurs aléatoires !!!
-                    //putUSBUSART(writeBuffer,sizeof(writeBuffer));//Bug car tableau déja rempli
-                    putUSBUSART(writeBuffer,2);
-                    
-                    //Si CR, convertir le tableau static :
-                    menu_number =  ascii_to_integer(menuBuffer);
-                    if(menu_number == 9999){
-                        led_red     = on;
-                        led_green   = off;
-                        led_blue    = off;
-                    }
-                    empty_table(menuBuffer,sizeof(menuBuffer));//Effacer à chaque CR.
-                    i_menu = 0;//Reset.
-                }
-                else{
-                    putUSBUSART(writeBuffer,numBytesRead);
+            if(sizeof(data_write_com) > 0){
+                //putsUSBUSART(data_write_com);
+                //putUSBUSART(data_write_com,numBytesRead);
+                putUSBUSART(data_write_com,sizeof(data_write_com));
+                
+                if(data_read_com[0] != 0x0d){
+                    menu_number = ascii_to_integer(data_read_com);
                 }
             }
         }
-
+        /*******************************************************************************/
+        
         CDCTxService();
-    }//End principal while.
+        
+        unsigned short i2c_data_integer     = 0;
+        unsigned short i2c_data_decimal     = 0;
+        
+        empty_table(t_data_i2c);
+        empty_table(t_data_usb_com);
+        empty_table(t_data_1);
+        
+        if(menu_number == 1){
+            led_blue    = off;
+            led_green   = off;
+            led_red     = on;
+            
+            float_to_ascii(4.567,t_data_i2c);
+            
+            //Prepare data COM with string copy and concatenation :            
+//            strcpy(t_data_usb_com," : Vbat = ");
+//            strcpy(t_data_1," Vvvvvolts \r\n");
+//            strcat(t_data_usb_com,t_data_i2c);
+//            strcat(t_data_usb_com,t_data_1);
+            
+            write_usb_com(t_data_usb_com,&f_data_sending);
+        }
+        else if (menu_number == 2){
+            led_red     = off;
+            led_blue    = off;
+            led_green   = on;
+            
+            float_to_ascii(0.783,t_data_i2c);
+            
+            //Prepare data COM with string copy and concatenation :            
+            strcpy(t_data_usb_com," : Ibat = ");
+            strcpy(t_data_1," mA \r\n");
+            strcat(t_data_usb_com,t_data_i2c);
+            strcat(t_data_usb_com,t_data_1);
+            
+            write_usb_com(t_data_usb_com,&f_data_sending);
+        }
+        else if (menu_number == 3){
+            led_red     = off;
+            led_blue    = on;
+            led_green   = on;
+           
+            float_to_ascii(36.413,t_data_i2c);
+            
+            //Prepare data COM with string copy and concatenation :            
+            strcpy(t_data_usb_com," : Die temperature = ");
+            strcpy(t_data_1," deg C \r\n");
+            strcat(t_data_usb_com,t_data_i2c);
+            strcat(t_data_usb_com,t_data_1);
+            
+//            t_data_usb_com[0] = "T";
+//            t_data_usb_com[1] = " ";
+//            t_data_usb_com[2] = ":";
+//            t_data_usb_com[3] = "";
+//            t_data_usb_com[4] = "";
+//            t_data_usb_com[5] = "";
+//            t_data_usb_com[6] = "0";
+//            t_data_usb_com[7] = ",";
+//            t_data_usb_com[8] = "4";
+//            t_data_usb_com[9] = "\0";
+            
+            write_usb_com(t_data_usb_com,&f_data_sending);
+        }
+        
+        /************************************************************
+         * If data USB COM is sending with "write_usb_com()", 
+         * bad menu_number to not display the menu.
+         */
+        if(f_data_sending == 1){
+            menu_number     = 0xfffe;
+            f_data_sending  = 0;//Reset flag.
+        }
+        /***********************************************************/
+        
+    }//End of principal while.
     
     
     return 0;
@@ -192,22 +255,13 @@ unsigned short ascii_to_integer(unsigned char *table){
  */
     char            table_ascii[11]     = {'0','1','2','3','4','5','6','7','8','9'};
     unsigned short  table_integer[11]   = {0,1,2,3,4,5,6,7,8,9};
-    unsigned short  i_table             = 0;
-    unsigned short  i_ascii             = 0;
+    unsigned short  i                   = 0;
     unsigned short  data_integer        = 0;
-    unsigned short  table_size          = 0;
     
-    //Brows all char in the retrieved table :
-    for(i_table=0 ; i_table < strlen(table) ; i_table++){
-    //for(i=0 ; i < 64 ; i++){
-        
-        //Compare with local ascii table :
-        i_ascii = 0;
-        while(i_ascii < sizeof(table_ascii)){
-            if(table_ascii[i_ascii] == table[i_table]){
-                data_integer = table_integer[i_ascii] + (data_integer * 10);
-            }
-            i_ascii++;
+    //for(i=0 ; i < strlen(table) ; i++){
+    for(i=0 ; i < 64 ; i++){
+        if(table_ascii[i] == table[0]){
+            data_integer = table_integer[i];
         }
     }
     
@@ -321,16 +375,15 @@ void extract_integer_decimal(float data,unsigned short *data_integer,unsigned sh
 }
 //__________________________________________________________________________________________________
 
-void empty_table(char *table,unsigned short t_size){
+void empty_table(char *table){
 /*
  * Empty the table :
  * ----------------
  */
-    unsigned short i_empty  = 0;
+    unsigned short i_empty = 0;
     
-    //for(i_empty=0 ; i_empty < sizeof(table) ; i_empty++){
-    for(i_empty=0 ; i_empty < t_size ; i_empty++){
-        table[i_empty] = '\0';//NULL.
+    for(i_empty=0 ; i_empty < sizeof(table) ; i_empty++){
+        table[i_empty] = "";//NULL.
     }
 }
 //__________________________________________________________________________________________________
