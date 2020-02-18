@@ -94,21 +94,6 @@ int main(void) {
     menu_com[7] = 0x0a;//Line Feed.
     
     while(1){
-        /********************************************************************************
-         * Display menu if USB COM ready :
-         * ------------------------------
-         */
-        if(menu_number == 0xffff){
-            //write_usb_com("Menu : \r\n",&f_data_sending);//Bug si M collé,ancienne data??
-            //write_usb_com(menu_com,&f_data_sending);
-            if(USBUSARTIsTxTrfReady() == true){
-                //putsUSBUSART(menu_com);
-                char test_menu[200] = "\nMenu : \r\n";
-                putUSBUSART(test_menu,sizeof(test_menu));
-                menu_number = 0xfffe;//Bloquer le menu.
-            }
-        }
-        /*******************************************************************************/
             
         /********************************************************************************
          * Read buffer if USB COM ready :
@@ -149,18 +134,16 @@ int main(void) {
             
             if(numBytesRead > 0){
                 if(writeBuffer[0] == 0x0d){//Détecter le CR (ENTER dans console).
-                    writeBuffer[1] = 0x0a;//LF
+                    //writeBuffer[1] = 0x0a;//LF
                     
-                    //!!! Bug car tableau déja rempli avec valeurs aléatoires !!!
-                    //putUSBUSART(writeBuffer,sizeof(writeBuffer));//Bug car tableau déja rempli
-                    putUSBUSART(writeBuffer,2);
+                    putUSBUSART(writeBuffer,strlen(writeBuffer));//(...,2).
                     
                     //Si CR, convertir le tableau static :
                     menu_number =  ascii_to_integer(menuBuffer);
-                    if(menu_number == 9999){
-                        led_red     = on;
-                        led_green   = off;
-                        led_blue    = off;
+                    if(menu_number == 0){
+                        led_red     = off;
+                        led_green   = on;
+                        led_blue    = on;
                     }
                     empty_table(menuBuffer,sizeof(menuBuffer));//Effacer à chaque CR.
                     i_menu = 0;//Reset.
@@ -181,30 +164,51 @@ int main(void) {
         empty_table(t_data_usb_com,sizeof(t_data_usb_com));
         empty_table(t_data_1,sizeof(t_data_1));
         
-        if(menu_number == 1){
-            led_blue    = off;
-            led_green   = off;
-            led_red     = on;
+        if(menu_number == 0){
+            //write_usb_com("Menu : \r\n",&f_data_sending);//Bug si M collé,ancienne data??
+            //write_usb_com(menu_com,&f_data_sending);
+            if(USBUSARTIsTxTrfReady() == true){
+                //putsUSBUSART(menu_com);
+                char test_menu[250] = "\n---------------\r\n"
+                "Menu : \r\n"
+                "-----\r\n"
+                "1 : Vbat \r\n"
+                "2 : Ibat \r\n"
+                "3 : Die T \r\n"
+                "---------------\r\n";
+                //putUSBUSART(test_menu,sizeof(test_menu));
+                putUSBUSART(test_menu,strlen(test_menu));
+                menu_number = 0xfffe;//Bloquer le menu.
+            }
+        }
+        else if(menu_number == 1){
             
             float_to_ascii(4.567,t_data_i2c);
+            
+            //!!! A faire : write_usb_com("Vbat = ",t_data_i2c," Volts \r\n") !!!
+            strcpy(t_data_usb_com,"1 : Vbat = ");
+            strcat(t_data_usb_com,t_data_i2c);
+            strcat(t_data_usb_com," Volllllltssss \r\n");
+            
+//            if(USBUSARTIsTxTrfReady() == true){
+//                putUSBUSART(t_data_usb_com,strlen(t_data_usb_com));
+//                menu_number = 0xfffe;//Bloquer le menu.
+//            }
             
             //Prepare data COM with string copy and concatenation :            
 //            strcpy(t_data_usb_com," : Vbat = ");
 //            strcpy(t_data_1," Vvvvvolts \r\n");
 //            strcat(t_data_usb_com,t_data_i2c);
 //            strcat(t_data_usb_com,t_data_1);
-            
+//            
             write_usb_com(t_data_usb_com,&f_data_sending);
         }
         else if (menu_number == 2){
-            led_red     = off;
-            led_blue    = off;
-            led_green   = on;
             
             float_to_ascii(0.783,t_data_i2c);
             
             //Prepare data COM with string copy and concatenation :            
-            strcpy(t_data_usb_com," : Ibat = ");
+            strcpy(t_data_usb_com,"2 : Ibat = ");
             strcpy(t_data_1," mA \r\n");
             strcat(t_data_usb_com,t_data_i2c);
             strcat(t_data_usb_com,t_data_1);
@@ -212,14 +216,11 @@ int main(void) {
             write_usb_com(t_data_usb_com,&f_data_sending);
         }
         else if (menu_number == 3){
-            led_red     = off;
-            led_blue    = on;
-            led_green   = on;
            
             float_to_ascii(36.413,t_data_i2c);
             
             //Prepare data COM with string copy and concatenation :            
-            strcpy(t_data_usb_com," : Die temperature = ");
+            strcpy(t_data_usb_com,"3 : Die temperature = ");
             strcpy(t_data_1," deg C \r\n");
             strcat(t_data_usb_com,t_data_i2c);
             strcat(t_data_usb_com,t_data_1);
@@ -289,7 +290,6 @@ unsigned short ascii_to_integer(unsigned char *table){
     unsigned short  i_table             = 0;
     unsigned short  i_ascii             = 0;
     unsigned short  data_integer        = 0;
-    unsigned short  table_size          = 0;
     
     //Brows all char in the retrieved table :
     for(i_table=0 ; i_table < strlen(table) ; i_table++){
@@ -389,7 +389,9 @@ void write_usb_com(char *t_data,unsigned short *flag_sending){
     strcpy(t_data_com,t_data);
 
     if(USBUSARTIsTxTrfReady() == true){
-        putUSBUSART(t_data_com,sizeof(t_data_com));
+        //putUSBUSART(t_data_com,sizeof(t_data_com));
+        //putUSBUSART(t_data_com,strlen(t_data_com));
+        putUSBUSART(t_data,strlen(t_data));
         *flag_sending = 1;
     }
 }
