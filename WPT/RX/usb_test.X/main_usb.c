@@ -74,34 +74,52 @@ int main(void) {
     led_green   = off;
     led_blue    = off;
     
-    //unsigned char menuB[10] = "";
-//    char menuB[10] = "";
-//    menuB[0] = '1';
-//    menuB[1] = '2';
-//    menuB[2] = '3';
-//    menuB[3] = '4';
-//    menuB[4] = '\0';
-//    menu_number = sizeof(menuB);
-//    menu_number =  ascii_to_integer(menuB);
-//    Nop();
-    
-//    empty_table(menuB,sizeof(menuB));
-//    Nop();
 
     
+    //Plugger l'USB pour démarrer le code.
+    while(USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended()== true){};
+    
+    led_red     = on;
+    led_green   = off;
+    
+    //get_menu(menu_com);
+    
+    menu_com[0] = 0x0d;//Carriage return.
+    menu_com[1] = 0x0a;//Line Feed.
+    menu_com[2] = 'M';
+    menu_com[3] = 'e';
+    menu_com[4] = 'n';
+    menu_com[5] = 'u';
+    menu_com[6] = 0x0d;//Carriage return.
+    menu_com[7] = 0x0a;//Line Feed.
+    
     while(1){
-        if( USBGetDeviceState() < CONFIGURED_STATE ){
+        /********************************************************************************
+         * Display menu if USB COM ready :
+         * ------------------------------
+         */
+        if(menu_number == 0xffff){
+            //write_usb_com("Menu : \r\n",&f_data_sending);//Bug si M collé,ancienne data??
+            //write_usb_com(menu_com,&f_data_sending);
+            if(USBUSARTIsTxTrfReady() == true){
+                //putsUSBUSART(menu_com);
+                char test_menu[200] = "\nMenu : \r\n";
+                putUSBUSART(test_menu,sizeof(test_menu));
+                menu_number = 0xfffe;//Bloquer le menu.
+            }
         }
-        if( USBIsDeviceSuspended()== true ){
-        }
+        /*******************************************************************************/
+            
+        /********************************************************************************
+         * Read buffer if USB COM ready :
+         * -----------------------------
+         */
         if( USBUSARTIsTxTrfReady() == true){
             uint8_t i;
             uint8_t numBytesRead;
-            //uint8_t readBuffer[64];
-            //uint8_t writeBuffer[64];
             unsigned char readBuffer[64]        = "";
-            unsigned char writeBuffer[64]       = "";
-            static unsigned char menuBuffer[5] = "";//max 9999.
+            unsigned char writeBuffer[64]       = "";//[128] fonctionne aussi.
+            static unsigned char menuBuffer[5] 	= "";//max 9999.
             static unsigned short i_menu        = 0;
 
             numBytesRead = getsUSBUSART(readBuffer, sizeof(readBuffer));
@@ -152,9 +170,85 @@ int main(void) {
                 }
             }
         }
-
+        /*******************************************************************************/
+        
         CDCTxService();
-    }//End principal while.
+        
+        unsigned short i2c_data_integer     = 0;
+        unsigned short i2c_data_decimal     = 0;
+        
+        empty_table(t_data_i2c,sizeof(t_data_i2c));
+        empty_table(t_data_usb_com,sizeof(t_data_usb_com));
+        empty_table(t_data_1,sizeof(t_data_1));
+        
+        if(menu_number == 1){
+            led_blue    = off;
+            led_green   = off;
+            led_red     = on;
+            
+            float_to_ascii(4.567,t_data_i2c);
+            
+            //Prepare data COM with string copy and concatenation :            
+//            strcpy(t_data_usb_com," : Vbat = ");
+//            strcpy(t_data_1," Vvvvvolts \r\n");
+//            strcat(t_data_usb_com,t_data_i2c);
+//            strcat(t_data_usb_com,t_data_1);
+            
+            write_usb_com(t_data_usb_com,&f_data_sending);
+        }
+        else if (menu_number == 2){
+            led_red     = off;
+            led_blue    = off;
+            led_green   = on;
+            
+            float_to_ascii(0.783,t_data_i2c);
+            
+            //Prepare data COM with string copy and concatenation :            
+            strcpy(t_data_usb_com," : Ibat = ");
+            strcpy(t_data_1," mA \r\n");
+            strcat(t_data_usb_com,t_data_i2c);
+            strcat(t_data_usb_com,t_data_1);
+            
+            write_usb_com(t_data_usb_com,&f_data_sending);
+        }
+        else if (menu_number == 3){
+            led_red     = off;
+            led_blue    = on;
+            led_green   = on;
+           
+            float_to_ascii(36.413,t_data_i2c);
+            
+            //Prepare data COM with string copy and concatenation :            
+            strcpy(t_data_usb_com," : Die temperature = ");
+            strcpy(t_data_1," deg C \r\n");
+            strcat(t_data_usb_com,t_data_i2c);
+            strcat(t_data_usb_com,t_data_1);
+            
+//            t_data_usb_com[0] = "T";
+//            t_data_usb_com[1] = " ";
+//            t_data_usb_com[2] = ":";
+//            t_data_usb_com[3] = "";
+//            t_data_usb_com[4] = "";
+//            t_data_usb_com[5] = "";
+//            t_data_usb_com[6] = "0";
+//            t_data_usb_com[7] = ",";
+//            t_data_usb_com[8] = "4";
+//            t_data_usb_com[9] = "\0";
+            
+            write_usb_com(t_data_usb_com,&f_data_sending);
+        }
+        
+        /************************************************************
+         * If data USB COM is sending with "write_usb_com()", 
+         * bad menu_number to not display the menu.
+         */
+        if(f_data_sending == 1){
+            menu_number     = 0xfffe;
+            f_data_sending  = 0;//Reset flag.
+        }
+        /***********************************************************/
+        
+    }//End of principal while.
     
     
     return 0;
@@ -199,10 +293,8 @@ unsigned short ascii_to_integer(unsigned char *table){
     
     //Brows all char in the retrieved table :
     for(i_table=0 ; i_table < strlen(table) ; i_table++){
-    //for(i=0 ; i < 64 ; i++){
-        
         //Compare with local ascii table :
-        i_ascii = 0;
+        i_ascii = 0;//Reset every turn of for (and out of while).
         while(i_ascii < sizeof(table_ascii)){
             if(table_ascii[i_ascii] == table[i_table]){
                 data_integer = table_integer[i_ascii] + (data_integer * 10);
