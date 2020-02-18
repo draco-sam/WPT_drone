@@ -40,7 +40,7 @@ int main(void) {
     unsigned short  f_data_sending  = 0;//Flag for write USB COM and main loop.
     unsigned long   counter_while   = 0;
     char            t_data_i2c[64]  = "";//!!! Changer taille car 16 bits max !!!
-    char            t_data_usb_com[64]  = "";
+    char            t_data_usb_com[200]  = "";
     char            t_data_1[64]    = "";
     //uint8_t         data_write_com[64];
     //uint8_t         data_read_com[64];
@@ -165,21 +165,15 @@ int main(void) {
         empty_table(t_data_1,sizeof(t_data_1));
         
         if(menu_number == 0){
-            //write_usb_com("Menu : \r\n",&f_data_sending);//Bug si M collé,ancienne data??
-            //write_usb_com(menu_com,&f_data_sending);
-            if(USBUSARTIsTxTrfReady() == true){
-                //putsUSBUSART(menu_com);
-                char test_menu[250] = "\n---------------\r\n"
-                "Menu : \r\n"
-                "-----\r\n"
-                "1 : Vbat \r\n"
-                "2 : Ibat \r\n"
-                "3 : Die T \r\n"
-                "---------------\r\n";
-                //putUSBUSART(test_menu,sizeof(test_menu));
-                putUSBUSART(test_menu,strlen(test_menu));
-                menu_number = 0xfffe;//Bloquer le menu.
-            }
+            //!!! Trop long pour "strcpy()", pq ???
+            char test_menu[250] =   "\n---------------\r\n"
+                                    "Menu : \r\n"
+                                    "-----\r\n"
+                                    "1 : Vbat \r\n"
+                                    "2 : Ibat \r\n"
+                                    "3 : Die T \r\n"
+                                    "---------------\r\n";
+            write_usb_com(test_menu,&f_data_sending);
         }
         else if(menu_number == 1){
             
@@ -190,17 +184,6 @@ int main(void) {
             strcat(t_data_usb_com,t_data_i2c);
             strcat(t_data_usb_com," Volllllltssss \r\n");
             
-//            if(USBUSARTIsTxTrfReady() == true){
-//                putUSBUSART(t_data_usb_com,strlen(t_data_usb_com));
-//                menu_number = 0xfffe;//Bloquer le menu.
-//            }
-            
-            //Prepare data COM with string copy and concatenation :            
-//            strcpy(t_data_usb_com," : Vbat = ");
-//            strcpy(t_data_1," Vvvvvolts \r\n");
-//            strcat(t_data_usb_com,t_data_i2c);
-//            strcat(t_data_usb_com,t_data_1);
-//            
             write_usb_com(t_data_usb_com,&f_data_sending);
         }
         else if (menu_number == 2){
