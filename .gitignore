@@ -4,3 +4,5 @@
 *.elf
 *.map
 *.o
+*private.xml
+*project.xml
