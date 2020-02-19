@@ -290,38 +290,30 @@ I2c_tm_analog i2c_master_get_tm(unsigned short tm_address){
     digital_data        = i2c_data_h << 8;//High 8-bit of data 16-bit.
     digital_data        = digital_data | i2c_data_l;//Low 8-bit add on final data 16-bit.
     
-    if(tm_address == TM_VBAT)
-    {
+    if(tm_address == TM_VBAT){
         //!!! Lancer d'abord TM "TM_CHEM_CELLS" pour connaitre la valeur de "CELL_COUNT" !!!
         i2c_tm_analog.data_1 = digital_data * 192.264e-6 * CELL_COUNT;//192.264 µV.
     }
-    else if(tm_address == TM_VIN || tm_address == TM_VSYS)
-    {
+    else if(tm_address == TM_VIN || tm_address == TM_VSYS){
         i2c_tm_analog.data_1 = digital_data * 0.001648;//LSB = 1.648 mV.
     }
-    else if(tm_address == TM_IBAT)
-    {
+    else if(tm_address == TM_IBAT){
         i2c_tm_analog.data_1 = (digital_data * 1.46487e-6)/R_SENS_BATTERY;
     }
-    else if(tm_address == TM_I_IN)
-    {
+    else if(tm_address == TM_I_IN){
         i2c_tm_analog.data_1 = (digital_data * 1.46487e-6)/R_SENS_IN;
     }
-    else if(tm_address == TM_DIE_TEMP)
-    {
+    else if(tm_address == TM_DIE_TEMP){
         i2c_tm_analog.data_1 = (digital_data - 12010)/45.6;//45.6 °C.
     }
-    else if(tm_address == TM_NTC_RATIO)
-    {
+    else if(tm_address == TM_NTC_RATIO){
         i2c_tm_analog.data_1 = (digital_data * R_NTC_BIAS)/(21845 - digital_data);
     }
-    else if (tm_address == TM_CHEM_CELLS)
-    {
+    else if (tm_address == TM_CHEM_CELLS){
         i2c_tm_analog.data_1 = 0.0;//!!! A coder !!!
         i2c_tm_analog.data_2 = digital_data && 0x0F;//bits 3:0 = 4 bits for number of cells.
     }
-    else if (tm_address == TM_CHARGER_STATE)
-    {
+    else if (tm_address == TM_CHARGER_STATE){
         /*
          * CHARGER_STATE :
          * --------------
@@ -341,6 +333,50 @@ I2c_tm_analog i2c_master_get_tm(unsigned short tm_address){
         i2c_tm_analog.data_4 = ((digital_data & 0x02) >> 1);//bit 1   : bat_missing_fault.
         i2c_tm_analog.data_5 = digital_data & 0x01;//bit 0   : bat_short_fault.
     }
+    else if(tm_address == TM_I_CHARGE_DAC){
+        i2c_tm_analog.data_1 = ((digital_data + 1) * 1e-3) / R_SENS_BATTERY;
+    }
+    else if(tm_address == TM_V_CHARGE_DAC){//PAS de loi de conversion ???
+        i2c_tm_analog.data_1 = digital_data;
+    }
+    else if(tm_address == TM_ICHARGE_TARGET){//0x1a, 5-bit [4:0].
+        i2c_tm_analog.data_1 = (((digital_data & 0x1f) + 1) * 1e-3) / R_SENS_BATTERY;
+    }
+    else if(tm_address == TM_VCHARGE_SETTING){//0x1a, 5-bit [4:0].
+        i2c_tm_analog.data_1 = (((digital_data & 0x1f)/80.0) + 3.8125) * CELL_COUNT ;
+    }
+    else if(tm_address == TM_CHARGE_STATUS){//0x35, 4-bit [3:0].
+        i2c_tm_analog.data_1 = (digital_data & 0x08) >> 3;//vin_uvcl_active.
+        i2c_tm_analog.data_2 = (digital_data & 0x04) >> 2;//iin_limit_active.
+        i2c_tm_analog.data_3 = (digital_data & 0x02) >> 1;//constant_current based on CHARGE_DAC.
+        i2c_tm_analog.data_4 = (digital_data & 0x01);//constant_voltage based on VCHARGE_DAC.
+    }
+    else if(tm_address == TM_SYSTEM_STATUS){//0x39, 14-bit [13:0].
+        /*
+         * bit at "1"       : state bit = ON ???
+         * bit at "0"       : state bit = OFF ???
+         */
+        i2c_tm_analog.data_1 = (digital_data & 0x2000)  >> 13;//Bit 13 : charger_enabled.
+        i2c_tm_analog.data_2 = (digital_data & 0x40)    >> 6;//Bit 6 : ok_to_charge.
+        i2c_tm_analog.data_3 = (digital_data & 0x10)    >> 4;//Bit 4 : thermal_shutdown (160 °C).
+        i2c_tm_analog.data_4 = (digital_data & 0x04)    >> 2;//Bit 2 : vin_gt_vbat.
+    }
+    else if(tm_address == TM_MAX_CHARGE_TIMER){
+        /*
+        * MAX_CHARGE_TIMER (Sub-Address 0x30, Bits 15:0, R) :
+        * --------------------------------------------------
+        * The MAX_CHARGE_TIMER starts with the battery charger soft-start after battery detection.
+        * If the total time charging the battery exceeds MAX_CHARGE_TIME, the charger will enter the
+        * MAX_CHARGE_TIME FAULT state and cease charging.
+        * 
+        * The MAX_CHARGE_TIME fault state can also be exited with SUSPEND_CHARGER is written to a 1.
+        */
+        i2c_tm_analog.data_1 = digital_data;//Time in [s].
+    }
+    else if(tm_address == TM_CV_TIMER){//CV_TIMER (Sub-Address 0x31, Bits 10:0, R).
+        i2c_tm_analog.data_1 = digital_data;//Time in [s]. 16 or 10 bits???
+    }
+    
     
     
     //Clear variables for next TM.

@@ -11,7 +11,13 @@
 
 //Sub addresses of read register on i2c slave IC charger :
 #define TX_CONFIG_BITS      0x14
+#define TM_ICHARGE_TARGET   0x1a
+#define TM_VCHARGE_SETTING  0x1b
+#define TM_MAX_CHARGE_TIMER 0x30
+#define TM_CV_TIMER         0x31
 #define TM_CHARGER_STATE    0x34
+#define TM_CHARGE_STATUS    0x35
+#define TM_SYSTEM_STATUS    0x39
 #define TM_VBAT             0x3a
 #define TM_IBAT             0x3d
 #define TM_VIN              0x3b

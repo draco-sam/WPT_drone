@@ -26,8 +26,10 @@ int main(void)
      */
     unsigned short      menu_number         = 0xfffe;//Bad menu number.
     unsigned short      f_data_sending      = 0;//Flag for write USB COM and main loop.
+    unsigned short      f_data_sending_1    = 0;
     char                t_data_i2c[64]      = "";//!!! Changer taille car 16 bits max !!!
     char                t_data_usb_com[250] = "";
+    char                t_data[4]           = "";
     /***********************************************************************************/
     
     /************************************************************************************
@@ -36,6 +38,7 @@ int main(void)
      */
     unsigned short      tm_address              = 0;
     unsigned short      flag_i2c_data_ready     = 0;//"0" = Data i2c not ready.
+    unsigned short      i_tm                    = 0;
     float               i2c_tm_analog_data      = 0;
     I2c_tm_analog       s_i2c_tm_analog;//Structure for I2C TM.
     /***********************************************************************************/
@@ -53,7 +56,6 @@ int main(void)
     //Plugger l'USB pour démarrer le code.
     while(USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended()== true){};
     led_red     = on;
-    led_green   = off;
     
 //    //Testing :
 //    unsigned short size_sam = 0;
@@ -74,19 +76,26 @@ int main(void)
         empty_table(t_data_i2c,sizeof(t_data_i2c));
         empty_table(t_data_usb_com,sizeof(t_data_usb_com));
         
-        i2c_tm_analog_data = 0;//Reset variable.
+        //Reset variable :
+        i2c_tm_analog_data  = 0;
+        
         
         if(menu_number == 0){
             //!!! Trop long pour "strcpy()", pq ???
-            char test_menu[250] =   "\n---------------\r\n"
+            char test_menu[250] =   "\n-------------------------\r\n"
                                     "Menu : \r\n"
                                     "-----\r\n"
-                                    "1 : Vin \r\n"
-                                    "2 : Die T \r\n"
-                                    "3 : Vbat \r\n"
-                                    "4 : Ibat \r\n"
-                                    "5 : State \r\n"
-                                    "---------------\r\n";
+                                    "1  : Vin \r\n"
+                                    "2  : Die T \r\n"
+                                    "3  : Vbat \r\n"
+                                    "4  : Ibat \r\n"
+                                    "5  : State \r\n"
+                                    "6  : TM_CHARGE_STATUS \r\n"
+                                    "7  : TM_SYSTEM_STATUS \n\r"
+                                    "8  : TM_I/V_CHARGE_DAC \r\n"
+                                    "11 : Suspend battery \r\n"
+                                    "12 : Restart charge \r\n"
+                                    "-------------------------\r\n";
             write_usb_com(test_menu,&f_data_sending);
         }
         else if(menu_number == 1){
@@ -213,23 +222,135 @@ int main(void)
                 write_usb_com(t_data_usb_com_1,&f_data_sending);
             }
         }
-        else if(menu_number == 6){
+        else if(menu_number == 6){//TM_CHARGE_STATUS.
+            if(flag_i2c_data_ready == 0){
+                i2c_master_start_read_tm(TM_CHARGE_STATUS,&flag_i2c_data_ready);
+            }
+            else if(flag_i2c_data_ready == 1){//Data is ready.
+                flag_i2c_data_ready = 0;//Reset flag.
+                s_i2c_tm_analog     = i2c_master_get_tm(TM_CHARGE_STATUS);
+                
+                char t_data_usb_com_1[250] = "";
+                
+                strcpy(t_data_usb_com_1,"6 : TM_CHARGE_STATUS -> ");
+                                
+                if(s_i2c_tm_analog.data_3 == 0){//OFF.
+                    strcat(t_data_usb_com_1,"CC with CHARGE_DAC : off ; ");
+                }
+                else{
+                    strcat(t_data_usb_com_1,"CC with CHARGE_DAC : on ; ");
+                }
+                if(s_i2c_tm_analog.data_4 == 0){//OFF.
+                    strcat(t_data_usb_com_1,"CV with VCHARGE_DAC : off \r\n");
+                }
+                else{
+                    strcat(t_data_usb_com_1,"CV with VCHARGE_DAC : on \r\n");
+                }
+            
+                write_usb_com(t_data_usb_com_1,&f_data_sending);
+            }
+        }
+        else if(menu_number == 7){//TM_SYSTEM_STATUS.
+            if(flag_i2c_data_ready == 0){
+                i2c_master_start_read_tm(TM_SYSTEM_STATUS,&flag_i2c_data_ready);
+            }
+            else if(flag_i2c_data_ready == 1){//Data is ready.
+                flag_i2c_data_ready = 0;//Reset flag.
+                s_i2c_tm_analog     = i2c_master_get_tm(TM_SYSTEM_STATUS);
+                
+                char t_data_usb_com_1[250] = "";
+                
+                strcpy(t_data_usb_com_1,"7 : TM_SYSTEM_STATUS -> ");
+                                
+                if(s_i2c_tm_analog.data_1 == 0){//OFF.
+                    strcat(t_data_usb_com_1,"charger_enabled : off ; ");
+                }
+                else{
+                    strcat(t_data_usb_com_1,"charger_enabled : on ; ");
+                }
+                if(s_i2c_tm_analog.data_2 == 0){//OFF.
+                    strcat(t_data_usb_com_1,"ok_to_charge : off ; ");
+                }
+                else{
+                    strcat(t_data_usb_com_1,"ok_to_charge : on ; ");
+                }
+                if(s_i2c_tm_analog.data_3 == 0){//OFF.
+                    strcat(t_data_usb_com_1,"thermal_shutdown : off ; ");
+                }
+                else{
+                    strcat(t_data_usb_com_1,"thermal_shutdown : on ; ");
+                }
+                if(s_i2c_tm_analog.data_4 == 0){//OFF.
+                    strcat(t_data_usb_com_1,"Vin > Vbat : off \r\n");
+                }
+                else{
+                    strcat(t_data_usb_com_1,"Vin > Vbat : on \r\n");
+                }
+            
+                write_usb_com(t_data_usb_com_1,&f_data_sending);
+            }
+        }
+        else if(menu_number == 8){//TM_I_CHARGE_DAC and TM_V_CHARGE_DAC.
+            if(flag_i2c_data_ready == 0){
+                if(i_tm == 0){
+                    i2c_master_start_read_tm(TM_I_CHARGE_DAC,&flag_i2c_data_ready);
+                    tm_address = TM_I_CHARGE_DAC;
+                    //strcpy(t_data," A \r\n");
+                    i_tm++;//1.
+                }
+                else if(i_tm == 2){
+                    i2c_master_start_read_tm(TM_V_CHARGE_DAC,&flag_i2c_data_ready);
+                    tm_address = TM_V_CHARGE_DAC;
+                    //strcpy(t_data," V \r\n");
+                    i_tm++;//3.
+                }
+            }
+            else if(flag_i2c_data_ready == 1){//Data is ready.
+                //flag_i2c_data_ready = 0;//Reset flag.
+                s_i2c_tm_analog     = i2c_master_get_tm(tm_address);
+                float_to_ascii(s_i2c_tm_analog.data_1,t_data_i2c);
+                
+                //Prepare data COM with string copy and concatenation :            
+                strcpy(t_data_usb_com,"8 : data = ");
+                strcat(t_data_usb_com,t_data_i2c);
+                strcat(t_data_usb_com," A or V \r\n");
+                //strcat(t_data_usb_com,t_data);
+                
+                if(i_tm == 1){
+                    if(f_data_sending_1 == 0){
+                        write_usb_com(t_data_usb_com,&f_data_sending_1);//Fake flag to keep menu 8.
+                    }
+                    else if(f_data_sending_1 == 1){
+                        flag_i2c_data_ready = 0;//Reset flag.
+                        //empty_table(t_data,sizeof(t_data));
+                        i_tm++;//2.
+                    }
+                }
+                else if(i_tm == 3){
+                    write_usb_com(t_data_usb_com,&f_data_sending);//Real flag to loose menu 8.
+                    i_tm = 0;//Reset for next 2 TM.
+                    f_data_sending_1 = 0;//Reset.
+                    flag_i2c_data_ready = 0;//Reset flag utilie ???
+                }
+            }
+        }
+        else if(menu_number == 11){
             led_blue    = off;
             led_green   = off;
             led_red     = on;
             
-            strcpy(t_data_usb_com," : Suspend battery \r\n ");
+            strcpy(t_data_usb_com,"11 : Suspend battery \r\n ");
             write_usb_com(t_data_usb_com,&f_data_sending);
             
             unsigned short flag_i2c_end_writing = 1;
             i2c_master_start_write_data(TX_CONFIG_BITS,0x0100,&flag_i2c_end_writing);
         }
-        else if(menu_number == 7){
+        else if(menu_number == 12){
             led_blue    = off;
             led_green   = off;
             led_red     = on;
             
-            strcpy(t_data_usb_com," : Restart charge battery \r\n ");
+            strcpy(t_data_usb_com,"12 : Restart charge battery \r\n ");
             write_usb_com(t_data_usb_com,&f_data_sending);
             
             unsigned short flag_i2c_end_writing = 1;

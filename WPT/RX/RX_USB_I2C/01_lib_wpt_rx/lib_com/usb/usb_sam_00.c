@@ -198,9 +198,9 @@ void read_usb_com(unsigned short  *menu_number){
                 //Si CR, convertir le tableau static :
                 *menu_number =  ascii_to_integer(menuBuffer);
                 if(*menu_number == 0){
-                    led_red     = off;
-                    led_green   = on;
-                    led_blue    = on;
+//                    led_red     = off;
+//                    led_green   = on;
+//                    led_blue    = on;
                 }
                 empty_table(menuBuffer,sizeof(menuBuffer));//Effacer à chaque CR.
                 i_menu = 0;//Reset.
