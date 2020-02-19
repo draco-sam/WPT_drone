@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : main_rx_usb_i2c_00.c
- * Date             : 13/02/2020.   
+ * Date             : 19/02/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -54,6 +54,16 @@ int main(void)
     while(USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended()== true){};
     led_red     = on;
     led_green   = off;
+    
+//    //Testing :
+//    unsigned short size_sam = 0;
+//    char test_sam[250] = "";
+//    strcpy(test_sam,"1234567891234567891234567891234567891234567891234 \r\n");
+//    strcat(test_sam,"1234567891234567891234567891234567891234567891234 \r\n");
+//    strcat(test_sam,"1234567891234567891234567891234567891234567891234 \r\n");
+//    strcat(test_sam,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTSamm \r\n");
+//    size_sam = strlen(test_sam);
+//    write_usb_com(test_sam,&f_data_sending);
 
     while (1)
     {   
@@ -61,13 +71,23 @@ int main(void)
         
         CDCTxService();
         
-        empty_table(t_data_i2c);
-        empty_table(t_data_usb_com);
+        empty_table(t_data_i2c,sizeof(t_data_i2c));
+        empty_table(t_data_usb_com,sizeof(t_data_usb_com));
         
         i2c_tm_analog_data = 0;//Reset variable.
         
-        if(menu_number == 0xffff){
-            write_usb_com("\r\nMenu : \r\n",&f_data_sending);//Bug si M collé,ancienne data??
+        if(menu_number == 0){
+            //!!! Trop long pour "strcpy()", pq ???
+            char test_menu[250] =   "\n---------------\r\n"
+                                    "Menu : \r\n"
+                                    "-----\r\n"
+                                    "1 : Vin \r\n"
+                                    "2 : Die T \r\n"
+                                    "3 : Vbat \r\n"
+                                    "4 : Ibat \r\n"
+                                    "5 : State \r\n"
+                                    "---------------\r\n";
+            write_usb_com(test_menu,&f_data_sending);
         }
         else if(menu_number == 1){
             if(flag_i2c_data_ready == 0){
@@ -81,7 +101,7 @@ int main(void)
                 float_to_ascii(i2c_tm_analog_data,t_data_i2c);
                 
                 //Prepare data COM with string copy and concatenation :            
-                strcpy(t_data_usb_com," : Vin = ");
+                strcpy(t_data_usb_com,"1 : Vin = ");
                 strcat(t_data_usb_com,t_data_i2c);
                 strcat(t_data_usb_com," Vvvvvolts \r\n");
             
@@ -100,7 +120,7 @@ int main(void)
                 float_to_ascii(i2c_tm_analog_data,t_data_i2c);
                 
                 //Prepare data COM with string copy and concatenation :            
-                strcpy(t_data_usb_com," : Temp Die = ");
+                strcpy(t_data_usb_com,"2 : Temp Die = ");
                 strcat(t_data_usb_com,t_data_i2c);
                 strcat(t_data_usb_com," deg C \r\n");
             
@@ -119,7 +139,7 @@ int main(void)
                 float_to_ascii(i2c_tm_analog_data,t_data_i2c);
                 
                 //Prepare data COM with string copy and concatenation :            
-                strcpy(t_data_usb_com," : Vbat = ");
+                strcpy(t_data_usb_com,"3 : Vbat = ");
                 strcat(t_data_usb_com,t_data_i2c);
                 strcat(t_data_usb_com," V \r\n");
             
@@ -138,7 +158,7 @@ int main(void)
                 float_to_ascii(i2c_tm_analog_data,t_data_i2c);
                 
                 //Prepare data COM with string copy and concatenation :            
-                strcpy(t_data_usb_com," : Ibat = ");
+                strcpy(t_data_usb_com,"4 : Ibat = ");
                 strcat(t_data_usb_com,t_data_i2c);
                 strcat(t_data_usb_com," A \r\n");
             
@@ -153,40 +173,44 @@ int main(void)
                 flag_i2c_data_ready = 0;//Reset flag.
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_CHARGER_STATE);
                 
-                strcpy(t_data_usb_com," : STATE -> ");
+                //Bug si on utilise "t_data_usb_com",pq??
+                //N'affiche pas la fin du tableau char...
+                char t_data_usb_com_1[250] = "";
+                
+                strcpy(t_data_usb_com_1,"5 : STATE -> ");
                 
                 if(s_i2c_tm_analog.data_1 == 0){//OFF.
-                    strcat(t_data_usb_com,"ch susp : off ; ");
+                    strcat(t_data_usb_com_1,"ch susp : off ; ");
                 }
                 else{
-                    strcat(t_data_usb_com,"ch susp : on ; ");
+                    strcat(t_data_usb_com_1,"ch susp : on ; ");
                 }
                 if(s_i2c_tm_analog.data_2 == 0){//OFF.
-                    strcat(t_data_usb_com,"prech : off ; ");
+                    strcat(t_data_usb_com_1,"prech : off ; ");
                 }
                 else{
-                    strcat(t_data_usb_com,"prech : on ; ");
+                    strcat(t_data_usb_com_1,"prech : on ; ");
                 }
                 if(s_i2c_tm_analog.data_3 == 0){//OFF.
-                    strcat(t_data_usb_com,"cc_cv : off ; ");
+                    strcat(t_data_usb_com_1,"cc_cv : off ; ");
                 }
                 else{
-                    strcat(t_data_usb_com,"cc_cv : on ; ");
+                    strcat(t_data_usb_com_1,"cc_cv : on ; ");
                 }
                 if(s_i2c_tm_analog.data_4 == 0){//OFF.
-                    strcat(t_data_usb_com,"bat_miss : off ; ");
+                    strcat(t_data_usb_com_1,"bat_miss : off ; ");
                 }
                 else{
-                    strcat(t_data_usb_com,"bat_miss : on ; ");
+                    strcat(t_data_usb_com_1,"bat_miss : on ; ");
                 }
                 if(s_i2c_tm_analog.data_5 == 0){//OFF.
-                    strcat(t_data_usb_com,"bat_short : off \r\n");
+                    strcat(t_data_usb_com_1,"bat_short : off \r\n");
                 }
                 else{
-                    strcat(t_data_usb_com,"bat_short : on \r\n");
+                    strcat(t_data_usb_com_1,"bat_short : on \r\n");
                 }
 
-                write_usb_com(t_data_usb_com,&f_data_sending);
+                write_usb_com(t_data_usb_com_1,&f_data_sending);
             }
         }
         else if(menu_number == 6){

@@ -43,14 +43,21 @@ unsigned short ascii_to_integer(unsigned char *table){
 /*
  * 
  */
-    char            table_ascii[11]     = {0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39};
+    char            table_ascii[11]     = {'0','1','2','3','4','5','6','7','8','9'};
     unsigned short  table_integer[11]   = {0,1,2,3,4,5,6,7,8,9};
-    unsigned short  i                   = 0;
+    unsigned short  i_table             = 0;
+    unsigned short  i_ascii             = 0;
     unsigned short  data_integer        = 0;
-
-    for(i=0 ; i < sizeof(table_ascii) ; i++){
-        if(table_ascii[i] == table[0]){
-            data_integer = table_integer[i];
+    
+    //Brows all char in the retrieved table :
+    for(i_table=0 ; i_table < strlen(table) ; i_table++){
+        //Compare with local ascii table :
+        i_ascii = 0;//Reset every turn of for (and out of while).
+        while(i_ascii < sizeof(table_ascii)){
+            if(table_ascii[i_ascii] == table[i_table]){
+                data_integer = table_integer[i_ascii] + (data_integer * 10);
+            }
+            i_ascii++;
         }
     }
     
@@ -128,13 +135,18 @@ void write_usb_com(char *t_data,unsigned short *flag_sending){
 /*
  * 
  */
-    unsigned short  i               = 0;
-    char            t_data_com[250]  = "";
-
-    strcpy(t_data_com,t_data);
+//    char            t_data_com[250]  = "";
+//
+//    strcpy(t_data_com,t_data);//!!! Enlever ???
+//    
+//    unsigned short size_1 = 0;
+//    unsigned short size_2 = 0;
+//    size_1 = strlen(t_data);
+//    size_2 = strlen(t_data_com);
 
     if(USBUSARTIsTxTrfReady() == true){
-        putUSBUSART(t_data_com,sizeof(t_data_com));
+        putUSBUSART(t_data,strlen(t_data));//strlen(t_data).
+        //putUSBUSART(t_data_com,strlen(t_data_com));
         *flag_sending = 1;
     }
 }
@@ -144,59 +156,58 @@ void read_usb_com(unsigned short  *menu_number){
 /*
  * If bus USB COM ready, check if a byte is placed on the read buffer.
  */
-    unsigned short  numBytesRead        = 0;
-    unsigned short  i                   = 0;
-    uint8_t         data_read_com[250];
-    uint8_t         data_write_com[250];
-//    char            data_read_com[250]  = "";
-//    char            data_write_com[250]  = "";
-    
-    static unsigned short   st_i_1          = 0;
-    static char             st_data_write[3] = "";
-    
-    if(USBUSARTIsTxTrfReady() == true){
-        numBytesRead = getsUSBUSART(data_read_com, sizeof(data_read_com));
+    if( USBUSARTIsTxTrfReady() == true){
+        uint8_t i;
+        uint8_t numBytesRead;
+        unsigned char readBuffer[64]        = "";
+        unsigned char writeBuffer[64]       = "";//[128] fonctionne aussi.
+        static unsigned char menuBuffer[5] 	= "";//max 9999.
+        static unsigned short i_menu        = 0;
+
+        numBytesRead = getsUSBUSART(readBuffer, sizeof(readBuffer));
 
         for(i=0; i<numBytesRead; i++){
-            if(data_read_com[i] == 0x0d){
-                *menu_number = 0xffff;//Relancer le menu.
+            if(readBuffer[i] == 0x0d){//0x0d = CR (0x0a = LF).
                 led_red     = off;
                 led_green   = off;
                 led_blue    = on;
-                
-                data_write_com[i] = 0x0a;
             }
-            else{
-                data_write_com[i] = data_read_com[i];
+            else if(readBuffer[i] != 0x0a){//Diff de LF.
+                /*******************************************
+                 * Save menu number :
+                 * -----------------
+                 */
+                if(i_menu < sizeof(menuBuffer)){
+                    menuBuffer[i_menu] = readBuffer[i];
+                    i_menu++;//For next tour.
+                }
+                else{
+                    i_menu = 0;//Reset.
+                }
+                /******************************************/
             }
-        }
+            writeBuffer[i] = readBuffer[i];
+        }//End for.
 
         if(numBytesRead > 0){
-            //putsUSBUSART(data_write_com);
-            putUSBUSART(data_write_com,numBytesRead);
+            if(writeBuffer[0] == 0x0d){//Détecter le CR (ENTER dans console).
+                //writeBuffer[1] = 0x0a;//LF
 
-            if(data_read_com[0] != 0x0d){
-                *menu_number = ascii_to_integer(data_read_com);
+                putUSBUSART(writeBuffer,strlen(writeBuffer));//(...,2).
+
+                //Si CR, convertir le tableau static :
+                *menu_number =  ascii_to_integer(menuBuffer);
+                if(*menu_number == 0){
+                    led_red     = off;
+                    led_green   = on;
+                    led_blue    = on;
+                }
+                empty_table(menuBuffer,sizeof(menuBuffer));//Effacer à chaque CR.
+                i_menu = 0;//Reset.
             }
-//                if(st_i_1 < sizeof(st_data_write)){
-//                    st_data_write[st_i_1] = data_read_com[0];
-//                    st_i_1++;
-//                }
-//                else{
-//                    //Reset table and variable :
-//                    empty_table(st_data_write);
-//                    st_i_1 = 0;
-//                }
-//            }
-//            else if(data_read_com[0] == 0x0d){
-//                if(st_data_write[1] != ""){
-//                    *menu_number = ascii_to_integer(st_data_write[0]);
-//                    *menu_number = (*menu_number * 10) + ascii_to_integer(st_data_write[1]);
-//                }
-//                else{
-//                    *menu_number = ascii_to_integer(st_data_write[0]);
-//                }
-//            }
+            else{
+                putUSBUSART(writeBuffer,numBytesRead);
+            }
         }
     }
 }
@@ -220,15 +231,16 @@ void extract_integer_decimal(float data,unsigned short *data_integer,unsigned sh
 }
 //__________________________________________________________________________________________________
 
-void empty_table(char *table){
+void empty_table(char *table,unsigned short t_size){
 /*
  * Empty the table :
  * ----------------
  */
     unsigned short i_empty = 0;
     
-    for(i_empty=0 ; i_empty < sizeof(table) ; i_empty++){
-        table[i_empty] = "";//NULL.
+    //for(i_empty=0 ; i_empty < sizeof(table) ; i_empty++){
+    for(i_empty=0 ; i_empty < t_size ; i_empty++){
+        table[i_empty] = '\0';//NULL.
     }
 }
 //__________________________________________________________________________________________________

@@ -40,7 +40,7 @@ int main(void) {
     unsigned short  f_data_sending  = 0;//Flag for write USB COM and main loop.
     unsigned long   counter_while   = 0;
     char            t_data_i2c[64]  = "";//!!! Changer taille car 16 bits max !!!
-    char            t_data_usb_com[64]  = "";
+    char            t_data_usb_com[200]  = "";
     char            t_data_1[64]    = "";
     uint8_t         data_write_com[64];
     uint8_t         data_read_com[64];
@@ -336,13 +336,13 @@ void write_usb_com(char *t_data,unsigned short *flag_sending){
  * 
  */
     unsigned short  i               = 0;
-    char            t_data_com[64]  = "";
+    char            t_data_com[200]  = "";
     
             
-    //Nettoyer le tableau avant utilisation :
-    for(i=0 ; i < sizeof(t_data_com) ; i++){
-            t_data_com[i] = 0;//NULL.
-    }
+//    //Nettoyer le tableau avant utilisation :
+//    for(i=0 ; i < sizeof(t_data_com) ; i++){
+//            t_data_com[i] = 0;//NULL.
+//    }
 
     strcpy(t_data_com,t_data);
 

@@ -17,4 +17,4 @@ void float_to_ascii(float data_float,char *t_table);
 void write_usb_com(char *t_data,unsigned short *flag_sending);
 void read_usb_com(unsigned short  *menu_number);
 void extract_integer_decimal(float data,unsigned short *data_integer,unsigned short *data_decimal);
-void empty_table(char *table);
+void empty_table(char *table,unsigned short t_size);
