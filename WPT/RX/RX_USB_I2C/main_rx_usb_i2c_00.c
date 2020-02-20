@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : main_rx_usb_i2c_00.c
- * Date             : 19/02/2020.   
+ * Date             : 20/02/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -82,7 +82,7 @@ int main(void)
         
         if(menu_number == 0){
             //!!! Trop long pour "strcpy()", pq ???
-            char test_menu[250] =   "\n-------------------------\r\n"
+            char test_menu[] =      "\n-------------------------\r\n"
                                     "Menu : \r\n"
                                     "-----\r\n"
                                     "1  : Vin \r\n"
@@ -104,10 +104,8 @@ int main(void)
             }
             else if(flag_i2c_data_ready == 1){//Data is ready.
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_VIN);
-                i2c_tm_analog_data  = s_i2c_tm_analog.data_1;//Analog value of the TM.
-                flag_i2c_data_ready = 0;//Reset flag.
                 
-                float_to_ascii(i2c_tm_analog_data,t_data_i2c);
+                float_to_ascii(s_i2c_tm_analog.data_1,t_data_i2c);
                 
                 //Prepare data COM with string copy and concatenation :            
                 strcpy(t_data_usb_com,"1 : Vin = ");
@@ -115,6 +113,10 @@ int main(void)
                 strcat(t_data_usb_com," Vvvvvolts \r\n");
             
                 write_usb_com(t_data_usb_com,&f_data_sending);
+                
+                if(f_data_sending == 1){//"1" if USB ready.
+                    flag_i2c_data_ready = 0;//Reset flag after USB ready to send.
+                }
             }
         }
         else if(menu_number == 2){
@@ -123,10 +125,8 @@ int main(void)
             }
             else if(flag_i2c_data_ready == 1){//Data is ready.
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_DIE_TEMP);
-                i2c_tm_analog_data  = s_i2c_tm_analog.data_1;//Analog value of the TM.
-                flag_i2c_data_ready = 0;//Reset flag.
                 
-                float_to_ascii(i2c_tm_analog_data,t_data_i2c);
+                float_to_ascii(s_i2c_tm_analog.data_1,t_data_i2c);
                 
                 //Prepare data COM with string copy and concatenation :            
                 strcpy(t_data_usb_com,"2 : Temp Die = ");
@@ -134,6 +134,10 @@ int main(void)
                 strcat(t_data_usb_com," deg C \r\n");
             
                 write_usb_com(t_data_usb_com,&f_data_sending);
+                
+                if(f_data_sending == 1){//"1" if USB ready.
+                    flag_i2c_data_ready = 0;//Reset flag after USB ready to send.
+                }
             }
         }
         else if(menu_number == 3){
@@ -142,10 +146,8 @@ int main(void)
             }
             else if(flag_i2c_data_ready == 1){//Data is ready.
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_VBAT);
-                i2c_tm_analog_data  = s_i2c_tm_analog.data_1;//Analog value of the TM.
-                flag_i2c_data_ready = 0;//Reset flag.
                 
-                float_to_ascii(i2c_tm_analog_data,t_data_i2c);
+                float_to_ascii(s_i2c_tm_analog.data_1,t_data_i2c);
                 
                 //Prepare data COM with string copy and concatenation :            
                 strcpy(t_data_usb_com,"3 : Vbat = ");
@@ -153,6 +155,10 @@ int main(void)
                 strcat(t_data_usb_com," V \r\n");
             
                 write_usb_com(t_data_usb_com,&f_data_sending);
+                
+                if(f_data_sending == 1){//"1" if USB ready.
+                    flag_i2c_data_ready = 0;//Reset flag after USB ready to send.
+                }
             }
         }
         else if(menu_number == 4){
@@ -161,10 +167,8 @@ int main(void)
             }
             else if(flag_i2c_data_ready == 1){//Data is ready.
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_IBAT);
-                i2c_tm_analog_data  = s_i2c_tm_analog.data_1;//Analog value of the TM.
-                flag_i2c_data_ready = 0;//Reset flag.
                 
-                float_to_ascii(i2c_tm_analog_data,t_data_i2c);
+                float_to_ascii(s_i2c_tm_analog.data_1,t_data_i2c);
                 
                 //Prepare data COM with string copy and concatenation :            
                 strcpy(t_data_usb_com,"4 : Ibat = ");
@@ -172,6 +176,10 @@ int main(void)
                 strcat(t_data_usb_com," A \r\n");
             
                 write_usb_com(t_data_usb_com,&f_data_sending);
+                
+                if(f_data_sending == 1){//"1" if USB ready.
+                    flag_i2c_data_ready = 0;//Reset flag after USB ready to send.
+                }
             }
         }
         else if(menu_number == 5){
@@ -179,7 +187,6 @@ int main(void)
                 i2c_master_start_read_tm(TM_CHARGER_STATE,&flag_i2c_data_ready);
             }
             else if(flag_i2c_data_ready == 1){//Data is ready.
-                flag_i2c_data_ready = 0;//Reset flag.
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_CHARGER_STATE);
                 
                 //Bug si on utilise "t_data_usb_com",pq??
@@ -220,6 +227,10 @@ int main(void)
                 }
 
                 write_usb_com(t_data_usb_com_1,&f_data_sending);
+                
+                if(f_data_sending == 1){//"1" if USB ready.
+                    flag_i2c_data_ready = 0;//Reset flag after USB ready to send.
+                }
             }
         }
         else if(menu_number == 6){//TM_CHARGE_STATUS.
@@ -227,7 +238,6 @@ int main(void)
                 i2c_master_start_read_tm(TM_CHARGE_STATUS,&flag_i2c_data_ready);
             }
             else if(flag_i2c_data_ready == 1){//Data is ready.
-                flag_i2c_data_ready = 0;//Reset flag.
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_CHARGE_STATUS);
                 
                 char t_data_usb_com_1[250] = "";
@@ -235,10 +245,10 @@ int main(void)
                 strcpy(t_data_usb_com_1,"6 : TM_CHARGE_STATUS -> ");
                                 
                 if(s_i2c_tm_analog.data_3 == 0){//OFF.
-                    strcat(t_data_usb_com_1,"CC with CHARGE_DAC : off ; ");
+                    strcat(t_data_usb_com_1,"CC with ICHARGE_DAC : off ; ");
                 }
                 else{
-                    strcat(t_data_usb_com_1,"CC with CHARGE_DAC : on ; ");
+                    strcat(t_data_usb_com_1,"CC with ICHARGE_DAC : on ; ");
                 }
                 if(s_i2c_tm_analog.data_4 == 0){//OFF.
                     strcat(t_data_usb_com_1,"CV with VCHARGE_DAC : off \r\n");
@@ -248,6 +258,10 @@ int main(void)
                 }
             
                 write_usb_com(t_data_usb_com_1,&f_data_sending);
+                
+                if(f_data_sending == 1){//"1" if USB ready.
+                    flag_i2c_data_ready = 0;//Reset flag after USB ready to send.
+                }
             }
         }
         else if(menu_number == 7){//TM_SYSTEM_STATUS.
@@ -255,7 +269,6 @@ int main(void)
                 i2c_master_start_read_tm(TM_SYSTEM_STATUS,&flag_i2c_data_ready);
             }
             else if(flag_i2c_data_ready == 1){//Data is ready.
-                flag_i2c_data_ready = 0;//Reset flag.
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_SYSTEM_STATUS);
                 
                 char t_data_usb_com_1[250] = "";
@@ -288,6 +301,10 @@ int main(void)
                 }
             
                 write_usb_com(t_data_usb_com_1,&f_data_sending);
+                
+                if(f_data_sending == 1){//"1" if USB ready.
+                    flag_i2c_data_ready = 0;//Reset flag after USB ready to send.
+                }
             }
         }
         else if(menu_number == 8){//TM_I_CHARGE_DAC and TM_V_CHARGE_DAC.
