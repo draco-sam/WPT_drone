@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : usb_sam_00.c
- * Date             : 12/02/2020.   
+ * Date             : 20/02/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -65,72 +65,6 @@ unsigned short ascii_to_integer(unsigned char *table){
 }
 //__________________________________________________________________________________________________
 
-//void integer_to_ascii(unsigned short data_integer,unsigned short data_decimal,char *t_table){
-void float_to_ascii(float data_float,char *t_table){
-/*
- * data max : 65535.
- */
-    unsigned short  data_integer        = 0;
-    unsigned short  data_decimal        = 0;
-    unsigned short  data_1              = 0;
-    unsigned short  data_2              = 0;
-    unsigned short  i                   = 0;
-    char            table_ascii[11]     = {'0','1','2','3','4','5','6','7','8','9'};
-    char            t_integer[6]        = {0};
-    char            t_decimal[5]        = {0};
-    
-    extract_integer_decimal(data_float,&data_integer,&data_decimal);
-    
-    if(data_integer > 0){
-        t_integer[5] = '\0';
-        //Ex : 54321.
-        data_1          = data_integer / 10;                    //54321 / 10        = 5432.
-        data_2          = data_1 * 10;                  //5432 * 10         = 54320.
-        t_integer[4]    = table_ascii[data_integer - data_2];   //54321 - 54320     = 1.
-
-        data_2          = (data_1 / 10) * 10;           //(5432 / 10) * 10  = 5430.
-        t_integer[3]    = table_ascii[data_1 - data_2]; //4532 - 5430       = 2.
-        data_1          = data_1 / 10;                  //5432 / 10         = 543.
-
-        data_2          = (data_1 / 10) * 10;           //(543 /10) * 10    = 540.  
-        t_integer[2]    = table_ascii[data_1 - data_2]; //543 - 540         = 3.
-        data_1          = data_1 / 10;                  //543 / 10          = 54.
-
-        data_2          = (data_1 / 10) * 10;           //(54/10) * 10      = 50.
-        t_integer[1]    = table_ascii[data_1 - data_2]; //54 - 50           = 4.
-        data_1          = data_1 / 10;                  //54 / 10           = 5.
-
-        t_integer[0]    = table_ascii[data_1];//5.
-    }
-    else{
-       t_integer[0] = '0';
-    }
-    
-    if(data_decimal > 0){//Ex : 728 mA.
-        t_decimal[4] = '\0';
-        
-        data_1 = 0;//Reset.
-        data_2 = 0;//Reset.
-        
-        data_1          = data_decimal / 10;                
-        data_2          = data_1 * 10;                 
-        t_decimal[3]    = table_ascii[data_decimal - data_2];//8.  
-
-        data_2          = (data_1 / 10) * 10;
-        t_decimal[2]    = table_ascii[data_1 - data_2];
-        data_1          = data_1 / 10;//2.
-        
-        t_decimal[1]    = table_ascii[data_1];//7.
-        
-        t_decimal[0]    = ',';
-    }
-    
-    
-    strcpy(t_table,t_integer);
-    strcat(t_table,t_decimal);
-}
-//__________________________________________________________________________________________________
-
 void write_usb_com(char *t_data,unsigned short *flag_sending){
 /*
  * 
@@ -168,9 +102,9 @@ void read_usb_com(unsigned short  *menu_number){
 
         for(i=0; i<numBytesRead; i++){
             if(readBuffer[i] == 0x0d){//0x0d = CR (0x0a = LF).
-                led_red     = off;
-                led_green   = off;
-                led_blue    = on;
+//                led_red     = off;
+//                led_green   = off;
+//                led_blue    = on;
             }
             else if(readBuffer[i] != 0x0a){//Diff de LF.
                 /*******************************************
@@ -210,24 +144,6 @@ void read_usb_com(unsigned short  *menu_number){
             }
         }
     }
-}
-//__________________________________________________________________________________________________
-
-void extract_integer_decimal(float data,unsigned short *data_integer,unsigned short *data_decimal){
-/*
- * Extraire la partie entière et décimale d'un nombre float.
- * Ne fonctionne que jusque 10^-3.
- * 
- * Ex avec 248 mA :
- *      data_integer = 0.
- *      data_decimal = 248 - 0 = 248.
- * 
- * Ex avec 23.746 V :
- *      data_integer = 23.
- *      data_decimal = 23746 - 23000 = 746.
- */
-    *data_integer   = data;
-    *data_decimal   = (data * 1000) - (*data_integer * 1000);
 }
 //__________________________________________________________________________________________________
 

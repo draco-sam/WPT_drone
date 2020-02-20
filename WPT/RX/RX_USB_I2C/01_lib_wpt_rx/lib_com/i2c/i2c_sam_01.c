@@ -1,6 +1,6 @@
 /* 
  * File             : i2c_sam_01.c
- * Date             : 13/02/2020.   
+ * Date             : 20/02/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -278,6 +278,7 @@ I2c_tm_analog i2c_master_get_tm(unsigned short tm_address){
  * The 16-bit data is decomposed into 2 bytes.
  */
     unsigned short  digital_data        = 0;
+    short           digital_data_signed = 0;
     I2c_tm_analog i2c_tm_analog;
     
     //Reset value :
@@ -290,6 +291,8 @@ I2c_tm_analog i2c_master_get_tm(unsigned short tm_address){
     digital_data        = i2c_data_h << 8;//High 8-bit of data 16-bit.
     digital_data        = digital_data | i2c_data_l;//Low 8-bit add on final data 16-bit.
     
+    digital_data_signed = digital_data;//Copy for signed calculations.
+    
     if(tm_address == TM_VBAT){
         //!!! Lancer d'abord TM "TM_CHEM_CELLS" pour connaitre la valeur de "CELL_COUNT" !!!
         i2c_tm_analog.data_1 = digital_data * 192.264e-6 * CELL_COUNT;//192.264 µV.
@@ -298,7 +301,12 @@ I2c_tm_analog i2c_master_get_tm(unsigned short tm_address){
         i2c_tm_analog.data_1 = digital_data * 0.001648;//LSB = 1.648 mV.
     }
     else if(tm_address == TM_IBAT){
-        i2c_tm_analog.data_1 = (digital_data * 1.46487e-6)/R_SENS_BATTERY;
+        if(digital_data >= 32768){//Negative ibat.
+            //2^16 = 65536 and 32768 is the most negative value.
+            digital_data_signed = digital_data - 65536;
+        }
+        i2c_tm_analog.data_1 = (digital_data_signed * 1.46487e-6)/R_SENS_BATTERY;
+        Nop();
     }
     else if(tm_address == TM_I_IN){
         i2c_tm_analog.data_1 = (digital_data * 1.46487e-6)/R_SENS_IN;
@@ -404,5 +412,144 @@ void i2c_master_start_write_data(   unsigned short tx_address,unsigned short dat
         
         I2C1CONbits.SEN     = 1;//Initiates Start condition on SDAx and SCLx pins.
     }
+}
+//__________________________________________________________________________________________________
+
+void get_i2c_tm_and_send_to_usb(unsigned short TM_ADDRESS,char *text_1,char *text_2,
+                                unsigned short *flag_sending){
+/*
+ * 
+ */
+    static unsigned short   flag_i2c_data_ready     = 0;//"0" = Data i2c not ready.
+    char                    t_data_usb_com_11[64]   = "";
+    char                    t_data_i2c[32]          = "";//!!! Changer taille car 16 bits max !!!
+    I2c_tm_analog           s_i2c_tm_analog;//Structure for I2C TM.
+    
+    if(flag_i2c_data_ready == 0){
+        i2c_master_start_read_tm(TM_VIN,&flag_i2c_data_ready);
+    }
+    else if(flag_i2c_data_ready == 1){//Data is ready.
+        s_i2c_tm_analog     = i2c_master_get_tm(TM_VIN);
+
+        float_to_ascii(s_i2c_tm_analog.data_1,t_data_i2c);
+
+        //Prepare data COM with string copy and concatenation :            
+//        strcpy(t_data_usb_com_11,"1 : Vin = ");
+//        strcat(t_data_usb_com,t_data_i2c);
+//        strcat(t_data_usb_com_11," Vvvvvolts \r\n");
+        
+        char t_1[] = "1 : Vin = ";
+
+        write_usb_com(t_1,flag_sending);
+        //write_usb_com("1 : Vin = ...",flag_sending);
+
+        if(*flag_sending == 1){//"1" if USB ready.
+            flag_i2c_data_ready = 0;//Reset flag after USB ready to send.
+        }
+    }
+}
+//__________________________________________________________________________________________________
+
+void float_to_ascii(float data_float,char *t_table){
+/*
+ * data max : 65535.
+ */
+    short           data_integer        = 0;
+    unsigned short  abs_data_integer    = 0;
+    unsigned short  abs_data_decimal    = 0;
+    short           data_decimal        = 0;
+    unsigned short  data_1              = 0;
+    unsigned short  data_2              = 0;
+    char            table_ascii[11]     = {'0','1','2','3','4','5','6','7','8','9'};
+    char            t_integer[7]        = {0};
+    char            t_decimal[5]        = {0};
+    
+    extract_integer_decimal(data_float,&data_integer,&data_decimal);
+    
+    //Absolute value for searching numbers.
+    abs_data_integer = abs(data_integer);
+    abs_data_decimal = abs(data_decimal);
+    
+    if(abs_data_integer > 0){
+        t_integer[6] = '\0';
+        //Ex : 54321.
+        data_1          = abs_data_integer / 10;                    //54321 / 10        = 5432.
+        data_2          = data_1 * 10;                  //5432 * 10         = 54320.
+        t_integer[5]    = table_ascii[abs_data_integer - data_2];   //54321 - 54320     = 1.
+
+        data_2          = (data_1 / 10) * 10;           //(5432 / 10) * 10  = 5430.
+        t_integer[4]    = table_ascii[data_1 - data_2]; //4532 - 5430       = 2.
+        data_1          = data_1 / 10;                  //5432 / 10         = 543.
+
+        data_2          = (data_1 / 10) * 10;           //(543 /10) * 10    = 540.  
+        t_integer[3]    = table_ascii[data_1 - data_2]; //543 - 540         = 3.
+        data_1          = data_1 / 10;                  //543 / 10          = 54.
+
+        data_2          = (data_1 / 10) * 10;           //(54/10) * 10      = 50.
+        t_integer[2]    = table_ascii[data_1 - data_2]; //54 - 50           = 4.
+        data_1          = data_1 / 10;                  //54 / 10           = 5.
+
+        t_integer[1]    = table_ascii[data_1];//5.
+        
+        //Sign : 
+        if(data_integer < 0){
+            t_integer[0]    = '-';
+        }
+        else{
+            t_integer[0]    = '+';
+        }
+    }
+    else{
+        //Sign : 
+        if(data_decimal < 0){
+            t_integer[0] = '-';
+        }
+        else{
+            t_integer[0] = '+';
+        }
+        t_integer[1] = '0';
+    }
+    
+    if(abs_data_decimal > 0){//Ex : 728 mA.
+        t_decimal[4] = '\0';
+        
+        data_1 = 0;//Reset.
+        data_2 = 0;//Reset.
+        
+        data_1          = abs_data_decimal / 10;                
+        data_2          = data_1 * 10;                 
+        t_decimal[3]    = table_ascii[abs_data_decimal - data_2];//8.  
+
+        data_2          = (data_1 / 10) * 10;
+        t_decimal[2]    = table_ascii[data_1 - data_2];
+        data_1          = data_1 / 10;//2.
+        
+        t_decimal[1]    = table_ascii[data_1];//7.
+        
+        t_decimal[0]    = ',';
+    }
+    
+    
+    strcpy(t_table,t_integer);
+    strcat(t_table,t_decimal);
+}
+//__________________________________________________________________________________________________
+
+void extract_integer_decimal(float data,short *data_integer,short *data_decimal){
+/*
+ * Extraire la partie entière et décimale d'un nombre float.
+ * Ne fonctionne que jusque 10^-3.
+ * 
+ * Ex avec 248 mA :
+ *      data_integer = 0.
+ *      data_decimal = 248 - 0 = 248.
+ * 
+ * Ex avec 23.746 V :
+ *      data_integer = 23.
+ *      data_decimal = 23746 - 23000 = 746.
+ */
+    
+    *data_integer   = data;
+    *data_decimal   = (data * 1000) - (*data_integer * 1000);//-1.234
 }
 //__________________________________________________________________________________________________

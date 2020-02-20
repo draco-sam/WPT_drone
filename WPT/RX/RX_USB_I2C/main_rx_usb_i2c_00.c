@@ -57,15 +57,6 @@ int main(void)
     while(USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended()== true){};
     led_red     = on;
     
-//    //Testing :
-//    unsigned short size_sam = 0;
-//    char test_sam[250] = "";
-//    strcpy(test_sam,"1234567891234567891234567891234567891234567891234 \r\n");
-//    strcat(test_sam,"1234567891234567891234567891234567891234567891234 \r\n");
-//    strcat(test_sam,"1234567891234567891234567891234567891234567891234 \r\n");
-//    strcat(test_sam,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTSamm \r\n");
-//    size_sam = strlen(test_sam);
-//    write_usb_com(test_sam,&f_data_sending);
 
     while (1)
     {   
@@ -99,6 +90,8 @@ int main(void)
             write_usb_com(test_menu,&f_data_sending);
         }
         else if(menu_number == 1){
+            //get_i2c_tm_and_send_to_usb(TM_VIN,"1 : Vin =","V",&f_data_sending);
+            
             if(flag_i2c_data_ready == 0){
                 i2c_master_start_read_tm(TM_VIN,&flag_i2c_data_ready);
             }
@@ -110,7 +103,7 @@ int main(void)
                 //Prepare data COM with string copy and concatenation :            
                 strcpy(t_data_usb_com,"1 : Vin = ");
                 strcat(t_data_usb_com,t_data_i2c);
-                strcat(t_data_usb_com," Vvvvvolts \r\n");
+                strcat(t_data_usb_com," V \r\n");
             
                 write_usb_com(t_data_usb_com,&f_data_sending);
                 
