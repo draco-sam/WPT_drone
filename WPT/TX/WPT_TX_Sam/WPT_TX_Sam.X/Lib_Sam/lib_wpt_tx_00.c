@@ -24,7 +24,7 @@ static INTCON2BITS  intcon2_bits;
  * 
  * (Primary Oscillator disabled & OSC2 is clock output).
  */
-_FOSC( POSCMD_NONE & OSCIOFNC_OFF);
+//_FOSC( POSCMD_NONE & OSCIOFNC_OFF);
 
 void pin_init (void)
 /*
