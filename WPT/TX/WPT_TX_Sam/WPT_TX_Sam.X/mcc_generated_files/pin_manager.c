@@ -1,48 +1,10 @@
-/**
-  PIN MANAGER Generated Driver File
-
-  @Company:
-    Microchip Technology Inc.
-
-  @File Name:
-    pin_manager.c
-
-  @Summary:
-    This is the generated manager file for the PIC24 / dsPIC33 / PIC32MM MCUs device.  This manager
-    configures the pins direction, initial state, analog setting.
-    The peripheral pin select, PPS, configuration is also handled by this manager.
-
-  @Description:
-    This source file provides implementations for PIN MANAGER.
-    Generation Information :
-        Product Revision  :  PIC24 / dsPIC33 / PIC32MM MCUs - 1.166.0
-        Device            :  dsPIC33CK256MP206
-    The generated drivers are tested against the following:
-        Compiler          :  XC16 v1.41
-        MPLAB 	          :  MPLAB X v5.30
-*/
-
-/*
-    (c) 2019 Microchip Technology Inc. and its subsidiaries. You may use this
-    software and any derivatives exclusively with Microchip products.
-
-    THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
-    EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
-    WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
-    PARTICULAR PURPOSE, OR ITS INTERACTION WITH MICROCHIP PRODUCTS, COMBINATION
-    WITH ANY OTHER PRODUCTS, OR USE IN ANY APPLICATION.
-
-    IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
-    INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
-    WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
-    BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
-    FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
-    ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
-    THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
-
-    MICROCHIP PROVIDES THIS SOFTWARE CONDITIONALLY UPON YOUR ACCEPTANCE OF THESE
-    TERMS.
-*/
+/*************************************************************************************************** 
+ * File             : pin_manager.c
+ * Date             : 21/02/2020.   
+ * Author           : Samuel LORENZINO.
+ * Comments         :
+ * Revision history : 
+ **************************************************************************************************/
 
 
 /**
@@ -102,8 +64,17 @@ void PIN_MANAGER_Initialize (void)
      * Setting the Analog/Digital Configuration SFR(s)
      ***************************************************************************/
     ANSELA = 0x001F;
-    ANSELB = 0x009D;
+    ANSELB = 0x0099;
     ANSELC = 0x00CF;
     ANSELD = 0x2C00;
+    
+    /****************************************************************************
+     * Set the PPS
+     ***************************************************************************/
+    __builtin_write_RPCON(0x0000);// unlock PPS
+
+    RPINR0bits.INT1R = 0x0039;//RC9 pin 37, external interrupt 1 for On/OFF PWM.
+
+    __builtin_write_RPCON(0x0800);// lock PPS
 }
 
