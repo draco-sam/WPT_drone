@@ -11,9 +11,6 @@
 #include "dsPIC33CK256MP206.h"
 
 //Variable globale uniquement pour "lib_wpt_tx_xx".
-static LATCBITS     latc_bits;
-static PG5CONLBITS  pg5conl_bits;
-static INTCON2BITS  intcon2_bits;
 
 /*
  * FOSC CONFIGURATION REGISTER :
@@ -207,8 +204,9 @@ void pwm_init (void)
     /*
      * PWM GENERATOR x CONTROL REGISTER HIGH :
      * -----------------------------------------------
-     * bit 15       : PWM Generator uses PGxDC register for duty cycle.
-     * bit 14       : PWM Generator uses PGxPER register for period.
+     * bit 15       : For duty cycle, PWM Generator uses PGxDC register.
+     * bit 14       : For period, PWM Generator uses PGxPER register.
+	 * bit 13		: For phase, PWM Generator uses PGxPHASE register. 
      * bit 10-8     : SOC update.
      * bit 3-0      : Local EOC ? PWM Generator is self-triggered.
      * bit other    : 0.
@@ -313,22 +311,22 @@ void pwm_init (void)
 }
 //*************************************************************************************************
 
-void pwm_on_off(unsigned short choix_pwm)
-/*
- * 
- */
-{
-    //PWM ON.
-    if(choix_pwm == 1)
-    {
-        pg5conl_bits.ON = 1;
-    }
-    //PWM OFF dans tous les autres cas.
-    else
-    { 
-       pg5conl_bits.ON = 0;
-    }
-}
+//void pwm_on_off(unsigned short choix_pwm)
+///*
+// * 
+// */
+//{
+//    //PWM ON.
+//    if(choix_pwm == 1)
+//    {
+//        pg5conl_bits.ON = 1;
+//    }
+//    //PWM OFF dans tous les autres cas.
+//    else
+//    { 
+//       pg5conl_bits.ON = 0;
+//    }
+//}
 //*************************************************************************************************
 
 void TMR1_init (void)
@@ -383,9 +381,7 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _T1Interrupt (  )
      * -------------------------
      * Toggle the state of the 3 PORTx (LED). 
      */
-    latc_bits.LATC12 = !latc_bits.LATC12;//Blue LED.
-    latc_bits.LATC13 = !latc_bits.LATC13;//Green LED.
-    latc_bits.LATC14 = !latc_bits.LATC14;//Red LED.
+    
 
     
     IFS0bits.T1IF = 0;//Reset flag.

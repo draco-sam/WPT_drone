@@ -8,11 +8,12 @@
 
 #include "dsPIC33CK256MP206.h"
 #include "../mcc_generated_files/system.h"
+#include "../mcc_generated_files/pwm.h"
 
 void pin_init (void);
 void oscillator_init(void);
 void pwm_init (void);
-void pwm_on_off(unsigned short choix_pwm);
+//void pwm_on_off(unsigned short choix_pwm);
 void TMR1_init (void);
 void TMR1_start( void );
 void TMR1_stop( void );
