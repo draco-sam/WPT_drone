@@ -1,25 +1,27 @@
 /**
-  System Interrupts Generated Driver File 
+  PIN MANAGER Generated Driver File
 
   @Company:
     Microchip Technology Inc.
 
   @File Name:
-    interrupt_manager.h
+    pin_manager.h
 
   @Summary:
-    This is the generated driver implementation file for setting up the
-    interrupts using PIC24 / dsPIC33 / PIC32MM MCUs
+    This is the generated manager file for the PIC24 / dsPIC33 / PIC32MM MCUs device.  This manager
+    configures the pins direction, initial state, analog setting.
+    The peripheral pin select, PPS, configuration is also handled by this manager.
 
   @Description:
-    This source file provides implementations for PIC24 / dsPIC33 / PIC32MM MCUs interrupts.
-    Generation Information : 
-        Product Revision  :  PIC24 / dsPIC33 / PIC32MM MCUs - 1.155.0-a
+    This source file provides implementations for PIN MANAGER.
+    Generation Information :
+        Product Revision  :  PIC24 / dsPIC33 / PIC32MM MCUs - 1.166.0
         Device            :  PIC24FJ128GC006
     The generated drivers are tested against the following:
-        Compiler          :  XC16 v1.40
-        MPLAB             :  MPLAB X v5.25
+        Compiler          :  XC16 v1.41
+        MPLAB 	          :  MPLAB X v5.30
 */
+
 /*
     (c) 2019 Microchip Technology Inc. and its subsidiaries. You may use this
     software and any derivatives exclusively with Microchip products.
@@ -42,23 +44,51 @@
     TERMS.
 */
 
+#ifndef _PIN_MANAGER_H
+#define _PIN_MANAGER_H
 /**
     Section: Includes
 */
 #include <xc.h>
 
 /**
-    void INTERRUPT_Initialize (void)
+    Section: Device Pin Macros
 */
-void INTERRUPT_Initialize (void)
-{
-    //    USBI: USB1 - USB1 Interrupt
-    //    Priority: 1
-    IPC21bits.USB1IP = 1;
-        
-    //MICI: MI2C1. I2C1 Master EventsPriority: 1.
-    IPC4bits.MI2C1P = 1;
-    //SICI: SI2C1 - I2C1 Slave Events. Priority: 1.
-    IPC4bits.SI2C1P = 1;
 
-}
+/**
+    Section: Function Prototypes
+*/
+/**
+  @Summary
+    Configures the pin settings of the PIC24FJ128GC006
+    The peripheral pin select, PPS, configuration is also handled by this manager.
+
+  @Description
+    This is the generated manager file for the PIC24 / dsPIC33 / PIC32MM MCUs device.  This manager
+    configures the pins direction, initial state, analog setting.
+    The peripheral pin select, PPS, configuration is also handled by this manager.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    void SYSTEM_Initialize(void)
+    {
+        // Other initializers are called from this function
+        PIN_MANAGER_Initialize();
+    }
+    </code>
+
+*/
+void PIN_MANAGER_Initialize (void);
+
+
+
+#endif

@@ -1,25 +1,25 @@
 /**
-  System Interrupts Generated Driver File 
+  @Generated PIC24 / dsPIC33 / PIC32MM MCUs Source File
 
   @Company:
     Microchip Technology Inc.
 
   @File Name:
-    interrupt_manager.h
+    system.h
 
   @Summary:
-    This is the generated driver implementation file for setting up the
-    interrupts using PIC24 / dsPIC33 / PIC32MM MCUs
+    This is the sysetm.h file generated using PIC24 / dsPIC33 / PIC32MM MCUs
 
   @Description:
-    This source file provides implementations for PIC24 / dsPIC33 / PIC32MM MCUs interrupts.
-    Generation Information : 
-        Product Revision  :  PIC24 / dsPIC33 / PIC32MM MCUs - 1.155.0-a
+    This header file provides implementations for driver APIs for all modules selected in the GUI.
+    Generation Information :
+        Product Revision  :  PIC24 / dsPIC33 / PIC32MM MCUs - 1.166.0
         Device            :  PIC24FJ128GC006
     The generated drivers are tested against the following:
-        Compiler          :  XC16 v1.40
-        MPLAB             :  MPLAB X v5.25
+        Compiler          :  XC16 v1.41
+        MPLAB             :  MPLAB X v5.30
 */
+
 /*
     (c) 2019 Microchip Technology Inc. and its subsidiaries. You may use this
     software and any derivatives exclusively with Microchip products.
@@ -42,23 +42,28 @@
     TERMS.
 */
 
-/**
-    Section: Includes
-*/
-#include <xc.h>
+#include "pin_manager.h"
+#include "clock.h"
+#include "system.h"
+//#include "usb/usb.h"
+#include "../lib_com/usb/usb_mplab/usb.h"
+#include "interrupt_manager.h"
+#include "traps.h"
+//#include "i2c1.h"
+#include "../lib_com/i2c/i2c1.h"
+#include "../lib_com/i2c/i2c_sam_01.h"
 
-/**
-    void INTERRUPT_Initialize (void)
-*/
-void INTERRUPT_Initialize (void)
+void SYSTEM_Initialize(void)
 {
-    //    USBI: USB1 - USB1 Interrupt
-    //    Priority: 1
-    IPC21bits.USB1IP = 1;
-        
-    //MICI: MI2C1. I2C1 Master EventsPriority: 1.
-    IPC4bits.MI2C1P = 1;
-    //SICI: SI2C1 - I2C1 Slave Events. Priority: 1.
-    IPC4bits.SI2C1P = 1;
-
+    PIN_MANAGER_Initialize();
+    INTERRUPT_Initialize();
+    CLOCK_Initialize();
+    USBDeviceInit();
+    USBDeviceAttach();
+    //I2C1_Initialize();
+    i2c_master_init();
 }
+
+/**
+ End of File
+*/

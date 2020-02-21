@@ -14,11 +14,11 @@
   @Description:
     This source file provides implementations for PIC24 / dsPIC33 / PIC32MM MCUs interrupts.
     Generation Information : 
-        Product Revision  :  PIC24 / dsPIC33 / PIC32MM MCUs - 1.155.0-a
+        Product Revision  :  PIC24 / dsPIC33 / PIC32MM MCUs - 1.166.0
         Device            :  PIC24FJ128GC006
     The generated drivers are tested against the following:
-        Compiler          :  XC16 v1.40
-        MPLAB             :  MPLAB X v5.25
+        Compiler          :  XC16 v1.41
+        MPLAB             :  MPLAB X v5.30
 */
 /*
     (c) 2019 Microchip Technology Inc. and its subsidiaries. You may use this
@@ -54,11 +54,11 @@ void INTERRUPT_Initialize (void)
 {
     //    USBI: USB1 - USB1 Interrupt
     //    Priority: 1
-    IPC21bits.USB1IP = 1;
+        IPC21bits.USB1IP = 1;
         
-    //MICI: MI2C1. I2C1 Master EventsPriority: 1.
+    //MICI: MI2C1 - I2C1 Master Events - Priority: 1
     IPC4bits.MI2C1P = 1;
-    //SICI: SI2C1 - I2C1 Slave Events. Priority: 1.
-    IPC4bits.SI2C1P = 1;
+    //SICI: SI2C1 - I2C1 Slave Events - Priority: 1
+        IPC4bits.SI2C1P = 1;
 
 }
