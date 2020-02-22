@@ -25,14 +25,16 @@ int main(int argc, char *argv[])
      */
     QString                     serial_name     = "";
     QString                     str             = "hello";
+    bool                        status_com_open = false;
     QList<QSerialPortInfo>      listPortCom;
-    QSerialPortInfo             serialPortInfo;
+    QSerialPortInfo             serialPortsInfo;
+    QSerialPort                 pic_usb_com;
     /***************************************************************/
 
     QApplication app(argc, argv);
 
 
-    listPortCom = serialPortInfo.availablePorts();
+    listPortCom = serialPortsInfo.availablePorts();
 
 
     for(int i=0 ; i < listPortCom.size() ; i++){
@@ -42,15 +44,24 @@ int main(int argc, char *argv[])
                 <<listPortCom.at(i).vendorIdentifier();
     }
 
+    //Configure de USB port COM4 :
+    pic_usb_com.setPortName("COM4");
+    pic_usb_com.setBaudRate(QSerialPort::Baud115200);
+    pic_usb_com.setDataBits(QSerialPort::Data8);
+    pic_usb_com.setParity(QSerialPort::NoParity);
+    pic_usb_com.setStopBits(QSerialPort::OneStop);
+    pic_usb_com.setFlowControl(QSerialPort::NoFlowControl);
+
+    status_com_open = pic_usb_com.open(QIODevice::ReadWrite);
+    qDebug()<<pic_usb_com.error();//Look if an error occure at the opening.
 
 
-
-
-
-    qDebug()<<serial_name;
 
     qDebug()<<"hello";
     cout<<"bonjour"<<endl;
+
+
+    pic_usb_com.close();
 
     return app.exec();
 }
