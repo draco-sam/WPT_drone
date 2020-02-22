@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : main_rx_usb_i2c_00.c
- * Date             : 20/02/2020.   
+ * Date             : 22/02/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -57,6 +57,7 @@ int main(void)
     while(USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended()== true){};
     led_red     = on;
     
+    write_usb_com("PIC24FJ128GC006 USB virtual COM4 \r\n",&f_data_sending);
 
     while (1)
     {   
