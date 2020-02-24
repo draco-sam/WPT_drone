@@ -90,7 +90,7 @@ void __attribute__ ( ( interrupt, no_auto_psv ) ) _MI2C1Interrupt ( void )
         else if(i2c_interrupt_counter == 2)
         {
             if(I2C1STATbits.ACKSTAT == 0)//0 = Acknowledge was received from Slave
-            {
+            {   
                 I2C1TRN = i2c_command;//Command to the slave.
             }
             else

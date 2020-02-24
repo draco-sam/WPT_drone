@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : main_rx_usb_i2c_00.c
- * Date             : 22/02/2020.   
+ * Date             : 24/02/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -92,6 +92,11 @@ int main(void)
         }
         else if(menu_number == 1){
             //get_i2c_tm_and_send_to_usb(TM_VIN,"1 : Vin =","V",&f_data_sending);
+            
+            led_red     = off;
+            led_green   = on;
+            led_blue    = off;
+            write_usb_com("1 : Sam test. \r\n",&f_data_sending);
             
             if(flag_i2c_data_ready == 0){
                 i2c_master_start_read_tm(TM_VIN,&flag_i2c_data_ready);
