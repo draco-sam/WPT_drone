@@ -53,25 +53,62 @@ int main(int argc, char *argv[])
     pic_usb_com.setStopBits(QSerialPort::OneStop);
     pic_usb_com.setFlowControl(QSerialPort::NoFlowControl);
 
+    //Open port COM and check if erreor :
     status_com_open = pic_usb_com.open(QIODevice::ReadWrite);
-    qDebug()<<pic_usb_com.error();//Look if an error occure at the opening.
+    qDebug()<<pic_usb_com.error()<<endl;//Look if an error occure at the opening.
 
 
     //while(pic_usb_com.isDataTerminalReady() != true){};
 
-    //pic_usb_com.write("1 \n\r");
 
-    QByteArray ba("1 \n\r");
-    pic_usb_com.write("bonjour Sam ^^");
+
+    QByteArray ba;
+    ba.resize(2);
+    ba[0] = '\r';
+    ba[1] = '1';
+    //ba[2] = '\n';//Idem à 0x0a pour LF.
+    //pic_usb_com.write(ba);
+    pic_usb_com.write("\r\n");
+    while(pic_usb_com.waitForReadyRead() != true){};
+    qDebug()<<pic_usb_com.readAll();
+    //Attendre que le menu soit transmit.
+    while(pic_usb_com.waitForReadyRead() != true){};
+    qDebug()<<pic_usb_com.readAll();
+
+//    pic_usb_com.write("\r\n");
+//    while(pic_usb_com.waitForReadyRead() != true){};
+//    qDebug()<<pic_usb_com.readAll();
+
+    pic_usb_com.write("1");
+    while(pic_usb_com.waitForReadyRead() != true){};
+    qDebug()<<pic_usb_com.readAll()<<endl;
+    pic_usb_com.write("\r\n");
+    while(pic_usb_com.waitForReadyRead() != true){};
+    qDebug()<<pic_usb_com.readAll()<<endl;
+    while(pic_usb_com.waitForReadyRead() != true){};
+    qDebug()<<pic_usb_com.readAll()<<endl;
+
+
+
+    //pic_usb_com.write("bonjour Sam ^^");
 
 
 
     //pic_usb_com.read(t_com,sizeof(t_com));
     //qDebug()<<t_com;
 
-    while(pic_usb_com.waitForReadyRead() != true){};
 
-    qDebug()<<pic_usb_com.readAll();
+
+
+
+//    pic_usb_com.write(ba);
+//    while(pic_usb_com.waitForReadyRead() != true){};
+//    qDebug()<<pic_usb_com.readAll();
+
+
+
+//    while(pic_usb_com.waitForReadyRead() != true){};
+//    qDebug()<<pic_usb_com.readAll();
 
 
 
