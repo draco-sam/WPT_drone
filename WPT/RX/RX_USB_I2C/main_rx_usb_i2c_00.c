@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : main_rx_usb_i2c_00.c
- * Date             : 20/02/2020.   
+ * Date             : 22/02/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -57,6 +57,7 @@ int main(void)
     while(USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended()== true){};
     led_red     = on;
     
+    //write_usb_com("PIC24FJ128GC006 USB virtual COM4 \r\n",&f_data_sending);
 
     while (1)
     {   
@@ -96,6 +97,9 @@ int main(void)
                 i2c_master_start_read_tm(TM_VIN,&flag_i2c_data_ready);
             }
             else if(flag_i2c_data_ready == 1){//Data is ready.
+                led_red     = off;
+                led_green   = on;
+                led_blue    = off;
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_VIN);
                 
                 float_to_ascii(s_i2c_tm_analog.data_1,t_data_i2c);
