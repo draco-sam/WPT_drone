@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : usb_sam_00.c
- * Date             : 20/02/2020.   
+ * Date             : 24/02/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -102,9 +102,9 @@ void read_usb_com(unsigned short  *menu_number){
 
         for(i=0; i<numBytesRead; i++){
             if(readBuffer[i] == 0x0d){//0x0d = CR (0x0a = LF).
-//                led_red     = off;
-//                led_green   = off;
-//                led_blue    = on;
+                led_red     = off;
+                led_green   = off;
+                led_blue    = on;
             }
             else if(readBuffer[i] != 0x0a){//Diff de LF.
                 /*******************************************
@@ -120,16 +120,16 @@ void read_usb_com(unsigned short  *menu_number){
                 }
                 /******************************************/
             }
-            writeBuffer[i] = readBuffer[i];
         }//End for.
 
         if(numBytesRead > 0){
-            if(writeBuffer[0] == 0x0d){//Détecter le CR (ENTER dans console).
+            /* Carriage return (CR, 0x0d) detection :
+             * -------------------------------------
+             * If CR, convert ASCII numbers into integer for main if.
+             */
+            if(readBuffer[0] == 0x0d){//Détecter le CR (ENTER dans console).
                 //writeBuffer[1] = 0x0a;//LF
 
-                putUSBUSART(writeBuffer,strlen(writeBuffer));//(...,2).
-
-                //Si CR, convertir le tableau static :
                 *menu_number =  ascii_to_integer(menuBuffer);
                 if(*menu_number == 0){
 //                    led_red     = off;
@@ -138,9 +138,6 @@ void read_usb_com(unsigned short  *menu_number){
                 }
                 empty_table(menuBuffer,sizeof(menuBuffer));//Effacer à chaque CR.
                 i_menu = 0;//Reset.
-            }
-            else{
-                putUSBUSART(writeBuffer,numBytesRead);
             }
         }
     }
