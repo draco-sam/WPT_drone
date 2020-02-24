@@ -1,0 +1,12 @@
+*.o
+*.o.d
+*memoryfile.xml
+*.elf
+*.map
+*.o
+*private.xml
+*project.xml
+<<<<<<< HEAD
+=======
+*configurations.xml
+>>>>>>> usb_PIC24FJ

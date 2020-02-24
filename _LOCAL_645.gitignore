@@ -1,0 +1,9 @@
+*.o
+*.o.d
+*memoryfile.xml
+*.elf
+*.map
+*.o
+*private.xml
+*project.xml
+*configurations.xml
