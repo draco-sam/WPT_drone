@@ -11,7 +11,6 @@
 #include "dsPIC33CK256MP206.h"
 
 //Variable globale uniquement pour "lib_wpt_tx_xx".
-static TRISCBITS    trisc_bits;
 static LATCBITS     latc_bits;
 static PG5CONLBITS  pg5conl_bits;
 static INTCON2BITS  intcon2_bits;
@@ -38,12 +37,18 @@ void pin_init (void)
     TRISD = 0xFFFF;
     
     //3 LEDs as output and ON :
-    trisc_bits.TRISC12 = 0;//Blue LED output.
-    trisc_bits.TRISC13 = 0;//Green LED output.
-    trisc_bits.TRISC14 = 0;//Red LED output.
-    latc_bits.LATC12 = 1;//Blue LED ON.
-    latc_bits.LATC13 = 1;//Green LED ON.
-    latc_bits.LATC14 = 1;//Red LED ON.
+    TRISCbits.TRISC12   = 0;//Blue LED output.
+    TRISCbits.TRISC13   = 0;//Green LED output.
+    TRISCbits.TRISC14   = 0;//Red LED output.
+    ANSELCbits.ANSELC0  = 0;
+    ANSELCbits.ANSELC1  = 0;
+    ANSELCbits.ANSELC2  = 0;
+    ANSELCbits.ANSELC3  = 0;
+    ANSELCbits.ANSELC6  = 0;
+    ANSELCbits.ANSELC7  = 0;
+    LATCbits.LATC12     = 1;//Blue LED ON.
+    LATCbits.LATC13     = 1;//Green LED ON.
+    LATCbits.LATC14     = 1;//Red LED ON.
 }
 
 void oscillator_init(void)
