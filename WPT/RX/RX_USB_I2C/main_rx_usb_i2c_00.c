@@ -61,14 +61,62 @@ int main(void)
     led_green   = off;
     led_blue    = off;
     
-//    char            t_sam[255]  = "";
-//    unsigned short  taille_t    = 0;
-//    taille_t = sizeof(t_sam);
-//    get_menu(1,t_sam,sizeof(t_sam));
-//    Nop();
-//    get_menu(2,t_sam,sizeof(t_sam));
-//    Nop();
+    char            t_int[7]        = "";
+    char            t_float[5]      = "";
+    char            t_final[50]     = "";
+    char            t_ascii[11]     = {'0','1','2','3','4','5','6','7','8','9'};
+    unsigned short  d_int           = 0;
+    unsigned short  d_temp          = 0;
+    unsigned short  d_div           = 10000;
+    unsigned short  d_decimal       = 321;
+    unsigned short  i_t             = 0;
+    unsigned short  i               = 0;
+    unsigned short  f_zero          = 1;
+    
+    t_final[0] = '+';
+    
+    if(d_int != 0){
+        for(i=0 ; i < 5 ; i++){
+            d_temp = d_int / d_div;
 
+            if(f_zero == 1){
+                if(d_temp != 0){
+                    f_zero = 0;
+                }
+            }
+            if(f_zero == 0 && i_t < sizeof(t_int)){
+                t_int[i_t] = t_ascii[d_temp];
+                i_t++;//++ a chaque sauvegarde.
+            }
+
+            d_int = d_int - (d_temp * d_div);//5432.
+
+            d_div = d_div / 10;//1000,100,10,1.
+        }
+    }
+    else{
+        t_int[0] = '0';
+    }
+    Nop();
+
+    strcat(t_final,t_int);
+    Nop();
+    
+
+//    t_int[0] = '+';
+//    t_int[1] = '5';
+//    t_int[2] = '4';
+//    t_int[3] = '\0';
+//    
+//    t_float[0] = ',';
+//    t_float[1] = '3';
+//    t_float[2] = '2';
+//    t_float[3] = '\0';
+//    
+//    strcpy(t_final,t_int);
+//    strcat(t_final,t_float);
+    
+    Nop();
     
     //Plugger l'USB pour démarrer le code.
     while(USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended()== true){};
@@ -108,34 +156,33 @@ int main(void)
         else if(menu_number == 1){
             //get_i2c_tm_and_send_to_usb(TM_VIN,"1 : Vin =","V",&f_data_sending);
             
-            led_red     = off;
-            led_green   = on;
-            led_blue    = off;
-            //write_usb_com("1 : Sam test. \r\n",&f_data_sending);
+//            led_red     = off;
+//            led_green   = on;
+//            led_blue    = off;
             
             if(flag_i2c_data_ready == 0){
                 i2c_master_start_read_tm(TM_VIN,&flag_i2c_data_ready);
             }
             else if(flag_i2c_data_ready == 1){//Data is ready.
-                led_red     = off;
-                led_green   = on;
-                led_blue    = on;
+//                led_red     = off;
+//                led_green   = on;
+//                led_blue    = on;
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_VIN);
                 
                 //!!! For debug !!!
                 s_i2c_tm_analog.data_1 = 3.456;
                 
                 float_to_ascii(s_i2c_tm_analog.data_1,t_data_i2c);
-                
-                //Prepare data COM with string copy and concatenation :            
-                strcpy(t_data_usb_com,"1 : Vin = ");
-                strcat(t_data_usb_com,t_data_i2c);
-                strcat(t_data_usb_com," V \r\n");
             
                 if(f_type_interface == 0){//Terminal COM.
+                    //Prepare data COM with string copy and concatenation :            
+                    strcpy(t_data_usb_com,"1 : Vin = ");
+                    strcat(t_data_usb_com,t_data_i2c);
+                    strcat(t_data_usb_com," V \r\n");
                     write_usb_com(t_data_usb_com,&f_data_sending);
                 }
                 else{//Qt interface.
+                    strcat(t_data_i2c,"\r\n");
                     write_usb_com(t_data_i2c,&f_data_sending);
                 }
                 
