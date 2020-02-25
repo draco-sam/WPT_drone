@@ -453,10 +453,17 @@ void get_i2c_tm_and_send_to_usb(unsigned short TM_ADDRESS,char *text_1,char *tex
 void float_to_ascii(float data_float,char *t_table){
 /*
  * data max : 65535.
+ * 
+ * !!! Modier code partie décimale pour ressembler à celui partie entière !!!
  */
     short           data_integer        = 0;
     unsigned short  abs_data_integer    = 0;
     unsigned short  abs_data_decimal    = 0;
+    unsigned short  i                   = 0;
+    unsigned short  i_t                 = 0;
+    unsigned short  f_zero              = 1;
+    unsigned short  d_temp              = 0;
+    unsigned short  d_div               = 10000;
     short           data_decimal        = 0;
     unsigned short  data_1              = 0;
     unsigned short  data_2              = 0;
@@ -470,45 +477,51 @@ void float_to_ascii(float data_float,char *t_table){
     abs_data_integer = abs(data_integer);
     abs_data_decimal = abs(data_decimal);
     
-    if(abs_data_integer > 0){
-        t_integer[6] = '\0';
-        //Ex : 54321.
-        data_1          = abs_data_integer / 10;                    //54321 / 10        = 5432.
-        data_2          = data_1 * 10;                  //5432 * 10         = 54320.
-        t_integer[5]    = table_ascii[abs_data_integer - data_2];   //54321 - 54320     = 1.
-
-        data_2          = (data_1 / 10) * 10;           //(5432 / 10) * 10  = 5430.
-        t_integer[4]    = table_ascii[data_1 - data_2]; //4532 - 5430       = 2.
-        data_1          = data_1 / 10;                  //5432 / 10         = 543.
-
-        data_2          = (data_1 / 10) * 10;           //(543 /10) * 10    = 540.  
-        t_integer[3]    = table_ascii[data_1 - data_2]; //543 - 540         = 3.
-        data_1          = data_1 / 10;                  //543 / 10          = 54.
-
-        data_2          = (data_1 / 10) * 10;           //(54/10) * 10      = 50.
-        t_integer[2]    = table_ascii[data_1 - data_2]; //54 - 50           = 4.
-        data_1          = data_1 / 10;                  //54 / 10           = 5.
-
-        t_integer[1]    = table_ascii[data_1];//5.
+    if(data_integer != 0){
+        //*****************************
+        //Check de sign :
+        if(data_integer > 0){
+            t_table[0] = '+';
+        }
+        else{
+            t_table[0] = '-';
+        }
+        //*****************************
         
-        //Sign : 
-        if(data_integer < 0){
-            t_integer[0]    = '-';
+        //*******************************************************************************
+        //Construct the integer table and remove unnecessary "0" :
+        for(i=0 ; i < 5 ; i++){
+            d_temp = abs_data_integer / d_div;
+
+            if(f_zero == 1){
+                if(d_temp != 0){
+                    f_zero = 0;
+                }
+            }
+            if(f_zero == 0 && i_t < sizeof(t_integer)){
+                t_integer[i_t] = table_ascii[d_temp];
+                i_t++;//++ a chaque sauvegarde.
+            }
+
+            abs_data_integer = abs_data_integer - (d_temp * d_div);//5432.
+
+            d_div = d_div / 10;//1000,100,10,1.
         }
-        else{
-            t_integer[0]    = '+';
-        }
+        //*******************************************************************************
     }
+    //*****************************************************
+    //Check de sign of decimal part if integer = 0:
     else{
-        //Sign : 
-        if(data_decimal < 0){
-            t_integer[0] = '-';
+        t_integer[0] = '0';
+        
+        if(data_decimal >= 0){
+            t_table[0] = '+';
         }
         else{
-            t_integer[0] = '+';
+            t_table[0] = '-';
         }
-        t_integer[1] = '0';
     }
+    //*****************************************************
     
     if(abs_data_decimal > 0){//Ex : 728 mA.
         t_decimal[4] = '\0';
@@ -529,8 +542,7 @@ void float_to_ascii(float data_float,char *t_table){
         t_decimal[0]    = ',';
     }
     
-    
-    strcpy(t_table,t_integer);
+    strcat(t_table,t_integer);
     strcat(t_table,t_decimal);
 }
 //__________________________________________________________________________________________________
