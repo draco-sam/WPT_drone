@@ -72,32 +72,24 @@ int main(int argc, char *argv[])
 
     //ENTER and read double menu :
     pic_usb_com.write("\r\n");
+    pic_usb_com.waitForBytesWritten();
+    pic_usb_com.waitForReadyRead();
     pic_usb_com.waitForReadyRead();
     qDebug().noquote()<<"readALL 1 : "<<endl<<pic_usb_com.readAll();
-    pic_usb_com.waitForReadyRead();
-    qDebug().noquote()<<"readALL 2 : "<<endl<<pic_usb_com.readAll();
 
+    //Activate the Qt interface mode on PIC :
+    pic_usb_com.write("\r\n20\r\n");
+    pic_usb_com.waitForBytesWritten();
+    pic_usb_com.waitForReadyRead();
+    qDebug().noquote()<<pic_usb_com.readAll();
 
     pic_usb_com.write("\r\n1\r\n");
     pic_usb_com.waitForBytesWritten();
     pic_usb_com.waitForReadyRead();
-    qDebug().noquote()<<endl<<"readAll 3 : "<<endl<<pic_usb_com.readAll()<<endl;
     pic_usb_com.write("\r\n1\r\n");
     pic_usb_com.waitForBytesWritten();
     pic_usb_com.waitForReadyRead();
-    qDebug().noquote()<<endl<<"readAll 4 : "<<endl<<pic_usb_com.readAll()<<endl;
-//    pic_usb_com.write("1");
-//    pic_usb_com.waitForBytesWritten();
-//    pic_usb_com.write("\r\n");
-//    pic_usb_com.waitForReadyRead();
-//    qDebug().noquote()<<"readAll 4 : "<<endl<<pic_usb_com.readAll()<<endl;
-
-//    pic_usb_com.write("1");
-//    while(pic_usb_com.waitForReadyRead() != true){};
-//    qDebug().noquote()<<endl<<"readAll 4 : "<<endl<<pic_usb_com.readAll()<<endl;
-//    pic_usb_com.write("\r\n");
-//    while(pic_usb_com.waitForReadyRead() != true){};
-//    qDebug().noquote()<<"readAll 5 : "<<endl<<pic_usb_com.readAll()<<endl;
+    qDebug().noquote()<<pic_usb_com.readAll();
 
 
 //    /******************************************************
