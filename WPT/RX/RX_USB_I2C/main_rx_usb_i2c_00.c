@@ -61,14 +61,6 @@ int main(void)
     led_green   = off;
     led_blue    = off;
     
-//    char            t_sam[255]  = "";
-//    unsigned short  taille_t    = 0;
-//    taille_t = sizeof(t_sam);
-//    get_menu(1,t_sam,sizeof(t_sam));
-//    Nop();
-//    get_menu(2,t_sam,sizeof(t_sam));
-//    Nop();
-
     
     //Plugger l'USB pour démarrer le code.
     while(USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended()== true){};
@@ -108,34 +100,25 @@ int main(void)
         else if(menu_number == 1){
             //get_i2c_tm_and_send_to_usb(TM_VIN,"1 : Vin =","V",&f_data_sending);
             
-            led_red     = off;
-            led_green   = on;
-            led_blue    = off;
-            //write_usb_com("1 : Sam test. \r\n",&f_data_sending);
-            
             if(flag_i2c_data_ready == 0){
                 i2c_master_start_read_tm(TM_VIN,&flag_i2c_data_ready);
             }
             else if(flag_i2c_data_ready == 1){//Data is ready.
-                led_red     = off;
-                led_green   = on;
-                led_blue    = on;
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_VIN);
                 
                 //!!! For debug !!!
-                s_i2c_tm_analog.data_1 = 3.456;
-                
+                s_i2c_tm_analog.data_1 = 29.876;
                 float_to_ascii(s_i2c_tm_analog.data_1,t_data_i2c);
-                
-                //Prepare data COM with string copy and concatenation :            
-                strcpy(t_data_usb_com,"1 : Vin = ");
-                strcat(t_data_usb_com,t_data_i2c);
-                strcat(t_data_usb_com," V \r\n");
             
                 if(f_type_interface == 0){//Terminal COM.
+                    //Prepare data COM with string copy and concatenation :            
+                    strcpy(t_data_usb_com,"1 : Vin = ");
+                    strcat(t_data_usb_com,t_data_i2c);
+                    strcat(t_data_usb_com," V \r\n");
                     write_usb_com(t_data_usb_com,&f_data_sending);
                 }
                 else{//Qt interface.
+                    strcat(t_data_i2c,"\r\n");
                     write_usb_com(t_data_i2c,&f_data_sending);
                 }
                 
@@ -172,14 +155,21 @@ int main(void)
             else if(flag_i2c_data_ready == 1){//Data is ready.
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_VBAT);
                 
+                //!!! For debug !!!
+                s_i2c_tm_analog.data_1 = 3.456;
                 float_to_ascii(s_i2c_tm_analog.data_1,t_data_i2c);
                 
-                //Prepare data COM with string copy and concatenation :            
-                strcpy(t_data_usb_com,"3 : Vbat = ");
-                strcat(t_data_usb_com,t_data_i2c);
-                strcat(t_data_usb_com," V \r\n");
-            
-                write_usb_com(t_data_usb_com,&f_data_sending);
+                if(f_type_interface == 0){//Terminal COM.
+                    //Prepare data COM with string copy and concatenation :            
+                    strcpy(t_data_usb_com,"3 : Vbat = ");
+                    strcat(t_data_usb_com,t_data_i2c);
+                    strcat(t_data_usb_com," V \r\n");
+                    write_usb_com(t_data_usb_com,&f_data_sending);
+                }
+                else{//Qt interface.
+                    strcat(t_data_i2c,"\r\n");
+                    write_usb_com(t_data_i2c,&f_data_sending);
+                }
                 
                 if(f_data_sending == 1){//"1" if USB ready.
                     flag_i2c_data_ready = 0;//Reset flag after USB ready to send.
@@ -193,14 +183,21 @@ int main(void)
             else if(flag_i2c_data_ready == 1){//Data is ready.
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_IBAT);
                 
+                //!!! For debug !!!
+                s_i2c_tm_analog.data_1 = 0.765;
                 float_to_ascii(s_i2c_tm_analog.data_1,t_data_i2c);
                 
-                //Prepare data COM with string copy and concatenation :            
-                strcpy(t_data_usb_com,"4 : Ibat = ");
-                strcat(t_data_usb_com,t_data_i2c);
-                strcat(t_data_usb_com," A \r\n");
-            
-                write_usb_com(t_data_usb_com,&f_data_sending);
+                if(f_type_interface == 0){//Terminal COM.
+                    //Prepare data COM with string copy and concatenation :            
+                    strcpy(t_data_usb_com,"4 : Ibat = ");
+                    strcat(t_data_usb_com,t_data_i2c);
+                    strcat(t_data_usb_com," A \r\n");
+                    write_usb_com(t_data_usb_com,&f_data_sending);
+                }
+                else{//Qt interface.
+                    strcat(t_data_i2c,"\r\n");
+                    write_usb_com(t_data_i2c,&f_data_sending);
+                }
                 
                 if(f_data_sending == 1){//"1" if USB ready.
                     flag_i2c_data_ready = 0;//Reset flag after USB ready to send.
@@ -425,15 +422,10 @@ int main(void)
     return 1;
 }
 
-void get_menu(unsigned short menu_number, char *t_menu, unsigned short table_size){
+void get_menu(unsigned short menu_number, char *t_menu, unsigned short t_menu_size){
 /*
- */
-    unsigned short  size_t_sam      = 0;
-    char            t_test_sam[255] = "";
-    
-    size_t_sam = sizeof(t_menu);
-    
-    empty_table(t_menu,table_size);
+ */ 
+    empty_table(t_menu,t_menu_size);
     
     
     char t_menu_1[] =   "\n-----------------------------------\r\n"
@@ -460,6 +452,16 @@ void get_menu(unsigned short menu_number, char *t_menu, unsigned short table_siz
     }
     else if(menu_number == 2){
         strcpy(t_menu,t_menu_2);
+        
+//        //A tester pour amélioration problème double char dans main.
+//        unsigned short i;
+//        for(i=0; i < sizeof(t_menu_2 ) ; i++){
+//            t_menu[i] = t_menu_2[i];
+//        } 
+//        i = i + 1;
+//        for(;i < t_menu_size ; i++){
+//            t_menu[i] = '\0';
+//        }
     }
     else{//Menu n°1 by default.
         strcpy(t_menu,t_menu_1);
