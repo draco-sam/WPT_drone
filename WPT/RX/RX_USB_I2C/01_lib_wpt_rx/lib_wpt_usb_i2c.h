@@ -15,7 +15,7 @@
 #include "lib_com/usb/usb_sam_00.h"
 #include "lib_com/i2c/i2c_sam_01.h"
 
-void get_menu(unsigned short menu_number, char *t_menu, unsigned short table_size);
+void get_menu(unsigned short menu_number, char *t_menu, unsigned short t_menu_size);
 
 
 #endif	/* LIB_WPT_USB_I2C_H */

@@ -425,15 +425,10 @@ int main(void)
     return 1;
 }
 
-void get_menu(unsigned short menu_number, char *t_menu, unsigned short table_size){
+void get_menu(unsigned short menu_number, char *t_menu, unsigned short t_menu_size){
 /*
- */
-    unsigned short  size_t_sam      = 0;
-    char            t_test_sam[255] = "";
-    
-    size_t_sam = sizeof(t_menu);
-    
-    empty_table(t_menu,table_size);
+ */ 
+    empty_table(t_menu,t_menu_size);
     
     
     char t_menu_1[] =   "\n-----------------------------------\r\n"
@@ -460,6 +455,16 @@ void get_menu(unsigned short menu_number, char *t_menu, unsigned short table_siz
     }
     else if(menu_number == 2){
         strcpy(t_menu,t_menu_2);
+        
+//        //A tester pour amélioration problème double char dans main.
+//        unsigned short i;
+//        for(i=0; i < sizeof(t_menu_2 ) ; i++){
+//            t_menu[i] = t_menu_2[i];
+//        } 
+//        i = i + 1;
+//        for(;i < t_menu_size ; i++){
+//            t_menu[i] = '\0';
+//        }
     }
     else{//Menu n°1 by default.
         strcpy(t_menu,t_menu_1);
