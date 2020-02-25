@@ -42,7 +42,8 @@
     TERMS.
 */
 
-#include "xc.h"
+//#include "xc.h"
+#include "../PIC24FJ128GC006.h"
 #include "stdint.h"
 
 #ifndef SYSTEM_H

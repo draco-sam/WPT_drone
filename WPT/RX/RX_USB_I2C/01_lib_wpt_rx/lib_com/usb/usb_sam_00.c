@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : usb_sam_00.c
- * Date             : 24/02/2020.   
+ * Date             : 25/02/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -13,20 +13,6 @@
 #define led_blue        LATEbits.LATE7
 #define on              0
 #define off             1
-
-void get_menu(char *data_menu){
-/*
- * 
- */
-    char data[]     = "\n\nMain Menu :\r\n----------\r\n"
-    "1 : Vbatttttttt \r\n"
-    "2 : Ibat \r\n"
-    "3 : Vbat ; Ibat ; T \r\n"
-    "----------\r\n";
-    
-    strcpy(data_menu,data); 
-}
-//__________________________________________________________________________________________________
 
 void get_data_i2c(char *t_data){
 /*

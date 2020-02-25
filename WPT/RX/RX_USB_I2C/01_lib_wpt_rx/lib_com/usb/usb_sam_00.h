@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : usb_sam_00.h
- * Date             : 20/02/2020.   
+ * Date             : 25/02/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -11,7 +11,6 @@
 //#include "usb_device_cdc.h"
 #include "usb_mplab/usb_device_cdc.h"
 
-void get_menu(char *data);
 void get_data_i2c(char *t_data);
 unsigned short ascii_to_integer(unsigned char *table);
 //void float_to_ascii(float data_float,char *t_table);

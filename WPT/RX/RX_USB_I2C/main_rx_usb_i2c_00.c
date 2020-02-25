@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : main_rx_usb_i2c_00.c
- * Date             : 24/02/2020.   
+ * Date             : 25/02/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -30,6 +30,7 @@ int main(void)
     char                t_data_i2c[64]      = "";//!!! Changer taille car 16 bits max !!!
     char                t_data_usb_com[250] = "";
     char                t_data[4]           = "";
+    char                t_menu[255]         = "";
     /***********************************************************************************/
     
     /************************************************************************************
@@ -43,6 +44,15 @@ int main(void)
     I2c_tm_analog       s_i2c_tm_analog;//Structure for I2C TM.
     /***********************************************************************************/
     
+    /************************************************************************************
+     * Main variables declaration :
+     * ----------------------------------- 
+     */
+    //According to the value of the flag,we send minimum or maximum
+    //TM informations over the USB virtual COM bus.
+    //"0" = terminal COM, "1" = Qt interface.
+    unsigned short      f_type_interface        = 0;
+    /***********************************************************************************/
     
     // initialize the device
     SYSTEM_Initialize();
@@ -51,13 +61,20 @@ int main(void)
     led_green   = off;
     led_blue    = off;
     
+//    char            t_sam[255]  = "";
+//    unsigned short  taille_t    = 0;
+//    taille_t = sizeof(t_sam);
+//    get_menu(1,t_sam,sizeof(t_sam));
+//    Nop();
+//    get_menu(2,t_sam,sizeof(t_sam));
+//    Nop();
 
     
     //Plugger l'USB pour démarrer le code.
     while(USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended()== true){};
     led_red     = on;
     
-    //write_usb_com("PIC24FJ128GC006 USB virtual COM4 \r\n",&f_data_sending);
+    write_usb_com("PIC24FJ128GC006 USB virtual COM4 \r\n",&f_data_sending);
 
     while (1)
     {   
@@ -71,24 +88,22 @@ int main(void)
         //Reset variable :
         i2c_tm_analog_data  = 0;
         
+        //!!! For debug !!!
+        flag_i2c_data_ready = 1;
         
         if(menu_number == 0){
-            //!!! Trop long pour "strcpy()", pq ???
-            char test_menu[] =      "\n-------------------------\r\n"
-                                    "Menu : \r\n"
-                                    "-----\r\n"
-                                    "1  : Vin \r\n"
-                                    "2  : Die T \r\n"
-                                    "3  : Vbat \r\n"
-                                    "4  : Ibat \r\n"
-                                    "5  : State \r\n"
-                                    "6  : TM_CHARGE_STATUS \r\n"
-                                    "7  : TM_SYSTEM_STATUS \n\r"
-                                    "8  : TM_I/V_CHARGE_DAC \r\n"
-                                    "11 : Suspend battery \r\n"
-                                    "12 : Restart charge \r\n"
-                                    "-------------------------\r\n";
-            write_usb_com(test_menu,&f_data_sending);
+            if(f_data_sending == 0 && f_data_sending_1 == 0){
+                get_menu(1,t_menu,sizeof(t_menu));
+                write_usb_com(t_menu,&f_data_sending_1);
+            }
+            else if(f_data_sending_1 == 1){
+                char t_menu_2[255] = "";//Améliorer le code pour enlever variable !!!
+                get_menu(2,t_menu_2,sizeof(t_menu_2));
+                write_usb_com(t_menu_2,&f_data_sending);
+                if(f_data_sending == 1){
+                    f_data_sending_1    = 0;//Reset flag.
+                }
+            }
         }
         else if(menu_number == 1){
             //get_i2c_tm_and_send_to_usb(TM_VIN,"1 : Vin =","V",&f_data_sending);
@@ -96,7 +111,7 @@ int main(void)
             led_red     = off;
             led_green   = on;
             led_blue    = off;
-            write_usb_com("1 : Sam test. \r\n",&f_data_sending);
+            //write_usb_com("1 : Sam test. \r\n",&f_data_sending);
             
             if(flag_i2c_data_ready == 0){
                 i2c_master_start_read_tm(TM_VIN,&flag_i2c_data_ready);
@@ -104,8 +119,11 @@ int main(void)
             else if(flag_i2c_data_ready == 1){//Data is ready.
                 led_red     = off;
                 led_green   = on;
-                led_blue    = off;
+                led_blue    = on;
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_VIN);
+                
+                //!!! For debug !!!
+                s_i2c_tm_analog.data_1 = 3.456;
                 
                 float_to_ascii(s_i2c_tm_analog.data_1,t_data_i2c);
                 
@@ -114,7 +132,12 @@ int main(void)
                 strcat(t_data_usb_com,t_data_i2c);
                 strcat(t_data_usb_com," V \r\n");
             
-                write_usb_com(t_data_usb_com,&f_data_sending);
+                if(f_type_interface == 0){//Terminal COM.
+                    write_usb_com(t_data_usb_com,&f_data_sending);
+                }
+                else{//Qt interface.
+                    write_usb_com(t_data_i2c,&f_data_sending);
+                }
                 
                 if(f_data_sending == 1){//"1" if USB ready.
                     flag_i2c_data_ready = 0;//Reset flag after USB ready to send.
@@ -375,6 +398,14 @@ int main(void)
             unsigned short flag_i2c_end_writing = 1;
             i2c_master_start_write_data(TX_CONFIG_BITS,0x0000,&flag_i2c_end_writing);
         }
+        else if(menu_number == 20){//Choose Qt interface.
+            f_type_interface = 1;
+            write_usb_com("Qt interface ON \r\n",&f_data_sending);
+        }
+        else if(menu_number == 21){//Choose terminal COM interface.
+            f_type_interface = 0;
+            write_usb_com("Terminal COM interface ON \r\n",&f_data_sending);
+        }
         
         
         
@@ -393,6 +424,49 @@ int main(void)
 
     return 1;
 }
+
+void get_menu(unsigned short menu_number, char *t_menu, unsigned short table_size){
+/*
+ */
+    unsigned short  size_t_sam      = 0;
+    char            t_test_sam[255] = "";
+    
+    size_t_sam = sizeof(t_menu);
+    
+    empty_table(t_menu,table_size);
+    
+    
+    char t_menu_1[] =   "\n-----------------------------------\r\n"
+                        "Menu : \r\n"
+                        "-----\r\n"
+                        "1  : Vin \r\n"
+                        "2  : Die T \r\n"
+                        "3  : Vbat \r\n"
+                        "4  : Ibat \r\n"
+                        "5  : State \r\n"
+                        "6  : TM_CHARGE_STATUS \r\n"
+                        "7  : TM_SYSTEM_STATUS \r\n"
+                        "8  : TM_I/V_CHARGE_DAC \r\n";
+    
+    char t_menu_2[] =   "11 : Suspend battery \r\n"
+                        "12 : Restart charge \r\n"
+                        "20 : Qt interface ON \r\n"
+                        "21 : Terminal COM interface ON \r\n"
+                        "-----------------------------------\r\n";
+    
+    
+    if(menu_number == 1){
+        strcpy(t_menu,t_menu_1);
+    }
+    else if(menu_number == 2){
+        strcpy(t_menu,t_menu_2);
+    }
+    else{//Menu n°1 by default.
+        strcpy(t_menu,t_menu_1);
+    }
+}
+//__________________________________________________________________________________________________
+
 /**
  End of File
 */
