@@ -70,35 +70,53 @@ int main(int argc, char *argv[])
 //    ba[4] = '\r';
     //pic_usb_com.write(ba);
 
+    //ENTER and read double menu :
     pic_usb_com.write("\r\n");
-    while(pic_usb_com.waitForReadyRead() != true){};
+    pic_usb_com.waitForReadyRead();
     qDebug().noquote()<<"readALL 1 : "<<endl<<pic_usb_com.readAll();
-
-    pic_usb_com.write("\r\n 1");
-    while(pic_usb_com.waitForReadyRead() != true){};
-    qDebug().noquote()<<endl<<"readAll 2 : "<<endl<<pic_usb_com.readAll()<<endl;
-    pic_usb_com.write("\r\n");
-    while(pic_usb_com.waitForReadyRead() != true){};
-    qDebug().noquote()<<"readAll 3 : "<<endl<<pic_usb_com.readAll()<<endl;
+    pic_usb_com.waitForReadyRead();
+    qDebug().noquote()<<"readALL 2 : "<<endl<<pic_usb_com.readAll();
 
 
-    /******************************************************
-     * Test en cours :
-     * --------------
-     */
-    QByteArray  test_sam("hello \r\n mister");
-    QString     s_sam = "";
-    for(int i=0 ; i < test_sam.size() ; i++){
-        qDebug()<<i<<" : "<<test_sam[i]<<endl;
-        if(test_sam[i] == '\n'){
-            s_sam = s_sam + '\n';
-        }
-        else if (test_sam[i] != '\r'){
-            s_sam = s_sam + test_sam[i];
-        }
-    }
-    qDebug()<<s_sam<<endl;
-    /*****************************************************/
+    pic_usb_com.write("\r\n1\r\n");
+    pic_usb_com.waitForBytesWritten();
+    pic_usb_com.waitForReadyRead();
+    qDebug().noquote()<<endl<<"readAll 3 : "<<endl<<pic_usb_com.readAll()<<endl;
+    pic_usb_com.write("\r\n1\r\n");
+    pic_usb_com.waitForBytesWritten();
+    pic_usb_com.waitForReadyRead();
+    qDebug().noquote()<<endl<<"readAll 4 : "<<endl<<pic_usb_com.readAll()<<endl;
+//    pic_usb_com.write("1");
+//    pic_usb_com.waitForBytesWritten();
+//    pic_usb_com.write("\r\n");
+//    pic_usb_com.waitForReadyRead();
+//    qDebug().noquote()<<"readAll 4 : "<<endl<<pic_usb_com.readAll()<<endl;
+
+//    pic_usb_com.write("1");
+//    while(pic_usb_com.waitForReadyRead() != true){};
+//    qDebug().noquote()<<endl<<"readAll 4 : "<<endl<<pic_usb_com.readAll()<<endl;
+//    pic_usb_com.write("\r\n");
+//    while(pic_usb_com.waitForReadyRead() != true){};
+//    qDebug().noquote()<<"readAll 5 : "<<endl<<pic_usb_com.readAll()<<endl;
+
+
+//    /******************************************************
+//     * Test en cours :
+//     * --------------
+//     */
+//    QByteArray  test_sam("hello \r\n mister");
+//    QString     s_sam = "";
+//    for(int i=0 ; i < test_sam.size() ; i++){
+//        qDebug()<<i<<" : "<<test_sam[i]<<endl;
+//        if(test_sam[i] == '\n'){
+//            s_sam = s_sam + '\n';
+//        }
+//        else if (test_sam[i] != '\r'){
+//            s_sam = s_sam + test_sam[i];
+//        }
+//    }
+//    qDebug()<<s_sam<<endl;
+//    /*****************************************************/
 
 
     qDebug()<<endl<<"hello";
