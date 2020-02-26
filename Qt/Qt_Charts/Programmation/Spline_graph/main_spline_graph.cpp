@@ -11,37 +11,20 @@
 
 #include <QApplication>
 #include <QtCharts>
+#include <QDebug>
+#include <QTest>
+#include "chart_sam.h"
+
 
 int main(int argc, char *argv[])
 {
     QApplication    app(argc, argv);
 
-    //QSplineSeries automatically calculates spline segment control points
-    //that are needed to properly draw the spline.
-    QSplineSeries   *series     = new QSplineSeries();
-
-    series->setName("spline");
-
-    //Add data points to the series :
-    series->append(0, 6);
-    series->append(2, -4);
-    series->append(3, 8);
-    series->append(7, 4);
-    series->append(10, 5);
-
-    //Other way to put datas.
-    //Using floating point numbers for accuracy
-    //*series << QPointF(11, 1) << QPointF(13, 3) << QPointF(17, 6) << QPointF(18, 3) << QPointF(20, 2);
-
-    //Create a QChart object and add the data series to it.
-    //Title and the values range on the y-axis.
-    QChart *chart = new QChart();
+    Chart *chart = new Chart;
+    chart->setTitle("Vbat and Ibat charge curve (dynamic chart)");
     chart->legend()->hide();
-    chart->addSeries(series);
-    chart->setTitle("LiPo battery charching curve");
-    chart->createDefaultAxes();
-    chart->axes(Qt::Vertical).first()->setRange(-10,10);//setRange(min,max).
-    chart->axes(Qt::Horizontal).first()->setRange(0,200);
+    chart->setAnimationOptions(QChart::AllAnimations);
+    //chart->setAnimationOptions(QChart::SeriesAnimations);
 
     //Create a QChartView object with QChart as a parameter.
     //With this way, we don't need to create a QGraphicsView scene ourselves.
@@ -57,6 +40,8 @@ int main(int argc, char *argv[])
 
 
 
-
     return app.exec();
-}
+
+}//End of main.
+//__________________________________________________________________________________________________
+
