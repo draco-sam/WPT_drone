@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : main_rx_usb_i2c_00.c
- * Date             : 25/02/2020.   
+ * Date             : 26/02/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -14,6 +14,14 @@
  */
 int main(void)
 {
+    //*********************************
+    //!!! For debug !!!
+    //*****************
+    I2C_x_y_data s_x_y_data;
+    s_x_y_data.x = 3.0;
+    s_x_y_data.y = 0.0;
+    //*********************************
+    
     #define led_red         LATGbits.LATG7
     #define led_green       LATGbits.LATG6
     #define led_blue        LATEbits.LATE7
@@ -28,6 +36,7 @@ int main(void)
     unsigned short      f_data_sending      = 0;//Flag for write USB COM and main loop.
     unsigned short      f_data_sending_1    = 0;
     char                t_data_i2c[64]      = "";//!!! Changer taille car 16 bits max !!!
+    char                t_i2c_time[6]       = "";
     char                t_data_usb_com[250] = "";
     char                t_data[4]           = "";
     char                t_menu[255]         = "";
@@ -66,6 +75,8 @@ int main(void)
     while(USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended()== true){};
     led_red     = on;
     
+    
+    
     write_usb_com("PIC24FJ128GC006 USB virtual COM4 \r\n",&f_data_sending);
 
     while (1)
@@ -75,6 +86,7 @@ int main(void)
         CDCTxService();
         
         empty_table(t_data_i2c,sizeof(t_data_i2c));
+        empty_table(t_i2c_time,sizeof(t_i2c_time));
         empty_table(t_data_usb_com,sizeof(t_data_usb_com));
         
         //Reset variable :
@@ -106,10 +118,16 @@ int main(void)
             else if(flag_i2c_data_ready == 1){//Data is ready.
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_VIN);
                 
+                //********************************************************
                 //!!! For debug !!!
-                s_i2c_tm_analog.data_1 = 29.876;
+                //-----------------
+                random_i2c_data(TM_VBAT,&s_x_y_data);
+                s_i2c_tm_analog.data_1 = s_x_y_data.x;
+                float_to_ascii(s_x_y_data.y,t_i2c_time);
+                //********************************************************
+                
                 float_to_ascii(s_i2c_tm_analog.data_1,t_data_i2c);
-            
+                
                 if(f_type_interface == 0){//Terminal COM.
                     //Prepare data COM with string copy and concatenation :            
                     strcpy(t_data_usb_com,"1 : Vin = ");
@@ -118,8 +136,11 @@ int main(void)
                     write_usb_com(t_data_usb_com,&f_data_sending);
                 }
                 else{//Qt interface.
-                    strcat(t_data_i2c,"\r\n");
-                    write_usb_com(t_data_i2c,&f_data_sending);
+                    strcpy(t_data_usb_com,t_data_i2c);
+                    strcat(t_data_usb_com,";");
+                    strcat(t_data_usb_com,t_i2c_time);
+                    strcat(t_data_usb_com,"\r\n");
+                    write_usb_com(t_data_usb_com,&f_data_sending);
                 }
                 
                 if(f_data_sending == 1){//"1" if USB ready.
@@ -465,6 +486,35 @@ void get_menu(unsigned short menu_number, char *t_menu, unsigned short t_menu_si
     }
     else{//Menu n°1 by default.
         strcpy(t_menu,t_menu_1);
+    }
+}
+//__________________________________________________________________________________________________
+
+void random_i2c_data(unsigned short type_data,I2C_x_y_data *s_i2c_x_y){
+/*
+ */ 
+    static float coeff = 0.1;
+    
+    if(type_data == TM_VBAT){
+        if(s_i2c_x_y->x >= 4.5){
+            coeff = -0.1;
+        }
+        else if(s_i2c_x_y->x <= 2.5){
+            coeff = 0.1;
+        }
+        s_i2c_x_y->x = s_i2c_x_y->x + coeff;
+    }
+    else if(type_data == TM_IBAT){
+        
+    }
+    else{
+       s_i2c_x_y->x = 0.0;
+       s_i2c_x_y->y = 0.0;
+    }
+    
+    s_i2c_x_y->y = s_i2c_x_y->y + 1;//+1s.
+    if(s_i2c_x_y->y > 3600){
+        s_i2c_x_y->y = 0;
     }
 }
 //__________________________________________________________________________________________________
