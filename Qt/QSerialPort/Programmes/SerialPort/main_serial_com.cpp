@@ -1,6 +1,6 @@
 /***************************************************************************************************
  * File name        : main_serial_com.cpp
- * Date             : 22/02/2020
+ * Date             : 27/02/2020
  * Author           : Samuel LORENZINO.
  *
  * Links            : https://doc.qt.io/qt-5/qserialport.html
@@ -83,32 +83,43 @@ int main(int argc, char *argv[])
     pic_usb_com.waitForReadyRead();
     qDebug().noquote()<<pic_usb_com.readAll();
 
+    //Send TM request to the PIC :
     pic_usb_com.write("\r\n1\r\n");
     pic_usb_com.waitForBytesWritten();
     pic_usb_com.waitForReadyRead();
+
+    QString         tm_i2c_str          = "";
+    QString         tm_v_str            = "";
+    QString         tm_t                = "";
+    unsigned short  f_comma             = 0;
+    float           tm_i2c_float        = 0.0;
+
+    //Read TM in the COM buffer :
+    tm_i2c_str = pic_usb_com.readAll();
+    qDebug()<<"tm_i2c_str = "<<tm_i2c_str<<"sizeof = "<<tm_i2c_str.size();
+    qDebug()<<tm_i2c_str[0]<<tm_i2c_str[1]<<tm_i2c_str[2]<<tm_i2c_str[3];
+
+    //Save string vbat (without time) :
+    for(int i=0 ; i < tm_i2c_str.size() ; i++){
+        if(tm_i2c_str[i] == ';'){
+            f_comma = 1;//Rise flag.
+        }
+        if(f_comma == 0){
+            tm_v_str[i] = tm_i2c_str[i];
+        }
+        qDebug()<<"i = "<<i<<" : tm_i2c_str[i] = "<<tm_i2c_str[i];
+    }
+    tm_v_str = "-3.100";
+    tm_i2c_float = tm_v_str.toFloat();
+    qDebug()<<"tm_v_str = "<<tm_v_str<<" ; tm_i2c_float = "<<tm_i2c_float;
+
     pic_usb_com.write("\r\n1\r\n");
     pic_usb_com.waitForBytesWritten();
     pic_usb_com.waitForReadyRead();
     qDebug().noquote()<<pic_usb_com.readAll();
 
 
-//    /******************************************************
-//     * Test en cours :
-//     * --------------
-//     */
-//    QByteArray  test_sam("hello \r\n mister");
-//    QString     s_sam = "";
-//    for(int i=0 ; i < test_sam.size() ; i++){
-//        qDebug()<<i<<" : "<<test_sam[i]<<endl;
-//        if(test_sam[i] == '\n'){
-//            s_sam = s_sam + '\n';
-//        }
-//        else if (test_sam[i] != '\r'){
-//            s_sam = s_sam + test_sam[i];
-//        }
-//    }
-//    qDebug()<<s_sam<<endl;
-//    /*****************************************************/
+
 
 
     qDebug()<<endl<<"hello";

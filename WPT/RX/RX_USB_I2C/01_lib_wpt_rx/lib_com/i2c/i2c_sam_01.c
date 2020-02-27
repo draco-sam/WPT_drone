@@ -1,6 +1,6 @@
 /* 
  * File             : i2c_sam_01.c
- * Date             : 20/02/2020.   
+ * Date             : 27/02/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -539,7 +539,7 @@ void float_to_ascii(float data_float,char *t_table){
         
         t_decimal[1]    = table_ascii[data_1];//7.
         
-        t_decimal[0]    = ',';
+        t_decimal[0]    = '.';
     }
     
     strcat(t_table,t_integer);

@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : main_rx_usb_i2c_00.c
- * Date             : 26/02/2020.   
+ * Date             : 27/02/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -417,14 +417,16 @@ int main(void)
             i2c_master_start_write_data(TX_CONFIG_BITS,0x0000,&flag_i2c_end_writing);
         }
         else if(menu_number == 20){//Choose Qt interface.
-            f_type_interface = 1;
-            write_usb_com("Qt interface ON \r\n",&f_data_sending);
+            if(f_type_interface == 0){
+                f_type_interface = 1;
+                strcpy(t_data_usb_com,"Qt interface ON \r\n");
+            }
+            else{
+                f_type_interface = 0;
+                strcpy(t_data_usb_com,"Qt interface OFF \r\n");
+            }
+            write_usb_com(t_data_usb_com,&f_data_sending);
         }
-        else if(menu_number == 21){//Choose terminal COM interface.
-            f_type_interface = 0;
-            write_usb_com("Terminal COM interface ON \r\n",&f_data_sending);
-        }
-        
         
         
         /************************************************************
@@ -463,8 +465,7 @@ void get_menu(unsigned short menu_number, char *t_menu, unsigned short t_menu_si
     
     char t_menu_2[] =   "11 : Suspend battery \r\n"
                         "12 : Restart charge \r\n"
-                        "20 : Qt interface ON \r\n"
-                        "21 : Terminal COM interface ON \r\n"
+                        "20 : Qt interface ON/OFF \r\n"
                         "-----------------------------------\r\n";
     
     
