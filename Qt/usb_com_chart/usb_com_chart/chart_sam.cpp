@@ -1,4 +1,13 @@
-#include "chart_sam.h"
+/***************************************************************************************************
+ * File name        : Chart_sam.cpp
+ * Date             : 27/02/2020
+ * Author           : Samuel LORENZINO.
+ *
+ * Links            :
+ *
+ * Comments         :
+ **************************************************************************************************/
+#include "Chart_sam.h"
 #include <QtCharts/QAbstractAxis>
 #include <QtCharts/QSplineSeries>
 #include <QtCharts/QValueAxis>
@@ -7,16 +16,13 @@
 
 
 Chart::Chart():
-    m_series(0),
-    m_axis_x(new QValueAxis()),
-    m_axis_y(new QValueAxis()),
-    //m_step(0),
-    m_x(0),
-    m_y(2),
-    m_coeff(1),
-    m_flag_timer(false)
+    m_series(0),m_axis_x(new QValueAxis()),m_axis_y(new QValueAxis()),
+    m_x(0),m_y(2),m_coeff(1),
+    m_flag_timer(false),m_usb_com(0)
 {
-    QObject::connect(&m_timer, &QTimer::timeout, this, &Chart::toggle_f_timer);
+    m_usb_com = new UsbVirtualCom();
+
+    QObject::connect(&m_timer, &QTimer::timeout, this, &Chart::add_data);
     m_timer.setInterval(1500);//[ms].
 
     //QSplineSeries automatically calculates spline segment control points
@@ -44,7 +50,8 @@ Chart::Chart():
 
 Chart::~Chart()
 {
-
+    delete m_usb_com;
+    qDebug()<<"!!! delete m_usb_com !!!";
 }
 //__________________________________________________________________________________________________
 
@@ -85,19 +92,6 @@ void Chart::get_data_xy(float *x,float *y)
 }
 //__________________________________________________________________________________________________
 
-void Chart::toggle_f_timer(){
-    m_flag_timer = !m_flag_timer;
 
-    add_data();
-}
-//__________________________________________________________________________________________________
-
-void Chart::get_f_timer(bool *flag){
-    *flag = m_flag_timer;
-}
-void Chart::set_f_timer(bool flag){
-    m_flag_timer = flag;
-}
-//__________________________________________________________________________________________________
 
 

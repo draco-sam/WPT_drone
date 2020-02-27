@@ -1,6 +1,6 @@
 SOURCES += \
+    Chart_sam.cpp \
     UsbVirtualCom.cpp \
-    chart_sam.cpp \
     main_usb_com_chart.cpp
 
 QT+=widgets
@@ -11,5 +11,5 @@ QT += charts
 QT += testlib
 
 HEADERS += \
-    UsbVirtualCom.h \
-    chart_sam.h
+    Chart_sam.h \
+    UsbVirtualCom.h

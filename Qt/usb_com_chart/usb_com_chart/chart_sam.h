@@ -1,5 +1,15 @@
+/***************************************************************************************************
+ * File name        : Chart_sam.h
+ * Date             : 27/02/2020
+ * Author           : Samuel LORENZINO.
+ *
+ * Links            :
+ *
+ * Comments         :
+ **************************************************************************************************/
 #include <QtCharts/QChart>
 #include <QtCore/QTimer>
+#include "UsbVirtualCom.h"
 
 QT_CHARTS_BEGIN_NAMESPACE
 class QSplineSeries;
@@ -18,12 +28,10 @@ public:
     void set_data_xy(float x,float y);
     void get_data_xy(float *x,float *y);
     void add_data();
-    void get_f_timer(bool *flag);
-    void set_f_timer(bool flag);
 
 public slots:
     //void add_data();
-    void toggle_f_timer();
+    //void toggle_f_timer();
 
 private:
     QTimer          m_timer;
@@ -36,4 +44,5 @@ private:
     qreal           m_y;
     short           m_coeff;
     bool            m_flag_timer;
+    UsbVirtualCom   *m_usb_com;
 };

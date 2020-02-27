@@ -12,7 +12,7 @@
 #include <QList>
 #include <QtCharts>
 #include <iostream>
-#include "chart_sam.h"
+#include "Chart_sam.h"
 #include "UsbVirtualCom.h"
 
 using namespace std;//Utilisation de l'espace de noms de la bibliothèque standard.
@@ -85,7 +85,6 @@ int main(int argc, char *argv[])
     QMainWindow window;
     window.setCentralWidget(chartView);
     window.resize(400, 300);
-    //window.setWindowModality(Qt::WindowModal);
     window.show();
 
 

@@ -1,3 +1,12 @@
+/***************************************************************************************************
+ * File name        : UsbVirtualCom.h
+ * Date             : 27/02/2020
+ * Author           : Samuel LORENZINO.
+ *
+ * Links            :
+ *
+ * Comments         :
+ **************************************************************************************************/
 #ifndef USBVIRTUALCOM_H
 #define USBVIRTUALCOM_H
 
@@ -7,6 +16,7 @@
 #include <QDebug>
 
 class UsbVirtualCom
+//class UsbVirtualCom
 {
     public :
     UsbVirtualCom();
