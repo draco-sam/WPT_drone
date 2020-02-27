@@ -15,9 +15,15 @@ class Chart: public QChart
 public:
     Chart();
     virtual ~Chart();
+    void set_data_xy(float x,float y);
+    void get_data_xy(float *x,float *y);
+    void add_data();
+    void get_f_timer(bool *flag);
+    void set_f_timer(bool flag);
 
 public slots:
-    void add_data();
+    //void add_data();
+    void toggle_f_timer();
 
 private:
     QTimer          m_timer;
@@ -29,4 +35,5 @@ private:
     qreal           m_x;
     qreal           m_y;
     short           m_coeff;
+    bool            m_flag_timer;
 };
