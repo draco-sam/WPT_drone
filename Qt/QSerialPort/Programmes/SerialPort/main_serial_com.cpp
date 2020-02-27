@@ -17,6 +17,8 @@
 
 using namespace std;//Utilisation de l'espace de noms de la bibliothèque standard.
 
+void tm_strings_to_floats(QString tm_i2c_str,float *tm_data_float,float *tm_time_float);
+
 int main(int argc, char *argv[])
 {
     /****************************************************************
@@ -60,16 +62,6 @@ int main(int argc, char *argv[])
     //while(pic_usb_com.isDataTerminalReady() != true){};
 
 
-
-//    QByteArray ba;
-//    ba.resize(1);
-//    ba[0] = '1';
-//    ba[1] = '\n';
-//    ba[2] = '\r';
-//    ba[3] = '\n';
-//    ba[4] = '\r';
-    //pic_usb_com.write(ba);
-
     //ENTER and read double menu :
     pic_usb_com.write("\r\n");
     pic_usb_com.waitForBytesWritten();
@@ -83,49 +75,26 @@ int main(int argc, char *argv[])
     pic_usb_com.waitForReadyRead();
     qDebug().noquote()<<pic_usb_com.readAll();
 
+
+    QString         tm_i2c_str      = "";
+    float           tm_v_float      = 0.0;
+    float           tm_time_float   = 0.0;
+
     //Send TM request to the PIC :
     pic_usb_com.write("\r\n1\r\n");
     pic_usb_com.waitForBytesWritten();
     pic_usb_com.waitForReadyRead();
-
-    QString         tm_i2c_str          = "";
-    QString         tm_v_str            = "";
-    QString         tm_time_str         = "";
-    unsigned short  f_comma             = 0;
-    float           tm_v_float          = 0.0;
-    float           tm_time_float       = 0.0;
-    int             i_float             = 0;
-
-    //Read TM in the COM buffer :
+    //Read TM in the COM buffer and convert it into 2 floats :
     tm_i2c_str = pic_usb_com.readAll();
-    qDebug()<<"tm_i2c_str = "<<tm_i2c_str<<"sizeof = "<<tm_i2c_str.size();
-    qDebug()<<tm_i2c_str[0]<<tm_i2c_str[1]<<tm_i2c_str[2]<<tm_i2c_str[3];
+    tm_strings_to_floats(tm_i2c_str,&tm_v_float,&tm_time_float);
 
-    //Save string vbat (without time) :
-    for(int i_int=0 ; i_int < tm_i2c_str.size() ; i_int++){
-        if(tm_i2c_str[i_int] == ';'){
-            f_comma = 1;//Rise flag.
-        }
-        if(f_comma == 0){
-            tm_v_str[i_int] = tm_i2c_str[i_int];
-        }
-        else if(f_comma == 1){
-            if(tm_i2c_str[i_int] != ';' && tm_i2c_str[i_int] != '\xd'&& tm_i2c_str[i_int] != '\xa'){
-                tm_time_str[i_float] = tm_i2c_str[i_int];
-                i_float++;
-            }
-        }
-    }
-    tm_v_float      = tm_v_str.toFloat();
-    tm_time_float   = tm_time_str.toFloat();
-    qDebug()<<"tm_v_str = "<<tm_v_str<<" ; tm_v_float = "<<tm_v_float
-           <<"tm_time_str  = "<<tm_time_str<<" ; tm_time_float = "<<tm_time_float;
-
+    //Send TM request to the PIC :
     pic_usb_com.write("\r\n1\r\n");
     pic_usb_com.waitForBytesWritten();
     pic_usb_com.waitForReadyRead();
-    qDebug().noquote()<<pic_usb_com.readAll();
-
+    //Read TM in the COM buffer and convert it into 2 floats :
+    tm_i2c_str = pic_usb_com.readAll();
+    tm_strings_to_floats(tm_i2c_str,&tm_v_float,&tm_time_float);
 
 
 
@@ -137,4 +106,43 @@ int main(int argc, char *argv[])
     pic_usb_com.close();
 
     return app.exec();
+}//End of main.
+//__________________________________________________________________________________________________
+
+void tm_strings_to_floats(QString tm_i2c_str,float *tm_data_float,float *tm_time_float){
+/* Convert a I2C TM on QString format into 2 floats.
+ */
+    QString         tm_v_str            = "";
+    QString         tm_time_str         = "";
+    unsigned short  f_comma             = 0;
+    int             i_float             = 0;
+
+    for(int i_int=0 ; i_int < tm_i2c_str.size() ; i_int++){
+        if(tm_i2c_str[i_int] == ';'){
+            f_comma = 1;//Rise flag.
+        }
+        if(f_comma == 0){
+            //tm_v_str[i_int] = tm_i2c_str[i_int];
+            tm_v_str.append(tm_i2c_str[i_int]);
+        }
+        else if(f_comma == 1){
+            if(tm_i2c_str[i_int] != ';' && tm_i2c_str[i_int] != '\xd'&& tm_i2c_str[i_int] != '\xa'){
+                //tm_time_str[i_float] = tm_i2c_str[i_int];
+                tm_time_str.append(tm_i2c_str[i_int]);
+                i_float++;
+            }
+        }
+    }
+    *tm_data_float      = tm_v_str.toFloat();
+    *tm_time_float   = tm_time_str.toFloat();
+    qDebug()<<"tm_v_str = "<<tm_v_str<<" ; *tm_data_float = "<<*tm_data_float<<endl
+           <<"tm_time_str = "<<tm_time_str<<" ; *tm_time_float = "<<*tm_time_float<<endl;
 }
+//__________________________________________________________________________________________________
+
+
+
+
+
+
+
