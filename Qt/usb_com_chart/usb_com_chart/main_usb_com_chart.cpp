@@ -22,7 +22,6 @@ void tm_strings_to_floats(QString tm_i2c_str,float *tm_data_float,float *tm_time
 int main(int argc, char *argv[])
 {
     QApplication    app(argc, argv);
-    UsbVirtualCom   usbVirtualCom;
 
 
 //    //ENTER and read double menu :
@@ -109,36 +108,7 @@ int main(int argc, char *argv[])
 }//End of main.
 //__________________________________________________________________________________________________
 
-void tm_strings_to_floats(QString tm_i2c_str,float *tm_data_float,float *tm_time_float){
-/* Convert a I2C TM on QString format into 2 floats.
- */
-    QString         tm_v_str            = "";
-    QString         tm_time_str         = "";
-    unsigned short  f_comma             = 0;
-    int             i_float             = 0;
 
-    for(int i_int=0 ; i_int < tm_i2c_str.size() ; i_int++){
-        if(tm_i2c_str[i_int] == ';'){
-            f_comma = 1;//Rise flag.
-        }
-        if(f_comma == 0){
-            //tm_v_str[i_int] = tm_i2c_str[i_int];
-            tm_v_str.append(tm_i2c_str[i_int]);
-        }
-        else if(f_comma == 1){
-            if(tm_i2c_str[i_int] != ';' && tm_i2c_str[i_int] != '\xd'&& tm_i2c_str[i_int] != '\xa'){
-                //tm_time_str[i_float] = tm_i2c_str[i_int];
-                tm_time_str.append(tm_i2c_str[i_int]);
-                i_float++;
-            }
-        }
-    }
-    *tm_data_float      = tm_v_str.toFloat();
-    *tm_time_float   = tm_time_str.toFloat();
-    qDebug()<<"tm_v_str = "<<tm_v_str<<" ; *tm_data_float = "<<*tm_data_float<<endl
-           <<"tm_time_str = "<<tm_time_str<<" ; *tm_time_float = "<<*tm_time_float<<endl;
-}
-//__________________________________________________________________________________________________
 
 
 

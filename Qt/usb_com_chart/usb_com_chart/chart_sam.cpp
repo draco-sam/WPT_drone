@@ -57,23 +57,32 @@ Chart::~Chart()
 
 void Chart::add_data()
 {
+    m_usb_com->send_tm_request();
+    m_usb_com->get_tm_i2c_float(&m_x,&m_y);
 
-    m_x = m_x + 5;
-    m_y = m_y + (2 * m_coeff);
-
-    if(m_y <= -10){
-        m_coeff = 1;
-        m_y = m_y + (2 * m_coeff);
-    }
-    else if(m_y >= 10){
-        m_coeff = -1;
-        m_y = m_y + (2 * m_coeff);
-    }
+    //qDebug()<<"add_data : m_x = "<<m_x<<" ; m_y = "<<m_y;
 
     m_series->append(m_x, m_y);
     if (m_x >= 150){
         m_timer.stop();
     }
+
+//    m_x = m_x + 5;
+//    m_y = m_y + (2 * m_coeff);
+
+//    if(m_y <= -10){
+//        m_coeff = 1;
+//        m_y = m_y + (2 * m_coeff);
+//    }
+//    else if(m_y >= 10){
+//        m_coeff = -1;
+//        m_y = m_y + (2 * m_coeff);
+//    }
+
+//    m_series->append(m_x, m_y);
+//    if (m_x >= 150){
+//        m_timer.stop();
+//    }
 
 }
 //__________________________________________________________________________________________________
