@@ -90,9 +90,11 @@ int main(int argc, char *argv[])
 
     QString         tm_i2c_str          = "";
     QString         tm_v_str            = "";
-    QString         tm_t                = "";
+    QString         tm_time_str         = "";
     unsigned short  f_comma             = 0;
-    float           tm_i2c_float        = 0.0;
+    float           tm_v_float          = 0.0;
+    float           tm_time_float       = 0.0;
+    int             i_float             = 0;
 
     //Read TM in the COM buffer :
     tm_i2c_str = pic_usb_com.readAll();
@@ -100,18 +102,24 @@ int main(int argc, char *argv[])
     qDebug()<<tm_i2c_str[0]<<tm_i2c_str[1]<<tm_i2c_str[2]<<tm_i2c_str[3];
 
     //Save string vbat (without time) :
-    for(int i=0 ; i < tm_i2c_str.size() ; i++){
-        if(tm_i2c_str[i] == ';'){
+    for(int i_int=0 ; i_int < tm_i2c_str.size() ; i_int++){
+        if(tm_i2c_str[i_int] == ';'){
             f_comma = 1;//Rise flag.
         }
         if(f_comma == 0){
-            tm_v_str[i] = tm_i2c_str[i];
+            tm_v_str[i_int] = tm_i2c_str[i_int];
         }
-        qDebug()<<"i = "<<i<<" : tm_i2c_str[i] = "<<tm_i2c_str[i];
+        else if(f_comma == 1){
+            if(tm_i2c_str[i_int] != ';' && tm_i2c_str[i_int] != '\xd'&& tm_i2c_str[i_int] != '\xa'){
+                tm_time_str[i_float] = tm_i2c_str[i_int];
+                i_float++;
+            }
+        }
     }
-    tm_v_str = "-3.100";
-    tm_i2c_float = tm_v_str.toFloat();
-    qDebug()<<"tm_v_str = "<<tm_v_str<<" ; tm_i2c_float = "<<tm_i2c_float;
+    tm_v_float      = tm_v_str.toFloat();
+    tm_time_float   = tm_time_str.toFloat();
+    qDebug()<<"tm_v_str = "<<tm_v_str<<" ; tm_v_float = "<<tm_v_float
+           <<"tm_time_str  = "<<tm_time_str<<" ; tm_time_float = "<<tm_time_float;
 
     pic_usb_com.write("\r\n1\r\n");
     pic_usb_com.waitForBytesWritten();
