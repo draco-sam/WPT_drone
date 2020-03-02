@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : main_rx_usb_i2c_00.c
- * Date             : 27/02/2020.   
+ * Date             : 02/03/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -93,7 +93,7 @@ int main(void)
         i2c_tm_analog_data  = 0;
         
         //!!! For debug !!!
-        flag_i2c_data_ready = 1;
+        //flag_i2c_data_ready = 1;
         
         if(menu_number == 0){
             if(f_data_sending == 0 && f_data_sending_1 == 0){
@@ -118,13 +118,13 @@ int main(void)
             else if(flag_i2c_data_ready == 1){//Data is ready.
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_VIN);
                 
-                //********************************************************
-                //!!! For debug !!!
-                //-----------------
-                random_i2c_data(TM_VBAT,&s_x_y_data);
-                s_i2c_tm_analog.data_1 = s_x_y_data.x;
-                float_to_ascii(s_x_y_data.y,t_i2c_time);
-                //********************************************************
+//                //********************************************************
+//                //!!! For debug !!!
+//                //-----------------
+//                random_i2c_data(TM_VBAT,&s_x_y_data);
+//                s_i2c_tm_analog.data_1 = s_x_y_data.x;
+//                float_to_ascii(s_x_y_data.y,t_i2c_time);
+//                //********************************************************
                 
                 float_to_ascii(s_i2c_tm_analog.data_1,t_data_i2c);
                 
@@ -177,7 +177,7 @@ int main(void)
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_VBAT);
                 
                 //!!! For debug !!!
-                s_i2c_tm_analog.data_1 = 3.456;
+                //s_i2c_tm_analog.data_1 = 3.456;
                 float_to_ascii(s_i2c_tm_analog.data_1,t_data_i2c);
                 
                 if(f_type_interface == 0){//Terminal COM.
@@ -205,7 +205,7 @@ int main(void)
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_IBAT);
                 
                 //!!! For debug !!!
-                s_i2c_tm_analog.data_1 = 0.765;
+                //s_i2c_tm_analog.data_1 = 0.765;
                 float_to_ascii(s_i2c_tm_analog.data_1,t_data_i2c);
                 
                 if(f_type_interface == 0){//Terminal COM.
