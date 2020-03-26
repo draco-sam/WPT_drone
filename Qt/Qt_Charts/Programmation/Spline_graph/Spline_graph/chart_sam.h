@@ -21,12 +21,15 @@ public slots:
 
 private:
     QTimer          m_timer;
-    QSplineSeries   *m_series;
+    QSplineSeries   *m_series_v;
+    QSplineSeries   *m_series_i;
     QStringList     m_titles;
     QValueAxis      *m_axis_x;
-    QValueAxis      *m_axis_y;
+    QValueAxis      *m_axis_y_v;
+    QValueAxis      *m_axis_y_i;
     //qreal           m_step;
     qreal           m_x;
-    qreal           m_y;
+    qreal           m_y_vbat;
+    qreal           m_y_ibat;
     short           m_coeff;
 };

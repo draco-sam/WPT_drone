@@ -7,7 +7,7 @@
 *****************************************************************************/
 
 #include <memory>
-#include "../Spline_graph/Spline_graph/chart_sam.h"
+#include "../Spline_graph/chart_sam.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
