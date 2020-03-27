@@ -20,9 +20,8 @@
 Chart::Chart():
     m_series_v(0),m_series_i(0),
     m_axis_x(new QValueAxis()),m_axis_y_v(new QValueAxis()),m_axis_y_i(new QValueAxis()),
-    //m_step(0),
-    m_x(0),m_y_vbat(2),m_y_ibat(0),
-    m_coeff(1)
+    m_x(0),m_y_vbat(2),m_y_ibat(0),m_f_data_ready(false),
+    m_coeff_v(1),m_coeff_i(1)
 {
     QObject::connect(&m_timer, &QTimer::timeout, this, &Chart::add_data);
     m_timer.setInterval(1500);//[ms].
@@ -41,7 +40,7 @@ Chart::Chart():
     pen_red.setWidth(3);
     m_series_v->setPen(pen_red);
     m_series_v->append(m_x, m_y_vbat);
-    addSeries(m_series_v);
+    Chart::addSeries(m_series_v);
 
     //Idem for i series :
     m_series_i = new QSplineSeries(this);
@@ -50,7 +49,7 @@ Chart::Chart():
     pen_green.setWidth(3);
     m_series_i->setPen(pen_green);
     m_series_i->append(m_x, m_y_ibat);
-    addSeries(m_series_i);
+    Chart::addSeries(m_series_i);
 
     //Same colore axis line and series :
     m_axis_y_v->setLinePenColor(m_series_v->pen().color());
@@ -82,37 +81,75 @@ Chart::~Chart()
 }
 //__________________________________________________________________________________________________
 
-void Chart::add_data()
-{
-    m_x = m_x + 5;
-    m_y_vbat = m_y_vbat + (2 * m_coeff);
-    m_y_ibat = m_y_ibat + (1.5 * m_coeff);
+void Chart::get_xy_v_i(qreal *x, qreal *y_v, qreal *y_i){
+    *x      = m_x;
+    *y_v    = m_y_vbat;
+    *y_i    = m_y_ibat;
+}
+//__________________________________________________________________________________________________
 
-    //For vbat :
-    if(m_y_vbat <= -10){
-        m_coeff = 1;
-        m_y_vbat = m_y_vbat + (2 * m_coeff);
-    }
-    else if(m_y_vbat >= 10){
-        m_coeff = -1;
-        m_y_vbat = m_y_vbat + (2 * m_coeff);
-    }
-    //----------------------------------------
+void Chart::set_xy_v_i(qreal x,qreal y_v, qreal y_i){
+    m_x         = x;
+    m_y_vbat    = y_v;
+    m_y_ibat    = y_i;
+}
+//__________________________________________________________________________________________________
 
-    //For ibat :
-    if(m_y_vbat <= -10){
-        m_coeff = 1;
-        m_y_vbat = m_y_vbat + (1.5 * m_coeff);
-    }
-    else if(m_y_vbat >= 10){
-        m_coeff = -1;
-        m_y_vbat = m_y_vbat + (1.5 * m_coeff);
-    }
-    //-----------------------------------------
+void Chart::get_series(QSplineSeries *series_v,QSplineSeries *series_i){
+    series_v = m_series_v;
+    series_i = m_series_i;
 
-    m_series_v->append(m_x, m_y_vbat);
-    m_series_i->append(m_x, m_y_ibat);
+    qDebug()<<"series_v = "<<series_v;
+
+    qreal x = 20,y=2;
+    //m_series_v->append(x,y);
+    //series_v->append(x,y);
+    series_i->append((x-5),(y+5));
+}
+//__________________________________________________________________________________________________
+
+void Chart::add_data(){
+
+//    m_x = m_x + 5;
+//    m_y_vbat = m_y_vbat + (2 * m_coeff_v);
+//    m_y_ibat = m_y_ibat + (1.5 * m_coeff_i);
+
+//    //For vbat :
+//    if(m_y_vbat <= -10){
+//        m_coeff_v = 1;
+//        m_y_vbat = m_y_vbat + (2 * m_coeff_v);
+//    }
+//    else if(m_y_vbat >= 10){
+//        m_coeff_v = -1;
+//        m_y_vbat = m_y_vbat + (2 * m_coeff_v);
+//    }
+//    //----------------------------------------
+
+//    //For ibat :
+//    if(m_y_vbat <= -10){
+//        m_coeff_i = 1;
+//        m_y_vbat = m_y_vbat + (1.5 * m_coeff_i);
+//    }
+//    else if(m_y_vbat >= 10){
+//        m_coeff_i = -1;
+//        m_y_vbat = m_y_vbat + (1.5 * m_coeff_i);
+//    }
+//    //-----------------------------------------
+
+    if(m_f_data_ready == true){
+        qDebug()<<"Class Chart add_data : m_x = "<<m_x<<" ; m_y_vbat = "<<m_y_vbat<<" ; m_y_ibat = "<<m_y_ibat;
+        m_series_v->append(m_x, m_y_vbat);
+        m_series_i->append(m_x, m_y_ibat);
+
+        m_f_data_ready = false;//Reset flag.
+    }
+
     if (m_x >= 150)
         m_timer.stop();
+}
+//__________________________________________________________________________________________________
+
+void Chart::set_flag_data_ready(bool flag){
+    m_f_data_ready = flag;
 }
 //__________________________________________________________________________________________________

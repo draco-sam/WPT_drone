@@ -16,10 +16,20 @@ class PrincipalWindow : public QMainWindow
         explicit PrincipalWindow(QWidget *parent = nullptr);
         ~PrincipalWindow();
 
+
+    public slots:
+        void send_usb_tm_request();
+
     private:
         Ui::PrincipalWindow *ui;
-        Chart       *m_chart_v_i;
-        Chart       *m_chart_coulomb;
+        Chart           *m_chart_v_i;
+        Chart           *m_chart_coulomb;
+        //QTimer      m_timer;
+        QTimer          *m_timer;
+        short           m_coeff_v;
+        short           m_coeff_i;
+        QSplineSeries   *m_series_v;
+        QSplineSeries   *m_series_i;
 
 };
 

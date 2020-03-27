@@ -41,7 +41,7 @@ Chart::Chart():
     pen_red.setWidth(3);
     m_series_v->setPen(pen_red);
     m_series_v->append(m_x, m_y_vbat);
-    addSeries(m_series_v);
+    Chart::addSeries(m_series_v);
 
     //Idem for i series :
     m_series_i = new QSplineSeries(this);
@@ -50,7 +50,7 @@ Chart::Chart():
     pen_green.setWidth(3);
     m_series_i->setPen(pen_green);
     m_series_i->append(m_x, m_y_ibat);
-    addSeries(m_series_i);
+    Chart::addSeries(m_series_i);
 
     //Same colore axis line and series :
     m_axis_y_v->setLinePenColor(m_series_v->pen().color());

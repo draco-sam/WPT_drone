@@ -15,6 +15,10 @@ class Chart: public QChart
 public:
     Chart();
     virtual ~Chart();
+    void get_xy_v_i(qreal *x, qreal *y_v, qreal *y_i);
+    void set_xy_v_i(qreal x, qreal y_v, qreal y_i);
+    void get_series(QSplineSeries *series_v,QSplineSeries *series_i);
+    void set_flag_data_ready(bool flag);
 
 public slots:
     void add_data();
@@ -31,5 +35,7 @@ private:
     qreal           m_x;
     qreal           m_y_vbat;
     qreal           m_y_ibat;
-    short           m_coeff;
+    bool            m_f_data_ready;//Flag set by the main window.
+    short           m_coeff_v;
+    short           m_coeff_i;
 };

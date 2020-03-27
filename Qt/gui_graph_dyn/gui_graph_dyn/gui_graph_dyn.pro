@@ -1,7 +1,6 @@
 SOURCES += \
     lib_sam/chart/chart_sam.cpp \
     lib_sam/gui/PrincipalWindow.cpp \
-    lib_sam/gui/samtest.cpp \
     main_gui.cpp
 
 QT+=widgets
