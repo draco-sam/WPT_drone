@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "lib_sam/chart/chart_sam.h"
+#include "lib_sam/usb/UsbVirtualCom.h"
 
 namespace Ui {
 class PrincipalWindow;
@@ -30,6 +31,7 @@ class PrincipalWindow : public QMainWindow
         short           m_coeff_i;
         QSplineSeries   *m_series_v;
         QSplineSeries   *m_series_i;
+        UsbVirtualCom   *m_usb_com;
 
 };
 

@@ -109,33 +109,11 @@ void Chart::get_series(QSplineSeries *series_v,QSplineSeries *series_i){
 //__________________________________________________________________________________________________
 
 void Chart::add_data(){
-
-//    m_x = m_x + 5;
-//    m_y_vbat = m_y_vbat + (2 * m_coeff_v);
-//    m_y_ibat = m_y_ibat + (1.5 * m_coeff_i);
-
-//    //For vbat :
-//    if(m_y_vbat <= -10){
-//        m_coeff_v = 1;
-//        m_y_vbat = m_y_vbat + (2 * m_coeff_v);
-//    }
-//    else if(m_y_vbat >= 10){
-//        m_coeff_v = -1;
-//        m_y_vbat = m_y_vbat + (2 * m_coeff_v);
-//    }
-//    //----------------------------------------
-
-//    //For ibat :
-//    if(m_y_vbat <= -10){
-//        m_coeff_i = 1;
-//        m_y_vbat = m_y_vbat + (1.5 * m_coeff_i);
-//    }
-//    else if(m_y_vbat >= 10){
-//        m_coeff_i = -1;
-//        m_y_vbat = m_y_vbat + (1.5 * m_coeff_i);
-//    }
-//    //-----------------------------------------
-
+/* Add data to the chart if PrincipalWindow write a valide data to
+ * m_x, m_y_vbat and m_y_ibat.
+ *
+ * Before adding data, check if data is ready.
+ */
     if(m_f_data_ready == true){
         qDebug()<<"Class Chart add_data : m_x = "<<m_x<<" ; m_y_vbat = "<<m_y_vbat<<" ; m_y_ibat = "<<m_y_ibat;
         m_series_v->append(m_x, m_y_vbat);
