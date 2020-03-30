@@ -20,7 +20,7 @@
 Chart::Chart():
     m_series_v(0),m_series_i(0),
     m_axis_x(new QValueAxis()),m_axis_y_v(new QValueAxis()),m_axis_y_i(new QValueAxis()),
-    m_x(0),m_y_vbat(2),m_y_ibat(0),m_f_data_ready(false),
+    m_x_vbat(0),m_x_ibat(0),m_y_vbat(2),m_y_ibat(0),m_f_data_ready(false),
     m_coeff_v(1),m_coeff_i(1)
 {
     QObject::connect(&m_timer, &QTimer::timeout, this, &Chart::add_data);
@@ -39,7 +39,7 @@ Chart::Chart():
     QPen pen_red(Qt::red);
     pen_red.setWidth(3);
     m_series_v->setPen(pen_red);
-    m_series_v->append(m_x, m_y_vbat);
+    m_series_v->append(m_x_vbat, m_y_vbat);
     Chart::addSeries(m_series_v);
 
     //Idem for i series :
@@ -48,7 +48,7 @@ Chart::Chart():
     QPen pen_green(Qt::green);
     pen_green.setWidth(3);
     m_series_i->setPen(pen_green);
-    m_series_i->append(m_x, m_y_ibat);
+    m_series_i->append(m_x_ibat, m_y_ibat);
     Chart::addSeries(m_series_i);
 
     //Same colore axis line and series :
@@ -81,16 +81,18 @@ Chart::~Chart()
 }
 //__________________________________________________________________________________________________
 
-void Chart::get_xy_v_i(qreal *x, qreal *y_v, qreal *y_i){
-    *x      = m_x;
+void Chart::get_xy_v_i(qreal *x_v, qreal *y_v, qreal *x_i, qreal *y_i){
+    *x_v    = m_x_vbat;
     *y_v    = m_y_vbat;
+    *x_i    = m_x_ibat;
     *y_i    = m_y_ibat;
 }
 //__________________________________________________________________________________________________
 
-void Chart::set_xy_v_i(qreal x,qreal y_v, qreal y_i){
-    m_x         = x;
+void Chart::set_xy_v_i(qreal x_v,qreal y_v, qreal x_i, qreal y_i){
+    m_x_vbat    = x_v;
     m_y_vbat    = y_v;
+    m_x_ibat    = x_i;
     m_y_ibat    = y_i;
 }
 //__________________________________________________________________________________________________
@@ -115,14 +117,15 @@ void Chart::add_data(){
  * Before adding data, check if data is ready.
  */
     if(m_f_data_ready == true){
-        qDebug()<<"Class Chart add_data : m_x = "<<m_x<<" ; m_y_vbat = "<<m_y_vbat<<" ; m_y_ibat = "<<m_y_ibat;
-        m_series_v->append(m_x, m_y_vbat);
-        m_series_i->append(m_x, m_y_ibat);
+        qDebug()<<"Class Chart add_data : m_x_vbat = "<<m_x_vbat<<" ; m_y_vbat = "
+               <<m_y_vbat<<" ; m_x_ibat = "<<m_x_ibat<<" ; m_y_ibat = "<<m_y_ibat;
+        m_series_v->append(m_x_vbat, m_y_vbat);
+        m_series_i->append(m_x_ibat, m_y_ibat);
 
         m_f_data_ready = false;//Reset flag.
     }
 
-    if (m_x >= 150)
+    if (m_x_vbat >= 150)
         m_timer.stop();
 }
 //__________________________________________________________________________________________________

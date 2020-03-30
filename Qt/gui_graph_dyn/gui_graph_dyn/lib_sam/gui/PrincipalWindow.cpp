@@ -47,6 +47,7 @@ PrincipalWindow::PrincipalWindow(QWidget *parent) :
     //qDebug()<<"Principal : m_series_v = "<<m_series_v;
     //m_series_v->append(a,b);
 }
+//__________________________________________________________________________________________________
 
 PrincipalWindow::~PrincipalWindow()
 {
@@ -54,65 +55,31 @@ PrincipalWindow::~PrincipalWindow()
     delete   m_usb_com;
     delete  ui;
 }
+//__________________________________________________________________________________________________
 
 void PrincipalWindow::send_usb_tm_request(){
-/* Lancer la TM de l'USB vers le PIC. Récupérer et décoder la data port COM.
+/* Lancer la TM de l'USB vers le PIC.
+ * Récupérer et décoder la data port COM.
  *
  */
-    qreal x = 0.0, y_v = 0.0, y_i = 0.0;
+    qreal x_v = 0.0, x_i = 0.0, y_v = 0.0, y_i = 0.0;
 
     //TM request for vbat :
     m_usb_com->send_tm_request(M_TM_VBAT);
-    m_usb_com->get_tm_i2c_float(&x,&y_v);
+    m_usb_com->get_tm_i2c_float(&x_v,&y_v);
 
     //TM request for ibat :
     m_usb_com->send_tm_request(M_TM_IBAT);
-    m_usb_com->get_tm_i2c_float(&x,&y_i);
+    m_usb_com->get_tm_i2c_float(&x_i,&y_i);
 
     //Set variable members of the Chart class.
-    m_chart_v_i->set_xy_v_i(x,y_v,y_i);
+    m_chart_v_i->set_xy_v_i(x_v,y_v,x_i,y_i);
 
     //Set flag for connect in Chart class.
     m_chart_v_i->set_flag_data_ready(true);
 
-//    qreal x = 20, y_v = 5, y_i = 7;
-//    m_chart_v_i->set_xy_v_i(x,y_v,y_i);
-//    m_chart_v_i->set_flag_data_ready(true);
-
-//    qreal x = 0, y_v = 0, y_i = 0;
-
-//    m_chart_v_i->get_xy_v_i(&x,&y_v,&y_i);
-
-//    qDebug()<<"send top : x = "<<x<<" ; y_v = "<<y_v<<" ; y_i = "<<y_i;
-
-//    x = x + 5;
-//    y_v = y_v + (2 * m_coeff_v);
-//    y_i = y_i + (1.5 * m_coeff_i);
-
-//    //For vbat :
-//    if(y_v <= -10){
-//        m_coeff_v = 1;
-//        y_v = y_v + (2 * m_coeff_v);
-//    }
-//    else if(y_v >= 10){
-//        m_coeff_v = -1;
-//        y_v = y_v + (2 * m_coeff_v);
-//    }
-//    //----------------------------------------
-
-//    //For ibat :
-//    if(y_i <= -10){
-//        m_coeff_i = 1;
-//        y_i = y_i + (1.5 * m_coeff_i);
-//    }
-//    else if(y_i >= 10){
-//        m_coeff_i = -1;
-//        y_i = y_i + (1.5 * m_coeff_i);
-//    }
-//    //-----------------------------------------
-
-//    qDebug()<<"send bottom : x = "<<x<<" ; y_v = "<<y_v<<" ; y_i = "<<y_i;
-
-//    m_chart_v_i->set_xy_v_i(x,y_v,y_i);
-//    m_chart_v_i->set_flag_data_ready(true);//Set flag for connect in Chart class.
+     ui->textEdit->append("Vbat = " + QString::number(y_v) + " V : " + QString::number(x_v) +
+                          " s \n" + "ibat = " + QString::number(y_i) + " A : " +
+                          QString::number(x_i) + " s \n\n");
 }
+//__________________________________________________________________________________________________
