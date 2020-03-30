@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : i2c_sam_01.h
- * Date             : 20/02/2020.   
+ * Date             : 30/03/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -45,6 +45,7 @@ typedef struct I2c_tm_analog
     float           data_3;
     float           data_4;
     float           data_5;
+    float           sample_time;
 }I2c_tm_analog;
 //__________________________________________________________________________________________________
 
@@ -58,3 +59,4 @@ void get_i2c_tm_and_send_to_usb(unsigned short TM_ADDRESS,char *text_1,char *tex
                                 unsigned short *flag_sending);
 void extract_integer_decimal(float data,short *data_integer,short *data_decimal);
 void float_to_ascii(float data_float,char *t_table);
+float get_i2c_sample_time();

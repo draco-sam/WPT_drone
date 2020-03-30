@@ -1,6 +1,6 @@
 /* 
  * File             : i2c_sam_01.c
- * Date             : 27/02/2020.   
+ * Date             : 30/03/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -272,6 +272,23 @@ void i2c_master_start_read_tm(unsigned short tm_address,unsigned short *f_data_r
 }
 //__________________________________________________________________________________________________
 
+float get_i2c_sample_time(){
+/* Use a timer to have the time of the i2c sample.
+ * 
+ * 
+ */
+    static float time = 0;
+    
+    time = time + 1;
+    
+    if(time >= 3600){
+        time = 0;//Reset after 1h.
+    }
+    
+    return time;
+}
+//__________________________________________________________________________________________________
+
 I2c_tm_analog i2c_master_get_tm(unsigned short tm_address){
 /*
  * I2C master get telemetry to main program .
@@ -282,11 +299,14 @@ I2c_tm_analog i2c_master_get_tm(unsigned short tm_address){
     I2c_tm_analog i2c_tm_analog;
     
     //Reset value :
-    i2c_tm_analog.data_1 = 0.0;
-    i2c_tm_analog.data_2 = 0.0;
-    i2c_tm_analog.data_3 = 0.0;
-    i2c_tm_analog.data_4 = 0.0;
-    i2c_tm_analog.data_5 = 0.0;
+    i2c_tm_analog.sample_time   = 0.0;
+    i2c_tm_analog.data_1        = 0.0;
+    i2c_tm_analog.data_2        = 0.0;
+    i2c_tm_analog.data_3        = 0.0;
+    i2c_tm_analog.data_4        = 0.0;
+    i2c_tm_analog.data_5        = 0.0;
+    
+    i2c_tm_analog.sample_time = get_i2c_sample_time();
     
     digital_data        = i2c_data_h << 8;//High 8-bit of data 16-bit.
     digital_data        = digital_data | i2c_data_l;//Low 8-bit add on final data 16-bit.

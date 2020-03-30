@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : main_rx_usb_i2c_00.c
- * Date             : 02/03/2020.   
+ * Date             : 30/03/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -77,7 +77,7 @@ int main(void)
     
     
     
-    write_usb_com("PIC24FJ128GC006 USB virtual COM4 \r\n",&f_data_sending);
+    write_usb_com("PIC24FJ128GC006 USB virtual COMx \r\n",&f_data_sending);
 
     while (1)
     {   
@@ -119,14 +119,15 @@ int main(void)
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_VIN);
                 
 //                //********************************************************
-//                //!!! For debug !!!
-//                //-----------------
+//                //!!! For debug to have a fake time !!!
+//                //-------------------------------------
 //                random_i2c_data(TM_VBAT,&s_x_y_data);
-//                s_i2c_tm_analog.data_1 = s_x_y_data.x;
+//                //s_i2c_tm_analog.data_1 = s_x_y_data.x;
 //                float_to_ascii(s_x_y_data.y,t_i2c_time);
 //                //********************************************************
                 
                 float_to_ascii(s_i2c_tm_analog.data_1,t_data_i2c);
+                float_to_ascii(s_i2c_tm_analog.sample_time,t_i2c_time);
                 
                 if(f_type_interface == 0){//Terminal COM.
                     //Prepare data COM with string copy and concatenation :            
@@ -176,9 +177,8 @@ int main(void)
             else if(flag_i2c_data_ready == 1){//Data is ready.
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_VBAT);
                 
-                //!!! For debug !!!
-                //s_i2c_tm_analog.data_1 = 3.456;
                 float_to_ascii(s_i2c_tm_analog.data_1,t_data_i2c);
+                float_to_ascii(s_i2c_tm_analog.sample_time,t_i2c_time);
                 
                 if(f_type_interface == 0){//Terminal COM.
                     //Prepare data COM with string copy and concatenation :            
@@ -188,8 +188,11 @@ int main(void)
                     write_usb_com(t_data_usb_com,&f_data_sending);
                 }
                 else{//Qt interface.
-                    strcat(t_data_i2c,"\r\n");
-                    write_usb_com(t_data_i2c,&f_data_sending);
+                    strcpy(t_data_usb_com,t_data_i2c);
+                    strcat(t_data_usb_com,";");
+                    strcat(t_data_usb_com,t_i2c_time);
+                    strcat(t_data_usb_com,"\r\n");
+                    write_usb_com(t_data_usb_com,&f_data_sending);
                 }
                 
                 if(f_data_sending == 1){//"1" if USB ready.
@@ -204,9 +207,8 @@ int main(void)
             else if(flag_i2c_data_ready == 1){//Data is ready.
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_IBAT);
                 
-                //!!! For debug !!!
-                //s_i2c_tm_analog.data_1 = 0.765;
                 float_to_ascii(s_i2c_tm_analog.data_1,t_data_i2c);
+                float_to_ascii(s_i2c_tm_analog.sample_time,t_i2c_time);
                 
                 if(f_type_interface == 0){//Terminal COM.
                     //Prepare data COM with string copy and concatenation :            
@@ -216,8 +218,11 @@ int main(void)
                     write_usb_com(t_data_usb_com,&f_data_sending);
                 }
                 else{//Qt interface.
-                    strcat(t_data_i2c,"\r\n");
-                    write_usb_com(t_data_i2c,&f_data_sending);
+                    strcpy(t_data_usb_com,t_data_i2c);
+                    strcat(t_data_usb_com,";");
+                    strcat(t_data_usb_com,t_i2c_time);
+                    strcat(t_data_usb_com,"\r\n");
+                    write_usb_com(t_data_usb_com,&f_data_sending);
                 }
                 
                 if(f_data_sending == 1){//"1" if USB ready.
@@ -518,6 +523,9 @@ void random_i2c_data(unsigned short type_data,I2C_x_y_data *s_i2c_x_y){
         s_i2c_x_y->y = 0;
     }
 }
+//__________________________________________________________________________________________________
+
+
 //__________________________________________________________________________________________________
 
 /**

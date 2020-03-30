@@ -24,7 +24,7 @@ UsbVirtualCom::UsbVirtualCom() :
     }
 
     //Configure de USB port COM4 :
-    m_pic_usb_com.setPortName("COM4");//setPortName(listPortCom.at(1)) si un seul port com ??
+    m_pic_usb_com.setPortName("COM3");//setPortName(listPortCom.at(1)) si un seul port com ??
     m_pic_usb_com.setBaudRate(QSerialPort::Baud115200);
     m_pic_usb_com.setDataBits(QSerialPort::Data8);
     m_pic_usb_com.setParity(QSerialPort::NoParity);
