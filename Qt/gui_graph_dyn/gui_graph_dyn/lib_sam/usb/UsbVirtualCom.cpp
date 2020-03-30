@@ -59,11 +59,23 @@ void UsbVirtualCom::send_enter(){
 //__________________________________________________________________________________________________
 
 void UsbVirtualCom::send_qt_mode_activation(){
+    QString pic_message = "";
+
     //Activate the Qt interface mode on PIC :
     m_pic_usb_com.write("\r\n20\r\n");
     m_pic_usb_com.waitForBytesWritten();
     m_pic_usb_com.waitForReadyRead();
-    qDebug().noquote()<<m_pic_usb_com.readAll();
+    pic_message = m_pic_usb_com.readAll();
+
+    //Resend menu 20 on pic if qt mode is OFF :
+    if(pic_message[13] == "O" && pic_message[14] == "F"){
+        m_pic_usb_com.write("\r\n20\r\n");
+        m_pic_usb_com.waitForBytesWritten();
+        m_pic_usb_com.waitForReadyRead();
+        pic_message = m_pic_usb_com.readAll();
+    }
+
+    qDebug().noquote()<<"send_qt_mode_activation() : "<<pic_message;
 }
 //__________________________________________________________________________________________________
 
