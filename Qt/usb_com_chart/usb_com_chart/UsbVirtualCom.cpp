@@ -1,6 +1,6 @@
 /***************************************************************************************************
  * File name        : UsbVirtualCom.cpp
- * Date             : 27/02/2020
+ * Date             : 30/03/2020
  * Author           : Samuel LORENZINO.
  *
  * Links            :
@@ -37,7 +37,7 @@ UsbVirtualCom::UsbVirtualCom() :
 
     send_enter();
     send_qt_mode_activation();
-    send_tm_request();
+    //send_tm_request(M_TM_VBAT);
 
 }
 UsbVirtualCom::~UsbVirtualCom()
@@ -99,9 +99,12 @@ void UsbVirtualCom::tm_strings_to_double(QString tm_i2c_str,
 }
 //__________________________________________________________________________________________________
 
-void UsbVirtualCom::send_tm_request(){
-    //Send TM request to the PIC :
-    m_pic_usb_com.write("\r\n1\r\n");
+void UsbVirtualCom::send_tm_request(QString usb_string){
+/* Send TM request to the PIC.
+ *
+ * https://doc.qt.io/qt-5/qstring.html#converting-between-8-bit-strings-and-unicode-strings
+ */
+    m_pic_usb_com.write(usb_string.toUtf8().constData());
     m_pic_usb_com.waitForBytesWritten();
     m_pic_usb_com.waitForReadyRead();
     //Read TM in the COM buffer and convert it into 2 floats :

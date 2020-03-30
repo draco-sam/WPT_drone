@@ -1,6 +1,6 @@
 /***************************************************************************************************
  * File name        : Chart_sam.cpp
- * Date             : 27/02/2020
+ * Date             : 30/03/2020
  * Author           : Samuel LORENZINO.
  *
  * Links            :
@@ -57,7 +57,7 @@ Chart::~Chart()
 
 void Chart::add_data()
 {
-    m_usb_com->send_tm_request();
+    m_usb_com->send_tm_request(M_TM_VBAT);
     m_usb_com->get_tm_i2c_float(&m_x,&m_y);
 
     //qDebug()<<"add_data : m_x = "<<m_x<<" ; m_y = "<<m_y;
