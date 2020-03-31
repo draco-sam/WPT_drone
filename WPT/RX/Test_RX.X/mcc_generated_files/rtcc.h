@@ -239,6 +239,9 @@ void RTCC_CallBack(void);
 
 bool RTCC_Task(void);
 
+uint8_t convertHexToBcd(uint8_t hexvalue);
+uint8_t convertBcdToHex(uint8_t bcdvalue);
+
 #ifdef __cplusplus  // Provide C++ Compatibility
 
     }

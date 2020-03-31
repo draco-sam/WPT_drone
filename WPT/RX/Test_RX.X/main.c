@@ -11,7 +11,7 @@
 */
 #include "mcc_generated_files/system.h"
 #include "mcc_generated_files/rtcc.h"
-//#include <time.h>
+
 
 /*
                          Main application
@@ -29,8 +29,18 @@ typedef struct
 	int tm_yday;
 	int tm_isdst;
 	}Date_time;
+    
+#define lundi       0x01;
+#define mardi       2;
+#define mercredi    0x03;
+#define jeudi       0x04;
+#define vendredi    0x05;
+#define samedi      0x06;
+#define dimanche    0x07;
+    
 
 void set_data_time(int year,int month,int day,int weekDay,int hours,int minutes,int seconds);
+unsigned long convertTimeToSeconds(unsigned int hour,unsigned int minutes,unsigned int seconds);
     
 int main(void)
 {
@@ -69,14 +79,22 @@ int main(void)
     //Déclaration des variables main :
     //-------------------------------
     Date_time       str_data_time;
-    bool            rtcc_status = false;
+    bool            rtcc_status     = false;
+    unsigned long   seconds_main    = 0;
     //-----------------------------------------------------
     
+    unsigned long   data    = 0;
     
+    //data = convertBcdTimeToSeconds(0x23,0x59,0x59);
+    Nop();
+    
+    data = 0;//Reset.
+    data = convertBcdToHex(0x40);
+    Nop();
  
     rtcc_status = RTCC_TimeGet(&str_data_time);
     
-    set_data_time(0,0,0,0,0,0,0);
+    set_data_time(20,3,31,2,15,40,0);//Year,month,day,weekday,hour,min,sec.
     
     rtcc_status = RTCC_TimeGet(&str_data_time);
     Nop();
@@ -84,6 +102,8 @@ int main(void)
     while (1)
     {
         rtcc_status = RTCC_TimeGet(&str_data_time);
+        seconds_main = convertTimeToSeconds(str_data_time.tm_hour,str_data_time.tm_min,
+                      str_data_time.tm_sec);
         
         Nop();
         Nop();
@@ -99,16 +119,39 @@ int main(void)
 void set_data_time(int year,int month,int day,int weekDay,int hours,int minutes,int seconds){
 /*
  * Ecrire en BCD chaque valeur.
- * Ex : 2020 ->0x20 ; 20h42min57sec ->0x20/0x42/0x57. 
+ * Ex : 2020 ->0x20 ; 20h42/min/57sec ->0x20/0x42/0x57.
+ * 
+ * In parameters : integer data in hex format. 
  */  
     Date_time date_time_structure;
-    date_time_structure.tm_year = 0x20;
-    date_time_structure.tm_mon  = 0x03;
-    date_time_structure.tm_mday = 0x31;
-    date_time_structure.tm_wday = 0x02;
-    date_time_structure.tm_hour = 0x12;
-    date_time_structure.tm_min  = 0x15;
-    date_time_structure.tm_sec  = 0x00;
+    date_time_structure.tm_year = convertHexToBcd(year);
+    date_time_structure.tm_mon  = convertHexToBcd(month);
+    date_time_structure.tm_mday = convertHexToBcd(day);
+    date_time_structure.tm_wday = convertHexToBcd(weekDay);
+    date_time_structure.tm_hour = convertHexToBcd(hours);
+    date_time_structure.tm_min  = convertHexToBcd(minutes);
+    date_time_structure.tm_sec  = convertHexToBcd(seconds);
     
     RTCC_BCDTimeSet(&date_time_structure);
+}
+//__________________________________________________________________________________________________
+
+unsigned long convertTimeToSeconds(unsigned int hour,unsigned int minutes,unsigned int seconds){
+/*
+ * Type of variables long because of the max hour multiply by the seconds (23*3600 = 82800).
+ * The multiplication doesn't like different type. 
+ */ 
+     unsigned long total_seconds = 0;
+    
+    if(hour >= 1){
+        total_seconds = hour * 3600;//1h <-> 3600s.
+    }
+    if(minutes >= 1){
+        total_seconds = (minutes * 60) + total_seconds;//Add previous hour conversion.
+    }
+    if(seconds >= 1){
+        total_seconds = seconds + total_seconds;
+    }
+    
+    return total_seconds;
 }

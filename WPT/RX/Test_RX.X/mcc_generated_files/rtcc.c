@@ -217,7 +217,22 @@ static uint8_t ConvertHexToBCD(uint8_t hexvalue)
     return (bcdvalue);
 }
 
+uint8_t convertHexToBcd(uint8_t hexvalue)
+{
+    uint8_t bcdvalue;
+    bcdvalue = (hexvalue / 10) << 4;
+    bcdvalue = bcdvalue | (hexvalue % 10);
+    return (bcdvalue);
+}
+
 static uint8_t ConvertBCDToHex(uint8_t bcdvalue)
+{
+    uint8_t hexvalue;
+    hexvalue = (((bcdvalue & 0xF0) >> 4)* 10) + (bcdvalue & 0x0F);
+    return hexvalue;
+}
+
+uint8_t convertBcdToHex(uint8_t bcdvalue)
 {
     uint8_t hexvalue;
     hexvalue = (((bcdvalue & 0xF0) >> 4)* 10) + (bcdvalue & 0x0F);
