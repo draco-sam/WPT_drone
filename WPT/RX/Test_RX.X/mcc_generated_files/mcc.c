@@ -52,7 +52,7 @@
 #pragma config DSWDTEN = ON    //Deep Sleep Watchdog Timer Enable->DSWDT Enabled
 #pragma config DSSWEN = ON    //DSEN Bit Enable->Deep Sleep is controlled by the register bit DSEN
 #pragma config RTCBAT = ON    //RTC Battery Operation Enable->RTC operation is continued through VBAT
-#pragma config PLLDIV = DIS    //PLL Input Prescaler Select bits->PLL is disabled
+#pragma config PLLDIV = DIV2    //PLL Input Prescaler Select bits->Oscillator divided by 2 (8 MHz input)
 #pragma config I2C2SEL = SEC    //Alternate I2C2 Location Select bit->I2C2 is multiplexed to SDA2/RF4 and SCL2/RF5
 #pragma config IOL1WAY = ON    //PPS IOLOCK Set Only Once Enable bit->Once set, the IOLOCK bit cannot be cleared
 
@@ -70,11 +70,11 @@
 #pragma config WDTCLK = LPRC    //WDT Clock Source Select bits->WDT uses LPRC
 #pragma config OSCIOFCN = OFF    //OSCO Pin Configuration->OSCO/CLKO/RC15 functions as CLKO (FOSC/2)
 #pragma config FCKSM = CSDCMD    //Clock Switching and Fail-Safe Clock Monitor Configuration bits->Clock switching and Fail-Safe Clock Monitor are disabled
-#pragma config FNOSC = FRCDIV    //Initial Oscillator Select->Fast RC Oscillator with Postscaler (FRCDIV)
+#pragma config FNOSC = FRCPLL    //Initial Oscillator Select->Fast RC Oscillator with PLL module (FRCPLL)
 #pragma config ALTADREF = AVREF_RB    //External 12-Bit A/D Reference Location Select bit->AVREF+/AVREF- are mapped to RB0/RB1
 #pragma config ALTCVREF = CVREF_RB    //External Comparator Reference Location Select bit->CVREF+/CVREF- are mapped to RB0/RB1
 #pragma config WDTCMX = WDTCLK    //WDT Clock Source Select bits->WDT clock source is determined by the WDTCLK Configuration bits
-#pragma config IESO = OFF    //Internal External Switchover->Disabled
+#pragma config IESO = ON    //Internal External Switchover->Enabled
 
 // CONFIG1
 #pragma config WDTPS = PS32768    //Watchdog Timer Postscaler Select->1:32768
