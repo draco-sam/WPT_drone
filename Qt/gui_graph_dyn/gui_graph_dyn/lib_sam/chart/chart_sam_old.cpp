@@ -20,62 +20,58 @@
 Chart::Chart():
     m_series_v(0),m_series_i(0),
     m_axis_x(new QValueAxis()),m_axis_y_v(new QValueAxis()),m_axis_y_i(new QValueAxis()),
-    m_x_vbat(0),m_x_ibat(0),m_y_vbat(0),m_y_ibat(0),m_f_data_ready(false),
+    m_x_vbat(56400),m_x_ibat(56400),m_y_vbat(0),m_y_ibat(0),m_f_data_ready(false),
     m_coeff_v(1),m_coeff_i(1)
 {
-    /*****************************************************************************************
-     * Creat 2 series and add it to the chart.
-     * Set color to the series and its own Y axis.
-     * Attach X and Y axies to the series
-     ***********************************************/
-
-    //QSplineSeries automatically calculates spline segment control points
-    //that are needed to properly draw the spline.
-    m_series_v = new QSplineSeries(this);
-    m_series_v->setName("spline_Vbat");
-    QPen pen_red(Qt::red);
-    pen_red.setWidth(3);
-    m_series_v->setPen(pen_red);
-    //m_series_v->append(m_x_vbat, m_y_vbat);//!!! Commenter si non bug 1er sample !!!
-    Chart::addSeries(m_series_v);
-
-    //Idem for i series :
-    m_series_i = new QSplineSeries(this);
-    m_series_i->setName("spline_Ibat");
-    QPen pen_green(Qt::green);
-    pen_green.setWidth(3);
-    m_series_i->setPen(pen_green);
-    //m_series_i->append(m_x_ibat, m_y_ibat);//!!! Commenter si non bug 1er sample !!!
-    Chart::addSeries(m_series_i);
-
-    //Same colore axis line and series :
-    m_axis_y_v->setLinePenColor(m_series_v->pen().color());
-    m_axis_y_i->setLinePenColor(m_series_i->pen().color());
-
-    //Add axis, attach series to its and set range :
-    addAxis(m_axis_x,Qt::AlignBottom);
-    addAxis(m_axis_y_v,Qt::AlignLeft);
-    m_series_v->attachAxis(m_axis_x);
-    m_series_v->attachAxis(m_axis_y_v);
-    m_axis_x->setTickCount(11);//Number of lines : Step = x_max_range / (tick_count - 1).
-    m_axis_x->setRange(56400,57000);//23h59min59s<->86399s.
-    m_axis_y_v->setRange(0, 5);
-
-    //idem for i series :
-    addAxis(m_axis_y_i,Qt::AlignRight);
-    m_series_i->attachAxis(m_axis_x);
-    m_series_i->attachAxis(m_axis_y_i);
-    m_axis_y_i->setRange(-2, 10);
-    /****************************************************************************************/
-    //m_series_v->clear();
-    //m_series_v->remove(25,7.5);
-    //m_series_v->removePoints(1,1);
-    //Chart::addSeries(m_series_v);
-
-
     QObject::connect(&m_timer, &QTimer::timeout, this, &Chart::add_data);
-    m_timer.setInterval(1500);//[ms].
-    m_timer.start();
+        m_timer.setInterval(1500);//[ms].
+
+        /*****************************************************************************************
+         * Creat 2 series and add it to the chart.
+         * Set color to the series and its own Y axis.
+         * Attach X and Y axies to the series
+         ***********************************************/
+
+        //QSplineSeries automatically calculates spline segment control points
+        //that are needed to properly draw the spline.
+        m_series_v = new QSplineSeries(this);
+        m_series_v->setName("spline_Vbat");
+        QPen pen_red(Qt::red);
+        pen_red.setWidth(3);
+        m_series_v->setPen(pen_red);
+        m_series_v->append(m_x_ibat, m_y_vbat);
+        Chart::addSeries(m_series_v);
+
+        //Idem for i series :
+        m_series_i = new QSplineSeries(this);
+        m_series_i->setName("spline_Ibat");
+        QPen pen_green(Qt::green);
+        pen_green.setWidth(3);
+        m_series_i->setPen(pen_green);
+        m_series_i->append(m_x_ibat, m_y_ibat);
+        Chart::addSeries(m_series_i);
+
+        //Same colore axis line and series :
+        m_axis_y_v->setLinePenColor(m_series_v->pen().color());
+        m_axis_y_i->setLinePenColor(m_series_i->pen().color());
+
+        //Add axis, attach series to its and set range :
+        addAxis(m_axis_x,Qt::AlignBottom);
+        addAxis(m_axis_y_v,Qt::AlignLeft);
+        m_series_v->attachAxis(m_axis_x);
+        m_series_v->attachAxis(m_axis_y_v);
+        m_axis_x->setTickCount(11);//Number of lines : Step = x_max_range / (tick_count - 1).
+        m_axis_x->setRange(56400,57000);
+        m_axis_y_v->setRange(-15, 15);
+
+        //idem for i series :
+        addAxis(m_axis_y_i,Qt::AlignRight);
+        m_series_i->attachAxis(m_axis_x);
+        m_series_i->attachAxis(m_axis_y_i);
+        m_axis_y_i->setRange(-10, 10);
+        /****************************************************************************************/
+
+        m_timer.start();
 }
 //__________________________________________________________________________________________________
 
@@ -121,16 +117,17 @@ void Chart::add_data(){
  * Before adding data, check if data is ready.
  */
     if(m_f_data_ready == true){
-        qDebug()<<"Class Chart add_data : m_x_vbat = "<<m_x_vbat<<" ; m_y_vbat = "
-               <<m_y_vbat<<" ; m_x_ibat = "<<m_x_ibat<<" ; m_y_ibat = "<<m_y_ibat;
-        m_series_v->append(m_x_vbat, m_y_vbat);
-        m_series_i->append(m_x_ibat, m_y_ibat);
+            qDebug()<<"Class Chart add_data : m_x_vbat = "<<m_x_vbat<<" ; m_y_vbat = "
+                   <<m_y_vbat<<" ; m_x_ibat = "<<m_x_ibat<<" ; m_y_ibat = "<<m_y_ibat;
+            m_series_v->append(m_x_vbat, m_y_vbat);
+            //m_series_v->append(25, 7.5);
+            m_series_i->append(m_x_ibat, m_y_ibat);
 
-        m_f_data_ready = false;//Reset flag.
-    }
+            m_f_data_ready = false;//Reset flag.
+        }
 
-    if (m_x_vbat >= 87000)
-        m_timer.stop();
+        if (m_x_vbat >= 87000)
+            m_timer.stop();
 }
 //__________________________________________________________________________________________________
 

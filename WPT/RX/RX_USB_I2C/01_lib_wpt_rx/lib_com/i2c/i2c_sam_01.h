@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : i2c_sam_01.h
- * Date             : 30/03/2020.   
+ * Date             : 31/03/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -9,6 +9,7 @@
 #include "../../PIC24FJ128GC006.h"
 #include <stddef.h>
 #include "../usb/usb_sam_00.h"
+#include "../../lib_mplab/rtcc.h"
 
 //Sub addresses of read register on i2c slave IC charger :
 #define TX_CONFIG_BITS      0x14
@@ -57,6 +58,8 @@ void i2c_master_start_write_data(   unsigned short tx_address,unsigned short dat
                                     unsigned short *f_end_writing);
 void get_i2c_tm_and_send_to_usb(unsigned short TM_ADDRESS,char *text_1,char *text_2,
                                 unsigned short *flag_sending);
-void extract_integer_decimal(float data,short *data_integer,short *data_decimal);
+void extract_integer_decimal(float data,long *data_integer,short *data_decimal);
 void float_to_ascii(float data_float,char *t_table);
-float get_i2c_sample_time();
+unsigned long get_i2c_sample_time();
+unsigned long convertTimeToSeconds(unsigned int hour,unsigned int minutes,unsigned int seconds);
+void set_RTCC_data_time(int year,int month,int day,int weekDay,int hours,int minutes,int seconds);

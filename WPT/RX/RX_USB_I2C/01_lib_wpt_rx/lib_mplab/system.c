@@ -45,6 +45,7 @@
 #include "pin_manager.h"
 #include "clock.h"
 #include "system.h"
+#include "rtcc.h"
 //#include "usb/usb.h"
 #include "../lib_com/usb/usb_mplab/usb.h"
 #include "interrupt_manager.h"
@@ -62,6 +63,7 @@ void SYSTEM_Initialize(void)
     USBDeviceAttach();
     //I2C1_Initialize();
     i2c_master_init();
+    RTCC_Initialize();
 }
 
 /**

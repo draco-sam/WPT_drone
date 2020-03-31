@@ -1,6 +1,6 @@
 /***************************************************************************************************
  * File name        : chart_sam.cpp
- * Date             : 27/03/2020
+ * Date             :01/04/2020
  * Author           : Samuel LORENZINO.
  *
  * Links            :
@@ -21,7 +21,7 @@ Chart::Chart():
     m_series_v(0),m_series_i(0),
     m_axis_x(new QValueAxis()),m_axis_y_v(new QValueAxis()),m_axis_y_i(new QValueAxis()),
     //m_step(0),
-    m_x(0),m_y_vbat(2),m_y_ibat(0),
+    m_x(0),m_y_vbat(0),m_y_ibat(0),
     m_coeff(1)
 {
     QObject::connect(&m_timer, &QTimer::timeout, this, &Chart::add_data);
@@ -62,7 +62,7 @@ Chart::Chart():
     m_series_v->attachAxis(m_axis_x);
     m_series_v->attachAxis(m_axis_y_v);
     m_axis_x->setTickCount(11);//Number of lines : Step = x_max_range / (tick_count - 1).
-    m_axis_x->setRange(0,200);
+    m_axis_x->setRange(0,100);
     m_axis_y_v->setRange(-15, 15);
 
     //idem for i series :
@@ -112,7 +112,7 @@ void Chart::add_data()
 
     m_series_v->append(m_x, m_y_vbat);
     m_series_i->append(m_x, m_y_ibat);
-    if (m_x >= 150)
+    if (m_x >= 70000)
         m_timer.stop();
 }
 //__________________________________________________________________________________________________

@@ -1,6 +1,6 @@
 /* 
  * File             : i2c_sam_01.c
- * Date             : 30/03/2020.   
+ * Date             : 01/04/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -272,20 +272,26 @@ void i2c_master_start_read_tm(unsigned short tm_address,unsigned short *f_data_r
 }
 //__________________________________________________________________________________________________
 
-float get_i2c_sample_time(){
-/* Use a timer to have the time of the i2c sample.
+unsigned long get_i2c_sample_time(){
+/* The time comes from RTCC (Real-Time Clock and Calendar) PIC.
  * 
  * 
- */
-    static float time = 0;
+ */ 
+    #define time_out_max        5000000
+    Date_time str_date_time;
+    bool            rtcc_status = false;
+    unsigned long   seconds     = 0;
+    unsigned long   time_out    = 0;
     
-    time = time + 1;
-    
-    if(time >= 3600){
-        time = 0;//Reset after 1h.
+    //While rtcc_status = false, run "RTCC_TimeGet()".
+    //If time out, get out of the while.
+    while(rtcc_status == false || time_out > time_out_max){
+        rtcc_status = RTCC_TimeGet(&str_date_time);//Pass address of structure Date_time.
+        seconds     = convertTimeToSeconds(str_date_time.tm_hour,str_date_time.tm_min,
+                      str_date_time.tm_sec);
     }
     
-    return time;
+    return seconds;
 }
 //__________________________________________________________________________________________________
 
@@ -306,7 +312,8 @@ I2c_tm_analog i2c_master_get_tm(unsigned short tm_address){
     i2c_tm_analog.data_4        = 0.0;
     i2c_tm_analog.data_5        = 0.0;
     
-    i2c_tm_analog.sample_time = get_i2c_sample_time();
+    //get sample time in seconds (RTCC [s] : hour + min + sec).
+    i2c_tm_analog.sample_time = get_i2c_sample_time();//Return a long !!!
     
     digital_data        = i2c_data_h << 8;//High 8-bit of data 16-bit.
     digital_data        = digital_data | i2c_data_l;//Low 8-bit add on final data 16-bit.
@@ -476,25 +483,33 @@ void float_to_ascii(float data_float,char *t_table){
  * 
  * !!! Modier code partie décimale pour ressembler à celui partie entière !!!
  */
-    short           data_integer        = 0;
-    unsigned short  abs_data_integer    = 0;
+    //short           data_integer        = 0;
+    long            data_integer        = 0;
+    //unsigned short  abs_data_integer    = 0;
+    unsigned long   abs_data_integer    = 0;
     unsigned short  abs_data_decimal    = 0;
     unsigned short  i                   = 0;
     unsigned short  i_t                 = 0;
     unsigned short  f_zero              = 1;
-    unsigned short  d_temp              = 0;
-    unsigned short  d_div               = 10000;
+    unsigned long   d_temp              = 0;
+    unsigned long   d_div               = 10000;
     short           data_decimal        = 0;
     unsigned short  data_1              = 0;
     unsigned short  data_2              = 0;
     char            table_ascii[11]     = {'0','1','2','3','4','5','6','7','8','9'};
-    char            t_integer[7]        = {0};
+    char            t_integer[7]        = {0};//[7] : sign + 5 digits + \0.
     char            t_decimal[5]        = {0};
     
     extract_integer_decimal(data_float,&data_integer,&data_decimal);
     
     //Absolute value for searching numbers.
-    abs_data_integer = abs(data_integer);
+    //abs_data_integer = abs(data_integer);
+    if(data_integer < 0){
+        abs_data_integer = data_integer * -1;//(-10) * (-1) = +10.
+    }
+    else{
+        abs_data_integer = data_integer;
+    }
     abs_data_decimal = abs(data_decimal);
     
     if(data_integer != 0){
@@ -567,7 +582,7 @@ void float_to_ascii(float data_float,char *t_table){
 }
 //__________________________________________________________________________________________________
 
-void extract_integer_decimal(float data,short *data_integer,short *data_decimal){
+void extract_integer_decimal(float data,long *data_integer,short *data_decimal){
 /*
  * Extraire la partie entière et décimale d'un nombre float.
  * Ne fonctionne que jusque 10^-3.
@@ -581,7 +596,49 @@ void extract_integer_decimal(float data,short *data_integer,short *data_decimal)
  *      data_decimal = 23746 - 23000 = 746.
  */
     
-    *data_integer   = data;
+    *data_integer   = data;//Integer part of the float.
     *data_decimal   = (data * 1000) - (*data_integer * 1000);//-1.234
+}
+//__________________________________________________________________________________________________
+
+void set_RTCC_data_time(int year,int month,int day,int weekDay,int hours,int minutes,int seconds){
+/* Set Real-Time Clock and Calendar (RTCC) :
+ * ----------------------------------------
+ * Ecrire en BCD chaque valeur.
+ * Ex : 2020 ->0x20 ; 20h42/min/57sec ->0x20/0x42/0x57.
+ * 
+ * In parameters : integer data in hex format. 
+ */  
+    Date_time date_time_structure;
+    date_time_structure.tm_year = convertHexToBcd(year);
+    date_time_structure.tm_mon  = convertHexToBcd(month);
+    date_time_structure.tm_mday = convertHexToBcd(day);
+    date_time_structure.tm_wday = convertHexToBcd(weekDay);
+    date_time_structure.tm_hour = convertHexToBcd(hours);
+    date_time_structure.tm_min  = convertHexToBcd(minutes);
+    date_time_structure.tm_sec  = convertHexToBcd(seconds);
+    
+    RTCC_BCDTimeSet(&date_time_structure);
+}
+//__________________________________________________________________________________________________
+
+unsigned long convertTimeToSeconds(unsigned int hour,unsigned int minutes,unsigned int seconds){
+/*
+ * Type of variables long because of the max hour multiply by the seconds (23*3600 = 82800).
+ * The multiplication doesn't like different type. 
+ */ 
+     unsigned long total_seconds = 0;
+    
+    if(hour >= 1){
+        total_seconds = hour * 3600;//1h <-> 3600s.
+    }
+    if(minutes >= 1){
+        total_seconds = (minutes * 60) + total_seconds;//Add previous hour conversion.
+    }
+    if(seconds >= 1){
+        total_seconds = seconds + total_seconds;
+    }
+    
+    return total_seconds;
 }
 //__________________________________________________________________________________________________

@@ -85,7 +85,7 @@ int main(void)
     
     unsigned long   data    = 0;
     
-    //data = convertBcdTimeToSeconds(0x23,0x59,0x59);
+    data = convertBcdTimeToSeconds(0x23,0x59,0x59);
     Nop();
     
     data = 0;//Reset.

@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : main_rx_usb_i2c_00.c
- * Date             : 30/03/2020.   
+ * Date             : 01/04/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -36,7 +36,7 @@ int main(void)
     unsigned short      f_data_sending      = 0;//Flag for write USB COM and main loop.
     unsigned short      f_data_sending_1    = 0;
     char                t_data_i2c[64]      = "";//!!! Changer taille car 16 bits max !!!
-    char                t_i2c_time[6]       = "";
+    char                t_i2c_time[7]       = "";
     char                t_data_usb_com[250] = "";
     char                t_data[4]           = "";
     char                t_menu[255]         = "";
@@ -55,12 +55,15 @@ int main(void)
     
     /************************************************************************************
      * Main variables declaration :
-     * ----------------------------------- 
+     * ---------------------------- 
      */
     //According to the value of the flag,we send minimum or maximum
     //TM informations over the USB virtual COM bus.
     //"0" = terminal COM, "1" = Qt interface.
-    unsigned short      f_type_interface        = 0;
+    unsigned short      f_type_interface    = 0;
+    bool                rtcc_status         = false;
+    unsigned long       seconds_main        = 0;
+    Date_time           str_data_time;
     /***********************************************************************************/
     
     // initialize the device
@@ -69,8 +72,11 @@ int main(void)
     led_red     = off;
     led_green   = off;
     led_blue    = off;
-    
-    
+        
+    //Set Real-Time Clock and Calendar.
+    //Useful for time sample of TM LiPo charger.
+    set_RTCC_data_time(20,3,31,2,15,40,0);//Year,month,day,weekday,hour,min,sec.
+        
     //Plugger l'USB pour démarrer le code.
     while(USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended()== true){};
     led_red     = on;
@@ -127,7 +133,9 @@ int main(void)
 //                //********************************************************
                 
                 float_to_ascii(s_i2c_tm_analog.data_1,t_data_i2c);
-                float_to_ascii(s_i2c_tm_analog.sample_time,t_i2c_time);
+                //float_to_ascii(s_i2c_tm_analog.sample_time,t_i2c_time);
+                float_to_ascii(76543,t_i2c_time);
+                //strcpy(t_i2c_time,"20 s");
                 
                 if(f_type_interface == 0){//Terminal COM.
                     //Prepare data COM with string copy and concatenation :            
@@ -525,8 +533,6 @@ void random_i2c_data(unsigned short type_data,I2C_x_y_data *s_i2c_x_y){
 }
 //__________________________________________________________________________________________________
 
-
-//__________________________________________________________________________________________________
 
 /**
  End of File

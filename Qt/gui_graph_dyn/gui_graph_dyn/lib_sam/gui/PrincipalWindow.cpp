@@ -78,6 +78,14 @@ void PrincipalWindow::send_usb_tm_request(){
     //Set flag for connect in Chart class.
     m_chart_v_i->set_flag_data_ready(true);
 
+//    m_chart_v_i->get_xy_v_i(&x_v,&y_v,&x_i,&y_i);
+//    x_v = x_v + 1;
+//    x_i = x_i + 1;
+//    y_v = y_v + 2;
+//    y_i = y_i + 0.5;
+//    m_chart_v_i->set_xy_v_i(x_v,y_v,x_i,y_i);
+//    m_chart_v_i->set_flag_data_ready(true);
+
      ui->textEdit->append("Vbat = " + QString::number(y_v) + " V : " + QString::number(x_v) +
                           " s \n" + "ibat = " + QString::number(y_i) + " A : " +
                           QString::number(x_i) + " s \n\n");
