@@ -15,15 +15,15 @@
   @Description:
     This source file provides implementations for PIN MANAGER.
     Generation Information :
-        Product Revision  :  PIC24 / dsPIC33 / PIC32MM MCUs - 1.145.0
+        Product Revision  :  PIC24 / dsPIC33 / PIC32MM MCUs - 1.166.1
         Device            :  dsPIC33CK256MP206
     The generated drivers are tested against the following:
-        Compiler          :  XC16 v1.36b
-        MPLAB 	          :  MPLAB X v5.25
+        Compiler          :  XC16 v1.41
+        MPLAB 	          :  MPLAB X v5.30
 */
 
 /*
-    (c) 2019 Microchip Technology Inc. and its subsidiaries. You may use this
+    (c) 2020 Microchip Technology Inc. and its subsidiaries. You may use this
     software and any derivatives exclusively with Microchip products.
 
     THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
@@ -73,11 +73,11 @@
   @Example
     <code>
     // Set RB0 high (1)
-    PullUp_RB0_SetHigh();
+    Pull_Up_RB0_SetHigh();
     </code>
 
 */
-#define PullUp_RB0_SetHigh()          _LATB0 = 1
+#define Pull_Up_RB0_SetHigh()          (_LATB0 = 1)
 /**
   @Summary
     Sets the GPIO pin, RB0, low using LATB0.
@@ -97,11 +97,11 @@
   @Example
     <code>
     // Set RB0 low (0)
-    PullUp_RB0_SetLow();
+    Pull_Up_RB0_SetLow();
     </code>
 
 */
-#define PullUp_RB0_SetLow()           _LATB0 = 0
+#define Pull_Up_RB0_SetLow()           (_LATB0 = 0)
 /**
   @Summary
     Toggles the GPIO pin, RB0, using LATB0.
@@ -121,11 +121,11 @@
   @Example
     <code>
     // Toggle RB0
-    PullUp_RB0_Toggle();
+    Pull_Up_RB0_Toggle();
     </code>
 
 */
-#define PullUp_RB0_Toggle()           _LATB0 ^= 1
+#define Pull_Up_RB0_Toggle()           (_LATB0 ^= 1)
 /**
   @Summary
     Reads the value of the GPIO pin, RB0.
@@ -147,11 +147,11 @@
     uint16_t portValue;
 
     // Read RB0
-    postValue = PullUp_RB0_GetValue();
+    postValue = Pull_Up_RB0_GetValue();
     </code>
 
 */
-#define PullUp_RB0_GetValue()         _RB0
+#define Pull_Up_RB0_GetValue()         _RB0
 /**
   @Summary
     Configures the GPIO pin, RB0, as an input.
@@ -171,11 +171,11 @@
   @Example
     <code>
     // Sets the RB0 as an input
-    PullUp_RB0_SetDigitalInput();
+    Pull_Up_RB0_SetDigitalInput();
     </code>
 
 */
-#define PullUp_RB0_SetDigitalInput()  _TRISB0 = 1
+#define Pull_Up_RB0_SetDigitalInput()  (_TRISB0 = 1)
 /**
   @Summary
     Configures the GPIO pin, RB0, as an output.
@@ -195,11 +195,11 @@
   @Example
     <code>
     // Sets the RB0 as an output
-    PullUp_RB0_SetDigitalOutput();
+    Pull_Up_RB0_SetDigitalOutput();
     </code>
 
 */
-#define PullUp_RB0_SetDigitalOutput() _TRISB0 = 0
+#define Pull_Up_RB0_SetDigitalOutput() (_TRISB0 = 0)
 
 /**
     Section: Function Prototypes
@@ -234,6 +234,7 @@
 
 */
 void PIN_MANAGER_Initialize (void);
+
 
 
 #endif

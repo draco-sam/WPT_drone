@@ -1,23 +1,23 @@
 /**
-  @Generated PIC24 / dsPIC33 / PIC32MM MCUs Source File
+  RESET Generated Driver File
 
-  @Company:
+  @Company
     Microchip Technology Inc.
 
-  @File Name:
-    system.h
+  @File Name
+    reset.c
 
-  @Summary:
-    This is the sysetm.h file generated using PIC24 / dsPIC33 / PIC32MM MCUs
+  @Summary
+    This is the generated driver implementation file for the RESET driver using PIC24 / dsPIC33 / PIC32MM MCUs
 
-  @Description:
-    This header file provides implementations for driver APIs for all modules selected in the GUI.
+  @Description
+    This header file provides implementations for driver APIs for RESET.
     Generation Information :
-        Product Revision  :  PIC24 / dsPIC33 / PIC32MM MCUs - 1.145.0
+        Product Revision  :  PIC24 / dsPIC33 / PIC32MM MCUs - 1.166.0
         Device            :  dsPIC33CK256MP206
     The generated drivers are tested against the following:
-        Compiler          :  XC16 v1.36b
-        MPLAB             :  MPLAB X v5.25
+        Compiler          :  XC16 v1.41
+        MPLAB             :  MPLAB X v5.30
 */
 
 /*
@@ -42,30 +42,43 @@
     TERMS.
 */
 
-#include "pin_manager.h"
-#include "clock.h"
-#include "system.h"
-#include "system_types.h"
-#include "pwm.h"
-#include "interrupt_manager.h"
-#include "traps.h"
-#include "ext_int.h"
-#include "tmr1.h"
-#include "i2c2.h"
+#ifndef RESET_H
+#define	RESET_H
 
-void SYSTEM_Initialize(void)
-{
-    PIN_MANAGER_Initialize();
-    INTERRUPT_Initialize();
-    CLOCK_Initialize();
-    PWM_Initialize();
-    I2C2_Initialize();
-    EXT_INT_Initialize();
-    TMR1_Initialize();
-    INTERRUPT_GlobalEnable();
-    SYSTEM_CORCONModeOperatingSet(CORCON_MODE_PORVALUES);
-}
+#include <stdint.h>
+#include "reset_types.h"
 
+/**
+* Checks reset cause, flashes UI with an error code as a result.
+* 
+* Note: this function should be called before any use of CLRWDT
+* since it has a side-effect of clearing the appropriate bits in the
+* register showing reset cause (see DS70602B page 8-10)
+*/
+uint16_t RESET_GetCause(void);
+
+/**
+ * It handles the reset cause by clearing the cause register values.
+ * Its a weak function user can override this function.
+ * @return None
+ * @example
+ * <code>
+ * RESET_CauseHandler();
+ * </code>
+ */
+void __attribute__ ((weak)) RESET_CauseHandler(void);
+
+/**
+ * This function resets the reset cause register.
+ * @return None
+ * @example
+ * <code>
+ * RESET_CauseClearAll();
+ * </code>
+ */
+void RESET_CauseClearAll();
+
+#endif	/* RESET_H */
 /**
  End of File
 */
