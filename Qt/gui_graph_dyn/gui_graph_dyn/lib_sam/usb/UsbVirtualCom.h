@@ -39,6 +39,7 @@ class UsbVirtualCom
     QSerialPortInfo             m_serialPortsInfo;
     QSerialPort                 m_pic_usb_com;
     QString                     m_tm_i2c_str;
+    QString                     m_com_name;
     double                      m_tm_v_double;
     double                      m_tm_time_double;
     //QString                     M_TM_VBAT;

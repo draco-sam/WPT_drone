@@ -86,7 +86,9 @@ void PrincipalWindow::send_usb_tm_request(){
 //    m_chart_v_i->set_xy_v_i(x_v,y_v,x_i,y_i);
 //    m_chart_v_i->set_flag_data_ready(true);
 
-     ui->textEdit->append("Vbat = " + QString::number(y_v) + " V : " + QString::number(x_v) +
+    ui->textEdit->moveCursor(QTextCursor::End);//!!! Arreter si on clique dans le textEdit !!!
+    ui->textEdit->ensureCursorVisible();
+    ui->textEdit->append("Vbat = " + QString::number(y_v) + " V : " + QString::number(x_v) +
                           " s \n" + "ibat = " + QString::number(y_i) + " A : " +
                           QString::number(x_i) + " s \n\n");
 }

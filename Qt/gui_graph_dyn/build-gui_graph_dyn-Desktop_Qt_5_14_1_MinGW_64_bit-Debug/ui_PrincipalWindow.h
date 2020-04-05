@@ -14,12 +14,13 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QGridLayout>
+#include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
-#include <QtWidgets/QRadioButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QTextEdit>
@@ -40,20 +41,24 @@ public:
     QAction *actionAbout;
     QWidget *centralwidget;
     QGridLayout *gridLayout_2;
-    QTextEdit *textEdit;
     QVBoxLayout *verticalLayout;
+    QGroupBox *groupBox;
+    QGridLayout *gridLayout_5;
     QComboBox *comboBox;
-    QRadioButton *radioButton;
-    QRadioButton *radioButton_2;
-    QRadioButton *radioButton_3;
-    QRadioButton *radioButton_4;
+    QPushButton *pushButton_9;
+    QGroupBox *groupBox_2;
+    QGridLayout *gridLayout_4;
+    QComboBox *comboBox_2;
+    QPushButton *pushButton_8;
+    QPushButton *pushButton_10;
+    QTextEdit *textEdit;
     QTabWidget *tabWidget;
     QWidget *tab_1;
     QGridLayout *gridLayout;
     QChartView *graphicsView_1;
     QHBoxLayout *horizontalLayout;
-    QPushButton *pushButton;
-    QPushButton *pushButton_2;
+    QLineEdit *lineEdit;
+    QLineEdit *lineEdit_2;
     QPushButton *pushButton_3;
     QPushButton *pushButton_4;
     QWidget *tab_2;
@@ -90,44 +95,62 @@ public:
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         gridLayout_2 = new QGridLayout(centralwidget);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
-        textEdit = new QTextEdit(centralwidget);
-        textEdit->setObjectName(QString::fromUtf8("textEdit"));
-        textEdit->setMaximumSize(QSize(16777215, 150));
-
-        gridLayout_2->addWidget(textEdit, 1, 0, 1, 2);
-
         verticalLayout = new QVBoxLayout();
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        comboBox = new QComboBox(centralwidget);
+        groupBox = new QGroupBox(centralwidget);
+        groupBox->setObjectName(QString::fromUtf8("groupBox"));
+        groupBox->setFlat(false);
+        groupBox->setCheckable(false);
+        gridLayout_5 = new QGridLayout(groupBox);
+        gridLayout_5->setObjectName(QString::fromUtf8("gridLayout_5"));
+        comboBox = new QComboBox(groupBox);
         comboBox->addItem(QString());
         comboBox->addItem(QString());
         comboBox->addItem(QString());
         comboBox->setObjectName(QString::fromUtf8("comboBox"));
 
-        verticalLayout->addWidget(comboBox);
+        gridLayout_5->addWidget(comboBox, 0, 0, 1, 1);
 
-        radioButton = new QRadioButton(centralwidget);
-        radioButton->setObjectName(QString::fromUtf8("radioButton"));
+        pushButton_9 = new QPushButton(groupBox);
+        pushButton_9->setObjectName(QString::fromUtf8("pushButton_9"));
 
-        verticalLayout->addWidget(radioButton);
+        gridLayout_5->addWidget(pushButton_9, 1, 0, 1, 1);
 
-        radioButton_2 = new QRadioButton(centralwidget);
-        radioButton_2->setObjectName(QString::fromUtf8("radioButton_2"));
 
-        verticalLayout->addWidget(radioButton_2);
+        verticalLayout->addWidget(groupBox);
 
-        radioButton_3 = new QRadioButton(centralwidget);
-        radioButton_3->setObjectName(QString::fromUtf8("radioButton_3"));
+        groupBox_2 = new QGroupBox(centralwidget);
+        groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
+        gridLayout_4 = new QGridLayout(groupBox_2);
+        gridLayout_4->setObjectName(QString::fromUtf8("gridLayout_4"));
+        comboBox_2 = new QComboBox(groupBox_2);
+        comboBox_2->setObjectName(QString::fromUtf8("comboBox_2"));
 
-        verticalLayout->addWidget(radioButton_3);
+        gridLayout_4->addWidget(comboBox_2, 0, 0, 1, 1);
 
-        radioButton_4 = new QRadioButton(centralwidget);
-        radioButton_4->setObjectName(QString::fromUtf8("radioButton_4"));
+        pushButton_8 = new QPushButton(groupBox_2);
+        pushButton_8->setObjectName(QString::fromUtf8("pushButton_8"));
 
-        verticalLayout->addWidget(radioButton_4);
+        gridLayout_4->addWidget(pushButton_8, 1, 0, 1, 1);
+
+
+        verticalLayout->addWidget(groupBox_2);
+
+        pushButton_10 = new QPushButton(centralwidget);
+        pushButton_10->setObjectName(QString::fromUtf8("pushButton_10"));
+
+        verticalLayout->addWidget(pushButton_10);
 
 
         gridLayout_2->addLayout(verticalLayout, 0, 1, 1, 1);
+
+        textEdit = new QTextEdit(centralwidget);
+        textEdit->setObjectName(QString::fromUtf8("textEdit"));
+        textEdit->setMaximumSize(QSize(16777215, 150));
+        textEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+        textEdit->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+
+        gridLayout_2->addWidget(textEdit, 1, 0, 1, 2);
 
         tabWidget = new QTabWidget(centralwidget);
         tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
@@ -142,15 +165,17 @@ public:
 
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        pushButton = new QPushButton(tab_1);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+        lineEdit = new QLineEdit(tab_1);
+        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
+        lineEdit->setMaximumSize(QSize(200, 16777215));
 
-        horizontalLayout->addWidget(pushButton);
+        horizontalLayout->addWidget(lineEdit);
 
-        pushButton_2 = new QPushButton(tab_1);
-        pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
+        lineEdit_2 = new QLineEdit(tab_1);
+        lineEdit_2->setObjectName(QString::fromUtf8("lineEdit_2"));
+        lineEdit_2->setMaximumSize(QSize(200, 16777215));
 
-        horizontalLayout->addWidget(pushButton_2);
+        horizontalLayout->addWidget(lineEdit_2);
 
         pushButton_3 = new QPushButton(tab_1);
         pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
@@ -244,23 +269,22 @@ public:
         actionColler->setText(QCoreApplication::translate("PrincipalWindow", "Coller", nullptr));
         actiontest->setText(QCoreApplication::translate("PrincipalWindow", "test", nullptr));
         actionAbout->setText(QCoreApplication::translate("PrincipalWindow", "About Sam GUI", nullptr));
+        groupBox->setTitle(QCoreApplication::translate("PrincipalWindow", "TM", nullptr));
+        comboBox->setItemText(0, QCoreApplication::translate("PrincipalWindow", "I2C_start", nullptr));
+        comboBox->setItemText(1, QCoreApplication::translate("PrincipalWindow", "TM_vbat", nullptr));
+        comboBox->setItemText(2, QCoreApplication::translate("PrincipalWindow", "TM_ibat", nullptr));
+
+        pushButton_9->setText(QCoreApplication::translate("PrincipalWindow", "Send TM", nullptr));
+        groupBox_2->setTitle(QCoreApplication::translate("PrincipalWindow", "Command", nullptr));
+        pushButton_8->setText(QCoreApplication::translate("PrincipalWindow", "Send CMD", nullptr));
+        pushButton_10->setText(QCoreApplication::translate("PrincipalWindow", "Restart COM", nullptr));
         textEdit->setHtml(QCoreApplication::translate("PrincipalWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", nullptr));
-        comboBox->setItemText(0, QCoreApplication::translate("PrincipalWindow", "I2C_start", nullptr));
-        comboBox->setItemText(1, QCoreApplication::translate("PrincipalWindow", "TM_vbat", nullptr));
-        comboBox->setItemText(2, QCoreApplication::translate("PrincipalWindow", "TM_ibat", nullptr));
-
-        radioButton->setText(QCoreApplication::translate("PrincipalWindow", "RadioButton", nullptr));
-        radioButton_2->setText(QCoreApplication::translate("PrincipalWindow", "RadioButton", nullptr));
-        radioButton_3->setText(QCoreApplication::translate("PrincipalWindow", "RadioButton", nullptr));
-        radioButton_4->setText(QCoreApplication::translate("PrincipalWindow", "RadioButton", nullptr));
-        pushButton->setText(QCoreApplication::translate("PrincipalWindow", "PushButton", nullptr));
-        pushButton_2->setText(QCoreApplication::translate("PrincipalWindow", "PushButton", nullptr));
         pushButton_3->setText(QCoreApplication::translate("PrincipalWindow", "PushButton", nullptr));
-        pushButton_4->setText(QCoreApplication::translate("PrincipalWindow", "PushButton", nullptr));
+        pushButton_4->setText(QCoreApplication::translate("PrincipalWindow", "Start Charge", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_1), QCoreApplication::translate("PrincipalWindow", "Graph U/I", nullptr));
         pushButton_5->setText(QCoreApplication::translate("PrincipalWindow", "PushButton", nullptr));
         pushButton_6->setText(QCoreApplication::translate("PrincipalWindow", "PushButton", nullptr));

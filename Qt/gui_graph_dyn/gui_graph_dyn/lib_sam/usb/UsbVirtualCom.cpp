@@ -10,7 +10,7 @@
 #include "UsbVirtualCom.h"
 
 UsbVirtualCom::UsbVirtualCom() :
-    m_serial_name(""),m_status_com_open(false),m_tm_i2c_str(""),
+    m_serial_name(""),m_status_com_open(false),m_tm_i2c_str(""),m_com_name("COM4"),
     m_tm_v_double(0.0),m_tm_time_double(0.0)
 
 {
@@ -24,7 +24,7 @@ UsbVirtualCom::UsbVirtualCom() :
     }
 
     //Configure de USB port COM4 :
-    m_pic_usb_com.setPortName("COM3");//setPortName(listPortCom.at(1)) si un seul port com ??
+    m_pic_usb_com.setPortName(m_com_name);//setPortName(listPortCom.at(1)) si un seul port com ??
     m_pic_usb_com.setBaudRate(QSerialPort::Baud115200);
     m_pic_usb_com.setDataBits(QSerialPort::Data8);
     m_pic_usb_com.setParity(QSerialPort::NoParity);
