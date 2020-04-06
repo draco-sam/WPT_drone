@@ -11,6 +11,7 @@
 
 UsbVirtualCom::UsbVirtualCom() :
     m_serial_name(""),m_status_com_open(false),m_tm_i2c_str(""),m_com_name("COM4"),
+    m_str_tm_0(""),m_str_tm_1(""),m_str_tm_2(""),m_str_tm_3(""),m_str_tm_4(""),m_str_tm_5(""),
     m_tm_v_double(0.0),m_tm_time_double(0.0)
 
 {
@@ -110,7 +111,44 @@ void UsbVirtualCom::tm_strings_to_double(QString tm_i2c_str,
            <<"tm_time_str = "<<tm_time_str<<" ; *tm_time_float = "<<*tm_time_float<<endl;
 }
 //__________________________________________________________________________________________________
+void UsbVirtualCom::send_tm(QString usb_string){
+/*
+ * 5 : STATE ; ch susp : on ; prech : off ; cc_cv : off ; bat_miss : off ; bat_short : off
+ */
+    unsigned short  comma    = 0;
 
+    m_pic_usb_com.write(usb_string.toUtf8().constData());
+    m_pic_usb_com.waitForBytesWritten();
+    m_pic_usb_com.waitForReadyRead();
+    //Read TM in the COM buffer and convert it into 2 floats :
+    m_tm_i2c_str = m_pic_usb_com.readAll();
+
+    for(int i=0 ; i < m_tm_i2c_str.size() ; i++){
+        if(m_tm_i2c_str[i] == ";"){
+            comma++;
+        }
+
+        if(m_tm_i2c_str[i] != ";" && comma == 0){m_str_tm_0.append(m_tm_i2c_str[i]);}
+        else if(m_tm_i2c_str[i] != ";" && comma == 1){m_str_tm_1.append(m_tm_i2c_str[i]);}
+        else if(m_tm_i2c_str[i] != ";" && comma == 2){m_str_tm_2.append(m_tm_i2c_str[i]);}
+        else if(m_tm_i2c_str[i] != ";" && comma == 3){m_str_tm_3.append(m_tm_i2c_str[i]);}
+        else if(m_tm_i2c_str[i] != ";" && comma == 4){m_str_tm_4.append(m_tm_i2c_str[i]);}
+        else if(m_tm_i2c_str[i] != ";" && comma == 5){m_str_tm_5.append(m_tm_i2c_str[i]);}
+    }
+    qDebug()<<m_str_tm_0 + " ; " + m_str_tm_1;
+}
+//__________________________________________________________________________________________________
+
+void UsbVirtualCom::get_tm_strings(QString *str_0,QString *str_1,QString *str_2,QString *str_3,
+                    QString *str_4,QString *str_5){
+    *str_0 = m_str_tm_0;
+    *str_1 = m_str_tm_1;
+    *str_2 = m_str_tm_2;
+    *str_3 = m_str_tm_3;
+    *str_4 = m_str_tm_4;
+    *str_5 = m_str_tm_5;
+}
+//__________________________________________________________________________________________________
 void UsbVirtualCom::send_tm_request(QString usb_string){
 /* Send TM request to the PIC.
  *
@@ -128,6 +166,20 @@ void UsbVirtualCom::send_tm_request(QString usb_string){
 void UsbVirtualCom::get_tm_i2c_float(double *tm_t,double *tm_v){
     *tm_v = m_tm_v_double;
     *tm_t = m_tm_time_double;
+}
+//__________________________________________________________________________________________________
+
+void UsbVirtualCom::send_tc(QString usb_string){
+/* Send TC (command) to the PIC.
+ *
+ *
+ */
+    m_pic_usb_com.write(usb_string.toUtf8().constData());
+    m_pic_usb_com.waitForBytesWritten();
+    m_pic_usb_com.waitForReadyRead();
+    //Read TM in the COM buffer and put it on qDebug() console :
+    m_tm_i2c_str = m_pic_usb_com.readAll();
+    qDebug()<<m_tm_i2c_str;
 }
 //__________________________________________________________________________________________________
 

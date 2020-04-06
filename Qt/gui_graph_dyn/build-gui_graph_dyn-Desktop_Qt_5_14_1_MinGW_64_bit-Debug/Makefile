@@ -1278,7 +1278,14 @@ PrincipalWindow.o: ../gui_graph_dyn/lib_sam/gui/PrincipalWindow.cpp ../gui_graph
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/qlayout.h \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/qlayoutitem.h \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/qboxlayout.h \
+		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/QGroupBox \
+		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/qgroupbox.h \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/QHBoxLayout \
+		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/QLineEdit \
+		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/qlineedit.h \
+		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtGui/qtextcursor.h \
+		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtGui/qtextformat.h \
+		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtGui/qtextoption.h \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/QMenu \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/qmenu.h \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/QMenuBar \
@@ -1286,8 +1293,6 @@ PrincipalWindow.o: ../gui_graph_dyn/lib_sam/gui/PrincipalWindow.cpp ../gui_graph
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/QPushButton \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/qpushbutton.h \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/qabstractbutton.h \
-		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/QRadioButton \
-		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/qradiobutton.h \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/QStatusBar \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/qstatusbar.h \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/QTabWidget \
@@ -1295,9 +1300,6 @@ PrincipalWindow.o: ../gui_graph_dyn/lib_sam/gui/PrincipalWindow.cpp ../gui_graph
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/qtextedit.h \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/qabstractscrollarea.h \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtGui/qtextdocument.h \
-		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtGui/qtextoption.h \
-		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtGui/qtextcursor.h \
-		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtGui/qtextformat.h \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/QVBoxLayout \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/QWidget \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtCharts/qchartview.h \

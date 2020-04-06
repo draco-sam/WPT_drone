@@ -15,8 +15,11 @@
 #include <QSerialPort>
 #include <QDebug>
 
-#define M_TM_VBAT "\r\n3\r\n"
-#define M_TM_IBAT "\r\n4\r\n"
+#define TM_VBAT              "\r\n3\r\n"
+#define TM_IBAT              "\r\n4\r\n"
+#define TM_STATE             "\r\n5\r\n"
+#define TC_START_STOP_CHARGE "\r\n11\r\n"
+
 
 class UsbVirtualCom
 //class UsbVirtualCom
@@ -28,8 +31,12 @@ class UsbVirtualCom
     void send_enter();
     void send_qt_mode_activation();
     void send_tm_request(QString usb_string);
+    void send_tm(QString usb_string);
+    void send_tc(QString usb_string);
     void tm_strings_to_double(QString tm_i2c_str,double *tm_data_float,double *tm_time_float);
     void get_tm_i2c_float(double *tm_t,double *tm_v);
+    void get_tm_strings(QString *str_0,QString *str_1,QString *str_2,QString *str_3,
+                        QString *str_4,QString *str_5);
 
     private :
 
@@ -40,11 +47,14 @@ class UsbVirtualCom
     QSerialPort                 m_pic_usb_com;
     QString                     m_tm_i2c_str;
     QString                     m_com_name;
+    QString                     m_str_tm_0;
+    QString                     m_str_tm_1;
+    QString                     m_str_tm_2;
+    QString                     m_str_tm_3;
+    QString                     m_str_tm_4;
+    QString                     m_str_tm_5;
     double                      m_tm_v_double;
     double                      m_tm_time_double;
-    //QString                     M_TM_VBAT;
-    //QString                     M_TM_IBAT;
-    //QString                     M_TM_VIN;
 };
 
 #endif // USBVIRTUALCOM_H

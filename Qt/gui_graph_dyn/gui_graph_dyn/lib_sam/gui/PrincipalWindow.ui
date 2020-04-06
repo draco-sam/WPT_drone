@@ -125,36 +125,49 @@ p, li { white-space: pre-wrap; }
         <item row="1" column="0">
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QLineEdit" name="lineEdit">
+           <widget class="QLineEdit" name="line_vbat">
             <property name="maximumSize">
              <size>
-              <width>200</width>
+              <width>250</width>
               <height>16777215</height>
              </size>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_2">
+           <widget class="QLineEdit" name="line_ibat">
             <property name="maximumSize">
              <size>
-              <width>200</width>
+              <width>250</width>
               <height>16777215</height>
              </size>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_3">
-            <property name="text">
-             <string>PushButton</string>
+           <widget class="QLineEdit" name="line_temp_bat">
+            <property name="maximumSize">
+             <size>
+              <width>150</width>
+              <height>16777215</height>
+             </size>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_4">
+           <widget class="QLineEdit" name="line_temp_die">
+            <property name="maximumSize">
+             <size>
+              <width>150</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="button_start_charge">
             <property name="text">
-             <string>Start Charge</string>
+             <string>START Charge</string>
             </property>
            </widget>
           </item>

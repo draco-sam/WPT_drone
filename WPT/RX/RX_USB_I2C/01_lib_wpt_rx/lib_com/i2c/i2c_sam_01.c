@@ -425,7 +425,7 @@ I2c_tm_analog i2c_master_get_tm(unsigned short tm_address){
 void i2c_master_start_write_data(   unsigned short tx_address,unsigned short data,
                                     unsigned short *f_end_writing){
 /*
- * Start i2C master read telemetry from slave IC charger and save it on static variables.
+ * Start i2C master write command from slave IC charger.
  */
     s_flag_end_writing      = f_end_writing;//Copy the address of the flag on static variable.
     

@@ -57,10 +57,11 @@ public:
     QGridLayout *gridLayout;
     QChartView *graphicsView_1;
     QHBoxLayout *horizontalLayout;
-    QLineEdit *lineEdit;
-    QLineEdit *lineEdit_2;
-    QPushButton *pushButton_3;
-    QPushButton *pushButton_4;
+    QLineEdit *line_vbat;
+    QLineEdit *line_ibat;
+    QLineEdit *line_temp_bat;
+    QLineEdit *line_temp_die;
+    QPushButton *button_start_charge;
     QWidget *tab_2;
     QGridLayout *gridLayout_3;
     QChartView *graphicsView_2;
@@ -165,27 +166,34 @@ public:
 
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        lineEdit = new QLineEdit(tab_1);
-        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
-        lineEdit->setMaximumSize(QSize(200, 16777215));
+        line_vbat = new QLineEdit(tab_1);
+        line_vbat->setObjectName(QString::fromUtf8("line_vbat"));
+        line_vbat->setMaximumSize(QSize(250, 16777215));
 
-        horizontalLayout->addWidget(lineEdit);
+        horizontalLayout->addWidget(line_vbat);
 
-        lineEdit_2 = new QLineEdit(tab_1);
-        lineEdit_2->setObjectName(QString::fromUtf8("lineEdit_2"));
-        lineEdit_2->setMaximumSize(QSize(200, 16777215));
+        line_ibat = new QLineEdit(tab_1);
+        line_ibat->setObjectName(QString::fromUtf8("line_ibat"));
+        line_ibat->setMaximumSize(QSize(250, 16777215));
 
-        horizontalLayout->addWidget(lineEdit_2);
+        horizontalLayout->addWidget(line_ibat);
 
-        pushButton_3 = new QPushButton(tab_1);
-        pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
+        line_temp_bat = new QLineEdit(tab_1);
+        line_temp_bat->setObjectName(QString::fromUtf8("line_temp_bat"));
+        line_temp_bat->setMaximumSize(QSize(150, 16777215));
 
-        horizontalLayout->addWidget(pushButton_3);
+        horizontalLayout->addWidget(line_temp_bat);
 
-        pushButton_4 = new QPushButton(tab_1);
-        pushButton_4->setObjectName(QString::fromUtf8("pushButton_4"));
+        line_temp_die = new QLineEdit(tab_1);
+        line_temp_die->setObjectName(QString::fromUtf8("line_temp_die"));
+        line_temp_die->setMaximumSize(QSize(150, 16777215));
 
-        horizontalLayout->addWidget(pushButton_4);
+        horizontalLayout->addWidget(line_temp_die);
+
+        button_start_charge = new QPushButton(tab_1);
+        button_start_charge->setObjectName(QString::fromUtf8("button_start_charge"));
+
+        horizontalLayout->addWidget(button_start_charge);
 
 
         gridLayout->addLayout(horizontalLayout, 1, 0, 1, 1);
@@ -283,8 +291,7 @@ public:
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", nullptr));
-        pushButton_3->setText(QCoreApplication::translate("PrincipalWindow", "PushButton", nullptr));
-        pushButton_4->setText(QCoreApplication::translate("PrincipalWindow", "Start Charge", nullptr));
+        button_start_charge->setText(QCoreApplication::translate("PrincipalWindow", "START Charge", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_1), QCoreApplication::translate("PrincipalWindow", "Graph U/I", nullptr));
         pushButton_5->setText(QCoreApplication::translate("PrincipalWindow", "PushButton", nullptr));
         pushButton_6->setText(QCoreApplication::translate("PrincipalWindow", "PushButton", nullptr));

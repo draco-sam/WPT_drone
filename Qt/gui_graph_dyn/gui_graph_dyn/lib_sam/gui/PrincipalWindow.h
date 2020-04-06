@@ -16,10 +16,12 @@ class PrincipalWindow : public QMainWindow
     public:
         explicit PrincipalWindow(QWidget *parent = nullptr);
         ~PrincipalWindow();
+        void check_i2c_charge_on_off();
 
 
     public slots:
         void send_usb_tm_request();
+        void usb_tc_start_stop_charge();
 
     private:
         Ui::PrincipalWindow *ui;
@@ -32,6 +34,7 @@ class PrincipalWindow : public QMainWindow
         QSplineSeries   *m_series_v;
         QSplineSeries   *m_series_i;
         UsbVirtualCom   *m_usb_com;
+        bool            m_flag_start_charge;//stop=false,start=true.
 
 };
 

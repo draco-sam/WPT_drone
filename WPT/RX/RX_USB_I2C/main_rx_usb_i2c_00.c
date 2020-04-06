@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : main_rx_usb_i2c_00.c
- * Date             : 01/04/2020.   
+ * Date             : 06/04/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -37,6 +37,10 @@ int main(void)
     unsigned short      f_data_sending_1    = 0;
     char                t_data_i2c[64]      = "";//!!! Changer taille car 16 bits max !!!
     char                t_i2c_time[7]       = "";
+    char                t_i2c_vbat[7]       = "";
+    char                t_i2c_ibat[7]       = "";
+    char                t_i2c_vbat_time[7]  = "";
+    char                t_i2c_ibat_time[7]  = "";
     char                t_data_usb_com[250] = "";
     char                t_data[4]           = "";
     char                t_menu[255]         = "";
@@ -48,6 +52,9 @@ int main(void)
      */
     unsigned short      tm_address              = 0;
     unsigned short      flag_i2c_data_ready     = 0;//"0" = Data i2c not ready.
+    unsigned short      i2c_num_data_decoded    = 0;//Number of i2c data decoded.
+    unsigned short      f_i2c_end_writing       = 0;//"0"=not ending,"1"=ending.
+    unsigned short      f_start_stop_charge     = 0;//"0"=stop, "1"=start.
     unsigned short      i_tm                    = 0;
     float               i2c_tm_analog_data      = 0;
     I2c_tm_analog       s_i2c_tm_analog;//Structure for I2C TM.
@@ -82,8 +89,11 @@ int main(void)
     led_red     = on;
     
     
-    
-    write_usb_com("PIC24FJ128GC006 USB virtual COMx \r\n",&f_data_sending);
+    //Stop the charge battery at the beginning of the code :
+    //f_i2c_end_writing encore utile???
+    i2c_master_start_write_data(TX_CONFIG_BITS,0x0100,&f_i2c_end_writing);
+    write_usb_com("PIC24FJ128GC006 USB virtual COMx \r\n"
+                  "STOP charge battery \r\n",&f_data_sending);
 
     while (1)
     {   
@@ -123,14 +133,6 @@ int main(void)
             }
             else if(flag_i2c_data_ready == 1){//Data is ready.
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_VIN);
-                
-//                //********************************************************
-//                //!!! For debug to have a fake time !!!
-//                //-------------------------------------
-//                random_i2c_data(TM_VBAT,&s_x_y_data);
-//                //s_i2c_tm_analog.data_1 = s_x_y_data.x;
-//                float_to_ascii(s_x_y_data.y,t_i2c_time);
-//                //********************************************************
                 
                 float_to_ascii(s_i2c_tm_analog.data_1,t_data_i2c);
                 //float_to_ascii(s_i2c_tm_analog.sample_time,t_i2c_time);
@@ -249,7 +251,7 @@ int main(void)
                 //N'affiche pas la fin du tableau char...
                 char t_data_usb_com_1[250] = "";
                 
-                strcpy(t_data_usb_com_1,"5 : STATE -> ");
+                strcpy(t_data_usb_com_1,"5 : STATE ; ");
                 
                 if(s_i2c_tm_analog.data_1 == 0){//OFF.
                     strcat(t_data_usb_com_1,"ch susp : off ; ");
@@ -407,27 +409,63 @@ int main(void)
                 }
             }
         }
-        else if(menu_number == 11){
-            led_blue    = off;
-            led_green   = off;
-            led_red     = on;
+        else if(menu_number == 9){//9  : V/I,times,status
+            //--------------------------------------------------------------------------------
+            //TM I2C Vbat and decoding :
+            if(flag_i2c_data_ready == 0 && i2c_num_data_decoded == 0){
+                i2c_master_start_read_tm(TM_VBAT,&flag_i2c_data_ready);
+            }
+            else if(flag_i2c_data_ready == 1 && i2c_num_data_decoded == 0){//Data is ready.
+                s_i2c_tm_analog     = i2c_master_get_tm(TM_VBAT);
+                
+                float_to_ascii(s_i2c_tm_analog.data_1,t_i2c_vbat);
+                float_to_ascii(s_i2c_tm_analog.sample_time,t_i2c_vbat_time);
+                
+                i2c_num_data_decoded    = 1;
+                flag_i2c_data_ready     = 0;//Reset flag for next TM.     
+            }
+            //--------------------------------------------------------------------------------
             
-            strcpy(t_data_usb_com,"11 : Suspend battery \r\n ");
-            write_usb_com(t_data_usb_com,&f_data_sending);
+            //--------------------------------------------------------------------------------
+            //TM I2C Ibat and decoding :
+            else if(flag_i2c_data_ready == 0 && i2c_num_data_decoded == 1){
+                i2c_master_start_read_tm(TM_IBAT,&flag_i2c_data_ready);
+            }
+            else if(flag_i2c_data_ready == 1 && i2c_num_data_decoded == 1){//Data is ready.
+                s_i2c_tm_analog     = i2c_master_get_tm(TM_IBAT);
+                
+                float_to_ascii(s_i2c_tm_analog.data_1,t_i2c_ibat);
+                float_to_ascii(s_i2c_tm_analog.sample_time,t_i2c_ibat_time);
+                
+                i2c_num_data_decoded = 2;
+            }
+            //--------------------------------------------------------------------------------
             
-            unsigned short flag_i2c_end_writing = 1;
-            i2c_master_start_write_data(TX_CONFIG_BITS,0x0100,&flag_i2c_end_writing);
+            //!!! reseter i2c_num_data_decoded à la fin !!!
+            //!!! Reseter les tableaux à la fin !!!
         }
-        else if(menu_number == 12){
-            led_blue    = off;
-            led_green   = off;
-            led_red     = on;
+        else if(menu_number == 11){//11 : START/STOP charge.
+            unsigned short tc_data      = 0x0100;//Stop charge.
+            char menu_text[25]          = "";
+            char menu_text_start[]      = "START charge battery \r\n";
+            char menu_text_stop[]       = "STOP charge battery \r\n";
             
-            strcpy(t_data_usb_com,"12 : Restart charge battery \r\n ");
+            if(f_start_stop_charge == 0){//stop to start.
+                strcpy(menu_text,menu_text_start);
+                tc_data                 = 0x0000;//Start charge.
+                f_start_stop_charge     = 1;//Charge running.
+            }
+            else{//start to stop.
+                strcpy(menu_text,menu_text_stop);
+                tc_data                 = 0x0100;//Stop charge.
+                f_start_stop_charge     = 0;//Charge stopped.
+            }
+            
+            strcpy(t_data_usb_com,menu_text);
             write_usb_com(t_data_usb_com,&f_data_sending);
             
             unsigned short flag_i2c_end_writing = 1;
-            i2c_master_start_write_data(TX_CONFIG_BITS,0x0000,&flag_i2c_end_writing);
+            i2c_master_start_write_data(TX_CONFIG_BITS,tc_data,&flag_i2c_end_writing);
         }
         else if(menu_number == 20){//Choose Qt interface.
             if(f_type_interface == 0){
@@ -476,8 +514,8 @@ void get_menu(unsigned short menu_number, char *t_menu, unsigned short t_menu_si
                         "7  : TM_SYSTEM_STATUS \r\n"
                         "8  : TM_I/V_CHARGE_DAC \r\n";
     
-    char t_menu_2[] =   "11 : Suspend battery \r\n"
-                        "12 : Restart charge \r\n"
+    char t_menu_2[] =   "9  : V/I,times,status \r\n"
+                        "11 : START/STOP charge \r\n"
                         "20 : Qt interface ON/OFF \r\n"
                         "-----------------------------------\r\n";
     
