@@ -14,14 +14,6 @@
  */
 int main(void)
 {
-    //*********************************
-    //!!! For debug !!!
-    //*****************
-    I2C_x_y_data s_x_y_data;
-    s_x_y_data.x = 3.0;
-    s_x_y_data.y = 0.0;
-    //*********************************
-    
     #define led_red         LATGbits.LATG7
     #define led_green       LATGbits.LATG6
     #define led_blue        LATEbits.LATE7
@@ -41,6 +33,7 @@ int main(void)
     char                t_i2c_ibat[7]       = "";
     char                t_i2c_vbat_time[7]  = "";
     char                t_i2c_ibat_time[7]  = "";
+    char                t_i2c_state[9]      = "";
     char                t_data_usb_com[250] = "";
     char                t_data[4]           = "";
     char                t_menu[255]         = "";
@@ -437,12 +430,75 @@ int main(void)
                 float_to_ascii(s_i2c_tm_analog.data_1,t_i2c_ibat);
                 float_to_ascii(s_i2c_tm_analog.sample_time,t_i2c_ibat_time);
                 
-                i2c_num_data_decoded = 2;
+                i2c_num_data_decoded    = 2;
+                flag_i2c_data_ready     = 0;//Reset flag for next TM.
             }
             //--------------------------------------------------------------------------------
             
-            //!!! reseter i2c_num_data_decoded à la fin !!!
-            //!!! Reseter les tableaux à la fin !!!
+            //--------------------------------------------------------------------------------
+            //TM state :
+            else if(flag_i2c_data_ready == 0 && i2c_num_data_decoded == 2){
+                i2c_master_start_read_tm(TM_CHARGER_STATE,&flag_i2c_data_ready);
+            }
+            else if(flag_i2c_data_ready == 1 && i2c_num_data_decoded == 2){//Data is ready.
+                s_i2c_tm_analog     = i2c_master_get_tm(TM_CHARGER_STATE);
+                                
+                //Charge suspended on/off.
+                if(s_i2c_tm_analog.data_1 == 0){//OFF.
+                    strcat(t_i2c_state,";off;");
+                }
+                else{
+                    strcat(t_i2c_state,";on;");
+                }
+                //Precharge on/off.
+                if(s_i2c_tm_analog.data_2 == 0){//OFF.
+                    strcat(t_i2c_state,"off;");
+                }
+                else{
+                    strcat(t_i2c_state,"on;");
+                }
+                
+                i2c_num_data_decoded    = 3;
+            }
+            //--------------------------------------------------------------------------------
+            
+            //--------------------------------------------------------------------------------
+            //Prepare data to send on USB :
+            if(flag_i2c_data_ready == 1 && i2c_num_data_decoded == 3){
+                
+                unsigned short i_1          = 0;//For table_concatenation().
+                
+                table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_vbat,
+                              sizeof(t_i2c_vbat),&i_1);
+                table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_vbat_time,
+                              sizeof(t_i2c_vbat_time),&i_1);
+                table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_ibat,
+                              sizeof(t_i2c_ibat),&i_1);
+                table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_ibat_time,
+                              sizeof(t_i2c_ibat_time),&i_1);
+                table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_state,
+                              sizeof(t_i2c_state),&i_1);
+                
+                
+                i_1--;
+                t_data_usb_com[i_1] = '\r';
+                i_1++;
+                t_data_usb_com[i_1] = '\n';
+                                
+                write_usb_com(t_data_usb_com,&f_data_sending);
+
+                if(f_data_sending == 1){//"1" if USB ready.
+                    flag_i2c_data_ready     = 0;//Reset flag after USB ready to send.
+                    i2c_num_data_decoded    = 0;//Reset data number for next turn.
+                    
+                    empty_table(t_i2c_vbat,sizeof(t_i2c_vbat));
+                    empty_table(t_i2c_vbat_time,sizeof(t_i2c_vbat_time));
+                    empty_table(t_i2c_ibat,sizeof(t_i2c_ibat));
+                    empty_table(t_i2c_ibat_time,sizeof(t_i2c_ibat_time));
+                    empty_table(t_i2c_state,sizeof(t_i2c_state));
+                }
+            }
+            //--------------------------------------------------------------------------------
         }
         else if(menu_number == 11){//11 : START/STOP charge.
             unsigned short tc_data      = 0x0100;//Stop charge.
@@ -571,6 +627,38 @@ void random_i2c_data(unsigned short type_data,I2C_x_y_data *s_i2c_x_y){
 }
 //__________________________________________________________________________________________________
 
+void table_concatenation(char *t_final,unsigned short t_final_size,char *t_new,
+                            unsigned short t_new_size,unsigned short *i_1){
+/*
+ */
+    unsigned short i_final  = 0;
+    unsigned short i_2      = 0;
+    char t_1[7] = "";
+    char t_2[7] = "";
+    
+    t_1[0] = t_new[0];
+    t_1[1] = t_new[1];
+    
+    i_final = *i_1;
+//    strcpy(t_1,t_final);
+//    strcpy(t_2,t_new);
+    
+    for(i_2 = 0; i_2 <  t_new_size ; i_2++){
+        t_final[i_final] = t_new[i_2];
+        i_final++;
+    }
+    
+    i_final--;//Retourner en arrière à cause du dernier i_1++;
+    t_final[i_final] = ';';
+    i_final++;
+    
+    *i_1 = i_final;
+    
+//    strcpy(t_1,t_final);
+//    strcpy(t_2,t_new);
+    
+}
+//__________________________________________________________________________________________________
 
 /**
  End of File
