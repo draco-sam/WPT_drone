@@ -482,10 +482,10 @@ int main(void)
                 }
                 //Precharge on/off.
                 if(s_i2c_tm_analog.data_2 == 0){//OFF.
-                    strcat(t_i2c_state,"off;");
+                    strcat(t_i2c_state,"off");
                 }
                 else{
-                    strcat(t_i2c_state,"on;");
+                    strcat(t_i2c_state,"on");
                 }
                 
                 i2c_num_data_decoded    = 3;
@@ -509,9 +509,6 @@ int main(void)
                 }
                 else{
                     strcpy(t_i2c_status,"CC/CV error");
-                    led_red     = off;
-                    led_blue    = off;
-                    led_green   =  on;
                 }
                 
                 i2c_num_data_decoded    = 4;
@@ -537,13 +534,9 @@ int main(void)
                 table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_status,
                               sizeof(t_i2c_status),&i_1);
                 
-//                i_1--;//Retirer le dernier ';'.
-//                t_data_usb_com[i_1] = '\0';
-                
-//                i_1--;
-//                t_data_usb_com[i_1] = '\r';
-//                i_1++;
-//                t_data_usb_com[i_1] = '\n';
+                t_data_usb_com[i_1] = '\r';
+                i_1++;
+                t_data_usb_com[i_1] = '\n';
                                 
                 write_usb_com(t_data_usb_com,&f_data_sending);
 
@@ -557,6 +550,8 @@ int main(void)
                     empty_table(t_i2c_ibat_time,sizeof(t_i2c_ibat_time));
                     empty_table(t_i2c_state,sizeof(t_i2c_state));
                     empty_table(t_i2c_state,sizeof(t_i2c_status));
+                    
+                    led_red     = !led_red;
                 }
             }
             //--------------------------------------------------------------------------------
