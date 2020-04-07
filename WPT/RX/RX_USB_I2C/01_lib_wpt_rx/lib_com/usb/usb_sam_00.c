@@ -88,9 +88,9 @@ void read_usb_com(unsigned short  *menu_number){
 
         for(i=0; i<numBytesRead; i++){
             if(readBuffer[i] == 0x0d){//0x0d = CR (0x0a = LF).
-                led_red     = off;
-                led_green   = off;
-                led_blue    = on;
+//                led_red     = off;
+//                led_green   = off;
+//                led_blue    = on;
             }
             else if(readBuffer[i] != 0x0a){//Diff de LF.
                 /*******************************************

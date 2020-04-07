@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : main_rx_usb_i2c_00.c
- * Date             : 06/04/2020.   
+ * Date             : 07/04/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -34,6 +34,7 @@ int main(void)
     char                t_i2c_vbat_time[7]  = "";
     char                t_i2c_ibat_time[7]  = "";
     char                t_i2c_state[9]      = "";
+    char                t_i2c_status[20]    = "";//"CC on \n\r" ou "CC/CV error \n\r.
     char                t_data_usb_com[250] = "";
     char                t_data[4]           = "";
     char                t_menu[255]         = "";
@@ -66,13 +67,42 @@ int main(void)
     Date_time           str_data_time;
     /***********************************************************************************/
     
+    
+//    unsigned short i_1      = 0;
+//    char t_vbat[]           = "bonjour_ABCD";
+//    unsigned short size_t1  = 0;
+//    
+//    size_t1 = sizeof(t_vbat);
+//    
+//    strcpy(t_i2c_vbat_time,"54321");
+//    strcpy(t_i2c_ibat,"-1.234");
+//    strcpy(t_i2c_ibat_time,"12345");
+//    strcpy(t_i2c_state,"on;off");
+//    strcpy(t_i2c_status,"CC/CV ERROR");
+//        
+//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_vbat,
+//                              sizeof(t_vbat),&i_1);
+//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_vbat_time,
+//                  sizeof(t_i2c_vbat_time),&i_1);
+//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_ibat,
+//                  sizeof(t_i2c_ibat),&i_1);
+//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_ibat_time,
+//                  sizeof(t_i2c_ibat_time),&i_1);
+//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_state,
+//                  sizeof(t_i2c_state),&i_1);
+//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_status,
+//                  sizeof(t_i2c_status),&i_1);
+//    
+//    Nop();
+    
+    
     // initialize the device
     SYSTEM_Initialize();
     
     led_red     = off;
     led_green   = off;
     led_blue    = off;
-        
+    
     //Set Real-Time Clock and Calendar.
     //Useful for time sample of TM LiPo charger.
     set_RTCC_data_time(20,3,31,2,15,40,0);//Year,month,day,weekday,hour,min,sec.
@@ -445,10 +475,10 @@ int main(void)
                                 
                 //Charge suspended on/off.
                 if(s_i2c_tm_analog.data_1 == 0){//OFF.
-                    strcat(t_i2c_state,";off;");
+                    strcpy(t_i2c_state,"off;");
                 }
                 else{
-                    strcat(t_i2c_state,";on;");
+                    strcpy(t_i2c_state,"on;");
                 }
                 //Precharge on/off.
                 if(s_i2c_tm_analog.data_2 == 0){//OFF.
@@ -459,12 +489,38 @@ int main(void)
                 }
                 
                 i2c_num_data_decoded    = 3;
+                flag_i2c_data_ready     = 0;//Reset flag for next TM.
+            }
+            //--------------------------------------------------------------------------------
+            
+            //--------------------------------------------------------------------------------
+            //TM status :
+            else if(flag_i2c_data_ready == 0 && i2c_num_data_decoded == 3){
+                i2c_master_start_read_tm(TM_CHARGE_STATUS,&flag_i2c_data_ready);
+            }
+            else if(flag_i2c_data_ready == 1 && i2c_num_data_decoded == 3){//Data is ready.
+                s_i2c_tm_analog     = i2c_master_get_tm(TM_CHARGE_STATUS);
+                                                
+                if(s_i2c_tm_analog.data_3 == 1){//CC with ICHARGE_DAC ON.
+                    strcpy(t_i2c_status,"CC on");
+                }
+                else if(s_i2c_tm_analog.data_4 == 1){//CV with VCHARGE_DAC ON.
+                    strcpy(t_i2c_status,"CV on");
+                }
+                else{
+                    strcpy(t_i2c_status,"CC/CV error");
+                    led_red     = off;
+                    led_blue    = off;
+                    led_green   =  on;
+                }
+                
+                i2c_num_data_decoded    = 4;
             }
             //--------------------------------------------------------------------------------
             
             //--------------------------------------------------------------------------------
             //Prepare data to send on USB :
-            if(flag_i2c_data_ready == 1 && i2c_num_data_decoded == 3){
+            if(flag_i2c_data_ready == 1 && i2c_num_data_decoded == 4){
                 
                 unsigned short i_1          = 0;//For table_concatenation().
                 
@@ -478,12 +534,16 @@ int main(void)
                               sizeof(t_i2c_ibat_time),&i_1);
                 table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_state,
                               sizeof(t_i2c_state),&i_1);
+                table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_status,
+                              sizeof(t_i2c_status),&i_1);
                 
+//                i_1--;//Retirer le dernier ';'.
+//                t_data_usb_com[i_1] = '\0';
                 
-                i_1--;
-                t_data_usb_com[i_1] = '\r';
-                i_1++;
-                t_data_usb_com[i_1] = '\n';
+//                i_1--;
+//                t_data_usb_com[i_1] = '\r';
+//                i_1++;
+//                t_data_usb_com[i_1] = '\n';
                                 
                 write_usb_com(t_data_usb_com,&f_data_sending);
 
@@ -496,6 +556,7 @@ int main(void)
                     empty_table(t_i2c_ibat,sizeof(t_i2c_ibat));
                     empty_table(t_i2c_ibat_time,sizeof(t_i2c_ibat_time));
                     empty_table(t_i2c_state,sizeof(t_i2c_state));
+                    empty_table(t_i2c_state,sizeof(t_i2c_status));
                 }
             }
             //--------------------------------------------------------------------------------
@@ -628,35 +689,33 @@ void random_i2c_data(unsigned short type_data,I2C_x_y_data *s_i2c_x_y){
 //__________________________________________________________________________________________________
 
 void table_concatenation(char *t_final,unsigned short t_final_size,char *t_new,
-                            unsigned short t_new_size,unsigned short *i_1){
-/*
+                            unsigned short t_new_size,unsigned short *i_t_final){
+/* Concatenation of 2 tables char.
+ * If the final table is not empty, add a ';' separator between data.
  */
-    unsigned short i_final  = 0;
-    unsigned short i_2      = 0;
-    char t_1[7] = "";
-    char t_2[7] = "";
+    unsigned short i_1  = 0;//Index for final table.
+    unsigned short i_2  = 0;//Index for new table to add.
+        
+    i_1 = *i_t_final;
     
-    t_1[0] = t_new[0];
-    t_1[1] = t_new[1];
-    
-    i_final = *i_1;
-//    strcpy(t_1,t_final);
-//    strcpy(t_2,t_new);
-    
-    for(i_2 = 0; i_2 <  t_new_size ; i_2++){
-        t_final[i_final] = t_new[i_2];
-        i_final++;
+    //Add data separator if table not empty :
+    if(i_1 > 0){
+        t_final[i_1] = ';';
+        i_1++;//Go to next index.
     }
     
-    i_final--;//Retourner en arrière à cause du dernier i_1++;
-    t_final[i_final] = ';';
-    i_final++;
+    //Add char in final table if char is not '\0' :
+    for(i_2 = 0; i_2 <  t_new_size ; i_2++){
+        if(t_new[i_2] != '\0'){
+            t_final[i_1] = t_new[i_2];
+            //Security to not exceed size max of t_final.
+            if((i_1+1) < t_final_size){
+                i_1++;
+            }
+        }
+    }
     
-    *i_1 = i_final;
-    
-//    strcpy(t_1,t_final);
-//    strcpy(t_2,t_new);
-    
+    *i_t_final = i_1;
 }
 //__________________________________________________________________________________________________
 
