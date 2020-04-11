@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : main_rx_usb_i2c_00.c
- * Date             : 07/04/2020.   
+ * Date             : 11/04/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -107,22 +107,36 @@ int main(void)
     //Useful for time sample of TM LiPo charger.
     set_RTCC_data_time(20,3,31,2,15,40,0);//Year,month,day,weekday,hour,min,sec.
         
+    
+    //!!! AJOUTER Timeout à la while USB avec RTCC !!!
+    unsigned int time_out_while     = 0;
+    unsigned int time_out_max_while = 120;//120 s <-> 2min d'attente.
+    
     //Plugger l'USB pour démarrer le code.
     while(USBGetDeviceState() < CONFIGURED_STATE || USBIsDeviceSuspended()== true){};
     led_red     = on;
     
+    if(time_out_while < time_out_max_while){
+        //f_i2c_end_writing encore utile???
+         write_usb_com("PIC24FJ128GC006 USB virtual COMx \r\n"
+                  "STOP charge battery \r\n",&f_data_sending);
+    }
+    else{
+        menu_number = 99;//Fonctionnement autonome sans IHM.
+    }
     
     //Stop the charge battery at the beginning of the code :
-    //f_i2c_end_writing encore utile???
     i2c_master_start_write_data(TX_CONFIG_BITS,0x0100,&f_i2c_end_writing);
-    write_usb_com("PIC24FJ128GC006 USB virtual COMx \r\n"
-                  "STOP charge battery \r\n",&f_data_sending);
+   
 
     while (1)
     {   
-        read_usb_com(&menu_number);
+        //Read or write USB buffer only if USB device plugged on PC :
+        if(time_out_while < time_out_max_while ){
+            read_usb_com(&menu_number);
         
-        CDCTxService();
+            CDCTxService();
+        }
         
         empty_table(t_data_i2c,sizeof(t_data_i2c));
         empty_table(t_i2c_time,sizeof(t_i2c_time));
@@ -589,6 +603,12 @@ int main(void)
                 strcpy(t_data_usb_com,"Qt interface OFF \r\n");
             }
             write_usb_com(t_data_usb_com,&f_data_sending);
+        }
+        else if(menu_number == 99){//Autonomous working without GUI.
+            //Check Vin >= 5V.
+            //Check T°_bat < 60 °C
+            //Check time_charge < 1h30min.
+            //...
         }
         
         

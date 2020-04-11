@@ -1,12 +1,13 @@
-/* 
+/*************************************************************************************************** 
  * File             : i2c_sam_01.c
- * Date             : 01/04/2020.   
+ * Date             : 11/04/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
- */
+ **************************************************************************************************/
 
 #include "i2c_sam_01.h"
+#include "temp_table.h"
 
  #define led_red         LATGbits.LATG7
  #define led_green       LATGbits.LATG6
@@ -642,3 +643,4 @@ unsigned long convertTimeToSeconds(unsigned int hour,unsigned int minutes,unsign
     return total_seconds;
 }
 //__________________________________________________________________________________________________
+

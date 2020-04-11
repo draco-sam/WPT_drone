@@ -69,6 +69,7 @@ public:
     QPushButton *pushButton_5;
     QPushButton *pushButton_6;
     QPushButton *pushButton_7;
+    QWidget *tab;
     QMenuBar *menubar;
     QMenu *menuFichier;
     QMenu *menuEdition;
@@ -229,6 +230,9 @@ public:
         gridLayout_3->addLayout(horizontalLayout_2, 1, 0, 1, 1);
 
         tabWidget->addTab(tab_2, QString());
+        tab = new QWidget();
+        tab->setObjectName(QString::fromUtf8("tab"));
+        tabWidget->addTab(tab, QString());
 
         gridLayout_2->addWidget(tabWidget, 0, 0, 1, 1);
 
@@ -297,6 +301,7 @@ public:
         pushButton_6->setText(QCoreApplication::translate("PrincipalWindow", "PushButton", nullptr));
         pushButton_7->setText(QCoreApplication::translate("PrincipalWindow", "PushButton", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QCoreApplication::translate("PrincipalWindow", "Graph Coulomb Counter", nullptr));
+        tabWidget->setTabText(tabWidget->indexOf(tab), QCoreApplication::translate("PrincipalWindow", "Configuration", nullptr));
         menuFichier->setTitle(QCoreApplication::translate("PrincipalWindow", "Fichier", nullptr));
         menuEdition->setTitle(QCoreApplication::translate("PrincipalWindow", "Edition", nullptr));
         menuAide->setTitle(QCoreApplication::translate("PrincipalWindow", "Aide", nullptr));
