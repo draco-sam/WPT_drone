@@ -1,13 +1,12 @@
 /*************************************************************************************************** 
  * File             : i2c_sam_01.c
- * Date             : 11/04/2020.   
+ * Date             : 12/04/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
  **************************************************************************************************/
 
 #include "i2c_sam_01.h"
-#include "temp_table.h"
 
  #define led_red         LATGbits.LATG7
  #define led_green       LATGbits.LATG6
@@ -342,8 +341,11 @@ I2c_tm_analog i2c_master_get_tm(unsigned short tm_address){
     else if(tm_address == TM_DIE_TEMP){
         i2c_tm_analog.data_1 = (digital_data - 12010)/45.6;//45.6 °C.
     }
+    //R_NTC = (digital_data * R_NTC_BIAS)/(21845 - digital_data);
+    //digital_data = NTC_RATIO (datasheet p21/76).
+    //The digital value is sent to the PC. Qt code decoded this value to determine the T°.
     else if(tm_address == TM_NTC_RATIO){
-        i2c_tm_analog.data_1 = (digital_data * R_NTC_BIAS)/(21845 - digital_data);
+        i2c_tm_analog.data_1 = digital_data;
     }
     else if (tm_address == TM_CHEM_CELLS){
         i2c_tm_analog.data_1 = 0.0;//!!! A coder !!!
