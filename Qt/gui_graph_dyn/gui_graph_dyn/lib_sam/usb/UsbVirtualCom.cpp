@@ -1,11 +1,11 @@
 /***************************************************************************************************
  * File name        : UsbVirtualCom.cpp
- * Date             : 30/03/2020
+ * Date             : 12/04/2020
  * Author           : Samuel LORENZINO.
  *
  * Links            :
  *
- * Comments         :
+ * Comments         : !!! Corriger tm_... !!!
  **************************************************************************************************/
 #include "UsbVirtualCom.h"
 
@@ -149,7 +149,8 @@ void UsbVirtualCom::get_tm_strings(QString *str_0,QString *str_1,QString *str_2,
     *str_5 = m_str_tm_5;
 }
 //__________________________________________________________________________________________________
-void UsbVirtualCom::send_tm_request(QString usb_string){
+//void UsbVirtualCom::send_tm_request(QString usb_string){
+QString UsbVirtualCom::send_tm_request(QString usb_string){
 /* Send TM request to the PIC.
  *
  * https://doc.qt.io/qt-5/qstring.html#converting-between-8-bit-strings-and-unicode-strings
@@ -159,7 +160,9 @@ void UsbVirtualCom::send_tm_request(QString usb_string){
     m_pic_usb_com.waitForReadyRead();
     //Read TM in the COM buffer and convert it into 2 floats :
     m_tm_i2c_str = m_pic_usb_com.readAll();
-    tm_strings_to_double(m_tm_i2c_str,&m_tm_v_double,&m_tm_time_double);
+    //tm_strings_to_double(m_tm_i2c_str,&m_tm_v_double,&m_tm_time_double);
+
+    return m_tm_i2c_str;
 }
 //__________________________________________________________________________________________________
 

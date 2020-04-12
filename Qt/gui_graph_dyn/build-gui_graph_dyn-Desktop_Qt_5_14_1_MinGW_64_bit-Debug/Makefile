@@ -772,6 +772,7 @@ moc_PrincipalWindow.cpp: ../gui_graph_dyn/lib_sam/gui/PrincipalWindow.h \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtGui/qtouchdevice.h \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/qtabwidget.h \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtGui/qicon.h \
+		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtCore/QFile \
 		../gui_graph_dyn/lib_sam/chart/chart_sam.h \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtCharts/QChart \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtCharts/qchart.h \
@@ -1214,6 +1215,7 @@ PrincipalWindow.o: ../gui_graph_dyn/lib_sam/gui/PrincipalWindow.cpp ../gui_graph
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtGui/qtouchdevice.h \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/qtabwidget.h \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtGui/qicon.h \
+		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtCore/QFile \
 		../gui_graph_dyn/lib_sam/chart/chart_sam.h \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtCharts/QChart \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtCharts/qchart.h \
@@ -1949,6 +1951,7 @@ main_gui.o: ../gui_graph_dyn/main_gui.cpp D:/Qt/01_Qt_2020/5.14.1/mingw73_64/inc
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtCore/QDebug \
 		../gui_graph_dyn/lib_sam/gui/PrincipalWindow.h \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtWidgets/QMainWindow \
+		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtCore/QFile \
 		../gui_graph_dyn/lib_sam/chart/chart_sam.h \
 		D:/Qt/01_Qt_2020/5.14.1/mingw73_64/include/QtCore/QTimer \
 		../gui_graph_dyn/lib_sam/usb/UsbVirtualCom.h \

@@ -15,10 +15,11 @@
 #include <QSerialPort>
 #include <QDebug>
 
-#define TM_VBAT              "\r\n3\r\n"
-#define TM_IBAT              "\r\n4\r\n"
-#define TM_STATE             "\r\n5\r\n"
-#define TC_START_STOP_CHARGE "\r\n11\r\n"
+#define TM_VBAT                 "\r\n3\r\n"
+#define TM_IBAT                 "\r\n4\r\n"
+#define TM_STATE                "\r\n5\r\n"
+#define TM_VBAT_MULTIPLE        "\r\n9\r\n"//Vbat,t_vbat,Ibat,t_ibat,status,state,T°_NTC,T°_die.
+#define TC_START_STOP_CHARGE    "\r\n11\r\n"
 
 
 class UsbVirtualCom
@@ -30,7 +31,8 @@ class UsbVirtualCom
     ~UsbVirtualCom();
     void send_enter();
     void send_qt_mode_activation();
-    void send_tm_request(QString usb_string);
+    //void send_tm_request(QString usb_string);
+    QString send_tm_request(QString usb_string);
     void send_tm(QString usb_string);
     void send_tc(QString usb_string);
     void tm_strings_to_double(QString tm_i2c_str,double *tm_data_float,double *tm_time_float);
