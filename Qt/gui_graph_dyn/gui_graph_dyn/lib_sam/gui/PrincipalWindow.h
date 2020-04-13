@@ -24,6 +24,7 @@ class PrincipalWindow : public QMainWindow
     public slots:
         void usb_tm_multiple();
         void usb_tc_start_stop_charge();
+        void text_edit_scroll_off();
 
     private:
         Ui::PrincipalWindow *ui;
@@ -47,6 +48,7 @@ class PrincipalWindow : public QMainWindow
         QString         m_charge_status_str;
         QString         m_bat_temp_ntc_str;
         QString         m_charge_temp_die_str;
+        bool            m_mouse_click;
 
 };
 

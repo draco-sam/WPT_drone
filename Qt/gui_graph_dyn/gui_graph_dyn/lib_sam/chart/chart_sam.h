@@ -36,6 +36,8 @@ private:
     qreal           m_x_ibat;
     qreal           m_y_vbat;
     qreal           m_y_ibat;
+    qreal           m_x_min;
+    qreal           m_x_max;
     bool            m_f_data_ready;//Flag set by the main window.
     short           m_coeff_v;
     short           m_coeff_i;

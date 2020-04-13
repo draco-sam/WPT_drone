@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : main_rx_usb_i2c_00.c
- * Date             : 12/04/2020.   
+ * Date             : 13/04/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -68,6 +68,54 @@ int main(void)
     unsigned long       seconds_main        = 0;
     Date_time           str_data_time;
     /***********************************************************************************/
+    
+//    unsigned short i_1          = 0;//For table_concatenation().
+//    
+//    strcpy(t_i2c_vbat,"+3.987");
+//    strcpy(t_i2c_vbat_time,"+56856");
+//    strcpy(t_i2c_ibat,"+0.001");
+//    strcpy(t_i2c_ibat_time,"+56856");
+//    strcpy(t_i2c_state,"off;off");
+//    strcpy(t_i2c_status,"CC/CV error");
+//    strcpy(t_i2c_ntc,"+108961");
+//    strcpy(t_i2c_die,"+32.192");
+//    
+//                
+//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_vbat,
+//                  sizeof(t_i2c_vbat),&i_1);
+//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_vbat_time,
+//                  sizeof(t_i2c_vbat_time),&i_1);
+//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_ibat,
+//                  sizeof(t_i2c_ibat),&i_1);
+//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_ibat_time,
+//                  sizeof(t_i2c_ibat_time),&i_1);
+//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_state,
+//                  sizeof(t_i2c_state),&i_1);
+//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_status,
+//                  sizeof(t_i2c_status),&i_1);
+//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_ntc,
+//                  sizeof(t_i2c_ntc),&i_1);
+//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_die,
+//                  sizeof(t_i2c_die),&i_1);
+//
+//    t_data_usb_com[i_1] = '\r';
+//    i_1++;
+//    t_data_usb_com[i_1] = '\n';
+//    
+//    Nop();
+//    
+//    empty_table(t_i2c_vbat,sizeof(t_i2c_vbat));
+//    empty_table(t_i2c_vbat_time,sizeof(t_i2c_vbat_time));
+//    empty_table(t_i2c_ibat,sizeof(t_i2c_ibat));
+//    empty_table(t_i2c_ibat_time,sizeof(t_i2c_ibat_time));
+//    empty_table(t_i2c_state,sizeof(t_i2c_state));
+//    empty_table(t_i2c_status,sizeof(t_i2c_status));
+//    empty_table(t_i2c_ntc,sizeof(t_i2c_ntc));
+//    empty_table(t_i2c_die,sizeof(t_i2c_die));
+//    
+//    Nop();
+    
+    
     
     
     // initialize the device
@@ -572,9 +620,9 @@ int main(void)
                     empty_table(t_i2c_ibat,sizeof(t_i2c_ibat));
                     empty_table(t_i2c_ibat_time,sizeof(t_i2c_ibat_time));
                     empty_table(t_i2c_state,sizeof(t_i2c_state));
-                    empty_table(t_i2c_state,sizeof(t_i2c_status));
-                    empty_table(t_i2c_state,sizeof(t_i2c_ntc));
-                    empty_table(t_i2c_state,sizeof(t_i2c_die));
+                    empty_table(t_i2c_status,sizeof(t_i2c_status));
+                    empty_table(t_i2c_ntc,sizeof(t_i2c_ntc));
+                    empty_table(t_i2c_die,sizeof(t_i2c_die));
                     
                     led_red     = !led_red;//Led blinking at +- 1s.
                 }

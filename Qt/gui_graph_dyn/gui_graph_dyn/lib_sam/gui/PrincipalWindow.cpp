@@ -1,12 +1,14 @@
 /***************************************************************************************************
  * File name        : PrincipalWindow.cpp
- * Date             : 12/04/2020
+ * Date             : 13/04/2020
  * Author           : Samuel LORENZINO.
  *
  * Links            :
  *                  :
  *
- * Comments         :
+ * Comments         :   - Coder onglet config.
+ *                      - Récupérer l'heure PC et configurer le RTCC dans le PIC RX.
+ *                      - Configurer min/max abscisse en fct de l'heure.
  **************************************************************************************************/
 #include "PrincipalWindow.h"
 #include "ui_PrincipalWindow.h"
@@ -18,7 +20,7 @@ PrincipalWindow::PrincipalWindow(QWidget *parent) :
     m_coeff_v(1),m_coeff_i(1),m_series_v(0),m_series_i(0),m_usb_com(0),m_flag_start_charge(false),
     m_data_usb_str(""),m_vbat_str(""),m_ibat_str(""),m_vbat_time_str(""),m_ibat_time_str(""),
     m_charge_state_suspended_str(""),m_charge_state_precharge_str(""),m_charge_status_str(""),
-    m_bat_temp_ntc_str(""),m_charge_temp_die_str("")
+    m_bat_temp_ntc_str(""),m_charge_temp_die_str(""),m_mouse_click(false)
 {
     qDebug()<<endl<<"Bonjour qDebug";
 
@@ -30,6 +32,9 @@ PrincipalWindow::PrincipalWindow(QWidget *parent) :
 
     QObject::connect(ui->button_start_charge,SIGNAL(clicked()),this,
                      SLOT(usb_tc_start_stop_charge()));
+
+    //Stop auto down scrolling of object textEdit with a signal.
+    QObject::connect(ui->textEdit,SIGNAL(selectionChanged()),this,SLOT(text_edit_scroll_off()));
 
     ui->textEdit->setText("Bonjour, I2C LiPo bat graph \n");
     ui->textEdit->append("TM 1 : U/I bat");
@@ -95,21 +100,33 @@ void PrincipalWindow::check_i2c_charge_on_off(){
 }
 //__________________________________________________________________________________________________
 
-//void PrincipalWindow::usb_one_tm_request(){
-
-void PrincipalWindow::usb_tm_multiple(){//!!!Changer en usb_tm_request()!!!
+void PrincipalWindow::usb_tm_multiple(){
 /* Lancer la TM de l'USB vers le PIC.
  * Récupérer et décoder la data port COM.
  *
  */
     qreal x_v = 0.0, x_i = 0.0, y_v = 0.0, y_i = 0.0;
-    unsigned int bat_ntc_ratio = 0;
-
+    unsigned int bat_ntc_ratio      = 0;
     unsigned short num_semicolon    = 0;//Compteur de point virgule.
     unsigned short i_str            = 0;
 
+    //Reset all string.
+    m_data_usb_str                  = "";
+    m_vbat_str                      = "";
+    m_vbat_time_str                 = "";
+    m_ibat_str                      = "";
+    m_ibat_time_str                 = "";
+    m_charge_state_suspended_str    = "";
+    m_charge_state_precharge_str    = "";
+    m_charge_status_str             = "";
+    m_bat_temp_ntc_str              = "";
+    m_charge_temp_die_str           = "";;
+
+
     //TM request for vbat :
     m_data_usb_str = m_usb_com->send_tm_request(TM_VBAT_MULTIPLE);
+
+    qDebug()<<"m_data_usb_str = "<<endl<<m_data_usb_str;
 
     //Extract multiple data I2C sending on port USB---------------------------------
     for(int i=0; i < m_data_usb_str.size() ; i++){
@@ -159,10 +176,10 @@ void PrincipalWindow::usb_tm_multiple(){//!!!Changer en usb_tm_request()!!!
     //------------------------------------------------------------------------------
 
     //Convert string to float fort chart.
-    x_v = m_vbat_str.toFloat();
-    y_v = m_vbat_time_str.toFloat();
-    x_i = m_ibat_str.toFloat();
-    y_i = m_ibat_time_str.toFloat();
+    y_v = m_vbat_str.toFloat();
+    x_v = m_vbat_time_str.toFloat();
+    y_i = m_ibat_str.toFloat();
+    x_i = m_ibat_time_str.toFloat();
 
     //Set variable members of the Chart class.
     m_chart_v_i->set_xy_v_i(x_v,y_v,x_i,y_i);
@@ -176,17 +193,20 @@ void PrincipalWindow::usb_tm_multiple(){//!!!Changer en usb_tm_request()!!!
     m_bat_temp_ntc_str  = "";//Reset the string before get_...
     m_bat_temp_ntc_str  = get_string_temp_on_file(bat_ntc_ratio);
 
-    ui->line_vbat->setText("Vbat = " + QString::number(y_v) + " V : " + QString::number(x_v) +" s");
-    ui->line_ibat->setText("ibat = " + QString::number(y_i) + " A : " +
-                            QString::number(x_i) + " s ");
+    ui->line_vbat->setText("Vbat = " + m_vbat_str + " V : " + m_vbat_time_str +" s");
+    ui->line_ibat->setText("ibat = " + m_ibat_str + " A : " + m_ibat_time_str + " s ");
     ui->line_temp_bat->setText("Bat T° = " + m_bat_temp_ntc_str + " °C");
     ui->line_temp_die->setText("Die T° = " + m_charge_temp_die_str + " °C");
 
-    ui->textEdit->moveCursor(QTextCursor::End);//!!! Arreter si on clique dans le textEdit !!!
+    if(m_mouse_click == false){//false = click OFF.
+        ui->textEdit->moveCursor(QTextCursor::End);//!!! Arreter si on clique dans le textEdit !!!
+    }
+
     ui->textEdit->ensureCursorVisible();
-    ui->textEdit->append("Vbat = " + QString::number(y_v) + " V : " + QString::number(x_v) +
-                          " s ; ibat = " + QString::number(y_i) + " A : " +
-                          QString::number(x_i) + " s ");
+//    ui->textEdit->append("Vbat = " + QString::number(y_v) + " V : " + QString::number(x_v) +
+//                          " s ; ibat = " + QString::number(y_i) + " A : " +
+//                          QString::number(x_i) + " s ");
+    ui->textEdit->append(m_data_usb_str);
 
     //textEdit for state and status.....
 
@@ -231,8 +251,6 @@ QString PrincipalWindow::get_string_temp_on_file(unsigned int i_num){
 
     file.close();
 
-    qDebug()<<data_string;
-
     return data_string;
 
 }
@@ -253,6 +271,14 @@ void PrincipalWindow::usb_tc_start_stop_charge(){
     }
     m_usb_com->send_tc(TC_START_STOP_CHARGE);
     qDebug()<<"usb_tc_start_stop_charge";
+}
+//__________________________________________________________________________________________________
+
+void PrincipalWindow::text_edit_scroll_off(){
+/* Slot for click event on textEdit obect.
+ */
+    m_mouse_click = true;
+    qDebug()<<" !!! CLICK !!!";
 }
 //__________________________________________________________________________________________________
 

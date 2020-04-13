@@ -181,13 +181,13 @@ public:
 
         line_temp_bat = new QLineEdit(tab_1);
         line_temp_bat->setObjectName(QString::fromUtf8("line_temp_bat"));
-        line_temp_bat->setMaximumSize(QSize(150, 16777215));
+        line_temp_bat->setMaximumSize(QSize(250, 16777215));
 
         horizontalLayout->addWidget(line_temp_bat);
 
         line_temp_die = new QLineEdit(tab_1);
         line_temp_die->setObjectName(QString::fromUtf8("line_temp_die"));
-        line_temp_die->setMaximumSize(QSize(150, 16777215));
+        line_temp_die->setMaximumSize(QSize(250, 16777215));
 
         horizontalLayout->addWidget(line_temp_die);
 

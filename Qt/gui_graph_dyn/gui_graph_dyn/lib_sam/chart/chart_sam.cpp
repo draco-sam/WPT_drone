@@ -20,8 +20,8 @@
 Chart::Chart():
     m_series_v(0),m_series_i(0),
     m_axis_x(new QValueAxis()),m_axis_y_v(new QValueAxis()),m_axis_y_i(new QValueAxis()),
-    m_x_vbat(0),m_x_ibat(0),m_y_vbat(0),m_y_ibat(0),m_f_data_ready(false),
-    m_coeff_v(1),m_coeff_i(1)
+    m_x_vbat(0),m_x_ibat(0),m_y_vbat(0),m_y_ibat(0),m_x_min(56400),m_x_max(56460),
+    m_f_data_ready(false),m_coeff_v(1),m_coeff_i(1)
 {
     /*****************************************************************************************
      * Creat 2 series and add it to the chart.
@@ -32,7 +32,7 @@ Chart::Chart():
     //QSplineSeries automatically calculates spline segment control points
     //that are needed to properly draw the spline.
     m_series_v = new QSplineSeries(this);
-    m_series_v->setName("spline_Vbat");
+    m_series_v->setName("Vbat [V]");
     QPen pen_red(Qt::red);
     pen_red.setWidth(3);
     m_series_v->setPen(pen_red);
@@ -41,7 +41,7 @@ Chart::Chart():
 
     //Idem for i series :
     m_series_i = new QSplineSeries(this);
-    m_series_i->setName("spline_Ibat");
+    m_series_i->setName("Ibat [A]");
     QPen pen_green(Qt::green);
     pen_green.setWidth(3);
     m_series_i->setPen(pen_green);
@@ -58,7 +58,7 @@ Chart::Chart():
     m_series_v->attachAxis(m_axis_x);
     m_series_v->attachAxis(m_axis_y_v);
     m_axis_x->setTickCount(11);//Number of lines : Step = x_max_range / (tick_count - 1).
-    m_axis_x->setRange(56400,57000);//23h59min59s<->86399s.
+    m_axis_x->setRange(m_x_min,m_x_max);//23h59min59s<->86399s.
     m_axis_y_v->setRange(2, 5);
 
     //idem for i series :
@@ -121,10 +121,14 @@ void Chart::add_data(){
  * Before adding data, check if data is ready.
  */
     if(m_f_data_ready == true){
-        qDebug()<<"Class Chart add_data : m_x_vbat = "<<m_x_vbat<<" ; m_y_vbat = "
-               <<m_y_vbat<<" ; m_x_ibat = "<<m_x_ibat<<" ; m_y_ibat = "<<m_y_ibat;
+        if(m_x_ibat > m_x_max){
+            m_x_max = m_x_max + 60;//Add 60s at max abscisse.
+            m_axis_x->setRange(m_x_min,m_x_max);//23h59min59s<->86399s.
+        }
+
         m_series_v->append(m_x_vbat, m_y_vbat);
         m_series_i->append(m_x_ibat, m_y_ibat);
+
 
         m_f_data_ready = false;//Reset flag.
     }
