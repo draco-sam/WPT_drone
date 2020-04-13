@@ -51,7 +51,7 @@ Chart::Chart():
     //Same colore axis line and series :
     m_axis_y_v->setLinePenColor(m_series_v->pen().color());
     m_axis_y_i->setLinePenColor(m_series_i->pen().color());
-
+    m_axis_x->setTitleText("Time [s]");
     //Add axis, attach series to its and set range :
     addAxis(m_axis_x,Qt::AlignBottom);
     addAxis(m_axis_y_v,Qt::AlignLeft);

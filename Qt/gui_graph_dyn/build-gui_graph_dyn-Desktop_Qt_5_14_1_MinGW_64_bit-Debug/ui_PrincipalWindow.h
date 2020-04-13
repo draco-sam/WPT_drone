@@ -193,6 +193,7 @@ public:
 
         button_start_charge = new QPushButton(tab_1);
         button_start_charge->setObjectName(QString::fromUtf8("button_start_charge"));
+        button_start_charge->setMaximumSize(QSize(250, 16777215));
 
         horizontalLayout->addWidget(button_start_charge);
 
@@ -274,7 +275,7 @@ public:
 
     void retranslateUi(QMainWindow *PrincipalWindow)
     {
-        PrincipalWindow->setWindowTitle(QCoreApplication::translate("PrincipalWindow", "MainWindow", nullptr));
+        PrincipalWindow->setWindowTitle(QCoreApplication::translate("PrincipalWindow", "WPT SAM : MainWindow V1.0", nullptr));
         actionNouveau->setText(QCoreApplication::translate("PrincipalWindow", "Nouveau", nullptr));
         actionOuvrir->setText(QCoreApplication::translate("PrincipalWindow", "Ouvrir", nullptr));
         actionQuitter->setText(QCoreApplication::translate("PrincipalWindow", "Quitter", nullptr));

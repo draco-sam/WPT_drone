@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>WPT SAM : MainWindow V1.0</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
@@ -166,6 +166,12 @@ p, li { white-space: pre-wrap; }
           </item>
           <item>
            <widget class="QPushButton" name="button_start_charge">
+            <property name="maximumSize">
+             <size>
+              <width>250</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="text">
              <string>START Charge</string>
             </property>
