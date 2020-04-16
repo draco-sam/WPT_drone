@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : ext_int.c
- * Date             : 02/04/2020.   
+ * Date             : 16/04/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -13,6 +13,7 @@
 #define led_blue        LATCbits.LATC12
 #define on              0
 #define off             1
+#define port_b1_ext_int PORTBbits.RB1
 
 //***User Area Begin->code: Add External Interrupt handler specific headers 
 
@@ -32,18 +33,36 @@
 */
 void __attribute__ ( ( interrupt, no_auto_psv ) ) _INT1Interrupt(void)
 {
-    //***User Area Begin->code: External Interrupt 1***
+    unsigned long time_counter = 0;
 	
 	//EX_INT1_CallBack();
     
-    pwm_5_h = pwm_off;
-     
-    led_red     = off;
-    led_green   = on;
-    led_blue    = off;
+    INTCON2bits.GIE = 0;//Global interrupt are disabled.
     
-	//***User Area End->code: External Interrupt 1***
+    //Wait switch bounce. time_counter=75000 <-> +-500 ms (150 for 1ms).
+    for(time_counter=0 ; time_counter < 75000 ; time_counter++){}//Wait switch bounce.
+    
+    if(port_b1_ext_int == 1){//PWM ON.
+        pwm_5_h     = pwm_on;
+        
+        INTCON2bits.INT1EP = 1;//External interrupt 1 on NEGATIVE edge.
+            
+        led_red     = on;
+        led_green   = off;
+        led_blue    = off;
+    }
+    else{//PWM OFF in the other cases.
+        pwm_5_h = pwm_off;
+        
+        INTCON2bits.INT1EP = 0;//External interrupt 1 on POSITIVE edge.
+     
+        led_red     = off;
+        led_green   = on;
+        led_blue    = off;
+    }
+	
     EX_INT1_InterruptFlagClear();
+    INTCON2bits.GIE = 1;//Global interrupt are enable.
 }
 /**
     Section: External Interrupt Initializers
