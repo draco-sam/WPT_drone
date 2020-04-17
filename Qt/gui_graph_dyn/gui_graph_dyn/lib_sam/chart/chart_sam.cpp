@@ -59,13 +59,15 @@ Chart::Chart():
     m_series_v->attachAxis(m_axis_y_v);
     m_axis_x->setTickCount(11);//Number of lines : Step = x_max_range / (tick_count - 1).
     m_axis_x->setRange(m_x_min,m_x_max);//23h59min59s<->86399s.
-    m_axis_y_v->setRange(2, 5);
+    m_axis_y_v->setRange(2.5, 4.5);
+    m_axis_y_v->setTickCount(11);
 
     //idem for i series :
     addAxis(m_axis_y_i,Qt::AlignRight);
     m_series_i->attachAxis(m_axis_x);
     m_series_i->attachAxis(m_axis_y_i);
-    m_axis_y_i->setRange(-1, 3);
+    m_axis_y_i->setRange(0, 2.5);
+    m_axis_y_i->setTickCount(11);
     /****************************************************************************************/
     //m_series_v->clear();
     //m_series_v->remove(25,7.5);
@@ -74,7 +76,7 @@ Chart::Chart():
 
 
     QObject::connect(&m_timer, &QTimer::timeout, this, &Chart::add_data);
-    m_timer.setInterval(1500);//[ms].
+    m_timer.setInterval(1100);//[ms].
     m_timer.start();
 }
 //__________________________________________________________________________________________________

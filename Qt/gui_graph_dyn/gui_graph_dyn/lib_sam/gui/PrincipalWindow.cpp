@@ -1,14 +1,16 @@
 /***************************************************************************************************
  * File name        : PrincipalWindow.cpp
- * Date             : 13/04/2020
+ * Date             : 20/04/2020
  * Author           : Samuel LORENZINO.
  *
  * Links            :
  *                  :
  *
- * Comments         :   - Coder onglet config.
+ * Comments         :   - Vin chargeur à afficher.
+ *                      - Coder onglet config.
  *                      - Récupérer l'heure PC et configurer le RTCC dans le PIC RX.
  *                      - Configurer min/max abscisse en fct de l'heure.
+ *                      - Bouton reset COM reset le PIC RX.
  **************************************************************************************************/
 #include "PrincipalWindow.h"
 #include "ui_PrincipalWindow.h"
@@ -18,9 +20,9 @@
 PrincipalWindow::PrincipalWindow(QWidget *parent) :
     QMainWindow(parent),ui(new Ui::PrincipalWindow),m_chart_v_i(0),m_chart_coulomb(0),m_timer(0),
     m_coeff_v(1),m_coeff_i(1),m_series_v(0),m_series_i(0),m_usb_com(0),m_flag_start_charge(false),
-    m_data_usb_str(""),m_vbat_str(""),m_ibat_str(""),m_vbat_time_str(""),m_ibat_time_str(""),
-    m_charge_state_suspended_str(""),m_charge_state_precharge_str(""),m_charge_status_str(""),
-    m_bat_temp_ntc_str(""),m_charge_temp_die_str(""),m_mouse_click(false)
+    m_data_usb_str(""),m_vin_str(""),m_vbat_str(""),m_ibat_str(""),m_vbat_time_str(""),
+    m_ibat_time_str(""),m_charge_state_suspended_str(""),m_charge_state_precharge_str(""),
+    m_charge_status_str(""),m_bat_temp_ntc_str(""),m_charge_temp_die_str(""),m_mouse_click(false)
 {
     qDebug()<<endl<<"Bonjour qDebug";
 
@@ -112,6 +114,7 @@ void PrincipalWindow::usb_tm_multiple(){
 
     //Reset all string.
     m_data_usb_str                  = "";
+    m_vin_str                       = "";
     m_vbat_str                      = "";
     m_vbat_time_str                 = "";
     m_ibat_str                      = "";
@@ -135,39 +138,43 @@ void PrincipalWindow::usb_tm_multiple(){
                 num_semicolon++;
                 i_str = 0;//Reset index.
             }
-            else if(num_semicolon == 0){//Vbat.
+            else if(num_semicolon == 0){//Vin charger.
+                m_vin_str[i_str] = m_data_usb_str[i];
+                i_str++;
+            }
+            else if(num_semicolon == 1){//Vbat.
                 m_vbat_str[i_str] = m_data_usb_str[i];
                 i_str++;
             }
-            else if(num_semicolon == 1){//Vbat time.
+            else if(num_semicolon == 2){//Vbat time.
                 m_vbat_time_str[i_str] = m_data_usb_str[i];
                 i_str++;
             }
-            else if(num_semicolon == 2){//Ibat.
+            else if(num_semicolon == 3){//Ibat.
                 m_ibat_str[i_str] = m_data_usb_str[i];
                 i_str++;
             }
-            else if(num_semicolon == 3){//Ibat time.
+            else if(num_semicolon == 4){//Ibat time.
                 m_ibat_time_str[i_str] = m_data_usb_str[i];
                 i_str++;
             }
-            else if(num_semicolon == 4){//Charge state.
+            else if(num_semicolon == 5){//Charge state.
                 m_charge_state_suspended_str[i_str] = m_data_usb_str[i];
                 i_str++;
             }
-            else if(num_semicolon == 5){//Charge state.
+            else if(num_semicolon == 6){//Charge state.
                 m_charge_state_precharge_str[i_str] = m_data_usb_str[i];
                 i_str++;
             }
-            else if(num_semicolon == 6){//Charge status.
+            else if(num_semicolon == 7){//Charge status.
                 m_charge_status_str[i_str] = m_data_usb_str[i];
                 i_str++;
             }
-            else if(num_semicolon == 7){//Bat NTC temperature.
+            else if(num_semicolon == 8){//Bat NTC temperature.
                 m_bat_temp_ntc_str[i_str] = m_data_usb_str[i];
                 i_str++;
             }
-            else if(num_semicolon == 8){//Charge die temperature.
+            else if(num_semicolon == 9){//Charge die temperature.
                 m_charge_temp_die_str[i_str] = m_data_usb_str[i];
                 i_str++;
             }
@@ -262,7 +269,7 @@ void PrincipalWindow::usb_tc_start_stop_charge(){
     if(m_flag_start_charge == false){//Stop to start.
         ui->button_start_charge->setText("STOP charge");//Toggle texte button.
         m_flag_start_charge = true;//Charge starting.
-        m_timer->start(1500);//ms.
+        m_timer->start(1000);//ms.
     }
     else{//Start to stop.
         ui->button_start_charge->setText("START charge");//Toggle texte button.

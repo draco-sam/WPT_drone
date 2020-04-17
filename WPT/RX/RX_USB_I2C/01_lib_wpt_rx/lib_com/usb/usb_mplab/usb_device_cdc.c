@@ -578,10 +578,18 @@ void putUSBUSART(uint8_t *data, uint8_t  length)
      * multi-tasking and a blocking code is not acceptable.
      * Use a state machine instead.
      */
+//    char data_sam[255]  = "";
+//    unsigned int i      = 0;
+//    for(i=0;i<length;i++){
+//        data_sam[i] = data[i];
+//    }
+//    Nop();
+    
     USBMaskInterrupts();
     if(cdc_trf_state == CDC_TX_READY)
     {
         mUSBUSARTTxRam((uint8_t*)data, length);     // See cdc.h
+        //mUSBUSARTTxRam((uint8_t*)data_sam, length);
     }
     USBUnmaskInterrupts();
 }//end putUSBUSART

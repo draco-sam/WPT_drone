@@ -55,15 +55,6 @@ void write_usb_com(char *t_data,unsigned short *flag_sending){
 /*
  * 
  */
-//    char            t_data_com[250]  = "";
-//
-//    strcpy(t_data_com,t_data);//!!! Enlever ???
-//    
-//    unsigned short size_1 = 0;
-//    unsigned short size_2 = 0;
-//    size_1 = strlen(t_data);
-//    size_2 = strlen(t_data_com);
-
     if(USBUSARTIsTxTrfReady() == true){
         putUSBUSART(t_data,strlen(t_data));//strlen(t_data).
         //putUSBUSART(t_data_com,strlen(t_data_com));

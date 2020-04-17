@@ -39,6 +39,7 @@ class PrincipalWindow : public QMainWindow
         UsbVirtualCom   *m_usb_com;
         bool            m_flag_start_charge;//stop=false,start=true.
         QString         m_data_usb_str;
+        QString         m_vin_str;
         QString         m_vbat_str;
         QString         m_ibat_str;
         QString         m_vbat_time_str;

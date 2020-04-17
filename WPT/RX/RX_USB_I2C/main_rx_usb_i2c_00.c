@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : main_rx_usb_i2c_00.c
- * Date             : 13/04/2020.   
+ * Date             : 20/04/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -29,14 +29,15 @@ int main(void)
     unsigned short      f_data_sending_1    = 0;
     char                t_data_i2c[64]      = "";//!!! Changer taille car 16 bits max !!!
     char                t_i2c_time[7]       = "";
+    char                t_i2c_vin[7]        = "";
     char                t_i2c_vbat[7]       = "";
     char                t_i2c_ibat[7]       = "";
     char                t_i2c_vbat_time[7]  = "";
     char                t_i2c_ibat_time[7]  = "";
     char                t_i2c_state[9]      = "";
     char                t_i2c_status[20]    = "";//"CC on \n\r" ou "CC/CV error \n\r.
-    char                t_i2c_ntc[7]        = "";
-    char                t_i2c_die[7]        = "";
+    char                t_i2c_ntc[10]       = "";
+    char                t_i2c_die[10]       = "";
     char                t_data_usb_com[250] = "";
     char                t_data[4]           = "";
     char                t_menu[255]         = "";
@@ -71,6 +72,7 @@ int main(void)
     
 //    unsigned short i_1          = 0;//For table_concatenation().
 //    
+//    strcpy(t_i2c_vin,"+8.765");
 //    strcpy(t_i2c_vbat,"+3.987");
 //    strcpy(t_i2c_vbat_time,"+56856");
 //    strcpy(t_i2c_ibat,"+0.001");
@@ -81,6 +83,8 @@ int main(void)
 //    strcpy(t_i2c_die,"+32.192");
 //    
 //                
+//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_vin,
+//                  sizeof(t_i2c_vin),&i_1);
 //    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_vbat,
 //                  sizeof(t_i2c_vbat),&i_1);
 //    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_vbat_time,
@@ -104,6 +108,7 @@ int main(void)
 //    
 //    Nop();
 //    
+//    empty_table(t_i2c_vin,sizeof(t_i2c_vin));
 //    empty_table(t_i2c_vbat,sizeof(t_i2c_vbat));
 //    empty_table(t_i2c_vbat_time,sizeof(t_i2c_vbat_time));
 //    empty_table(t_i2c_ibat,sizeof(t_i2c_ibat));
@@ -149,6 +154,10 @@ int main(void)
     
     //Stop the charge battery at the beginning of the code :
     i2c_master_start_write_data(TX_CONFIG_BITS,0x0100,&f_i2c_end_writing);
+    
+//    //Stop the charge battery at the beginning of the code :
+//    i2c_master_start_write_data(CHARGER_CONFIG_BITS,0x0000,&f_i2c_end_writing);
+    //ICHARGE_TARGET register ...
    
 
     while (1)
@@ -477,41 +486,55 @@ int main(void)
             }
         }
         else if(menu_number == 9){//9  : V/I,times,status
-            //TM I2C Vbat and decoding :------------------------------------------------------
+            //TM Vin :------------------------------------------------------------------------
             if(flag_i2c_data_ready == 0 && i2c_num_data_decoded == 0){
-                i2c_master_start_read_tm(TM_VBAT,&flag_i2c_data_ready);
+                i2c_master_start_read_tm(TM_VIN,&flag_i2c_data_ready);
             }
             else if(flag_i2c_data_ready == 1 && i2c_num_data_decoded == 0){//Data is ready.
-                s_i2c_tm_analog     = i2c_master_get_tm(TM_VBAT);
+                s_i2c_tm_analog     = i2c_master_get_tm(TM_VIN);
                 
-                float_to_ascii(s_i2c_tm_analog.data_1,t_i2c_vbat);
-                float_to_ascii(s_i2c_tm_analog.sample_time,t_i2c_vbat_time);
+                float_to_ascii(s_i2c_tm_analog.data_1,t_i2c_vin);
                 
                 i2c_num_data_decoded    = 1;
                 flag_i2c_data_ready     = 0;//Reset flag for next TM.     
             }
             //--------------------------------------------------------------------------------
-                        
-            //TM I2C Ibat and decoding :------------------------------------------------------
+            
+            //TM I2C Vbat and decoding :------------------------------------------------------
             else if(flag_i2c_data_ready == 0 && i2c_num_data_decoded == 1){
-                i2c_master_start_read_tm(TM_IBAT,&flag_i2c_data_ready);
+                i2c_master_start_read_tm(TM_VBAT,&flag_i2c_data_ready);
             }
             else if(flag_i2c_data_ready == 1 && i2c_num_data_decoded == 1){//Data is ready.
+                s_i2c_tm_analog     = i2c_master_get_tm(TM_VBAT);
+                
+                float_to_ascii(s_i2c_tm_analog.data_1,t_i2c_vbat);
+                float_to_ascii(s_i2c_tm_analog.sample_time,t_i2c_vbat_time);
+                
+                i2c_num_data_decoded    = 2;
+                flag_i2c_data_ready     = 0;//Reset flag for next TM.     
+            }
+            //--------------------------------------------------------------------------------
+                        
+            //TM I2C Ibat and decoding :------------------------------------------------------
+            else if(flag_i2c_data_ready == 0 && i2c_num_data_decoded == 2){
+                i2c_master_start_read_tm(TM_IBAT,&flag_i2c_data_ready);
+            }
+            else if(flag_i2c_data_ready == 1 && i2c_num_data_decoded == 2){//Data is ready.
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_IBAT);
                 
                 float_to_ascii(s_i2c_tm_analog.data_1,t_i2c_ibat);
                 float_to_ascii(s_i2c_tm_analog.sample_time,t_i2c_ibat_time);
                 
-                i2c_num_data_decoded    = 2;
+                i2c_num_data_decoded    = 3;
                 flag_i2c_data_ready     = 0;//Reset flag for next TM.
             }
             //--------------------------------------------------------------------------------
                         
             //TM state :----------------------------------------------------------------------
-            else if(flag_i2c_data_ready == 0 && i2c_num_data_decoded == 2){
+            else if(flag_i2c_data_ready == 0 && i2c_num_data_decoded == 3){
                 i2c_master_start_read_tm(TM_CHARGER_STATE,&flag_i2c_data_ready);
             }
-            else if(flag_i2c_data_ready == 1 && i2c_num_data_decoded == 2){//Data is ready.
+            else if(flag_i2c_data_ready == 1 && i2c_num_data_decoded == 3){//Data is ready.
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_CHARGER_STATE);
                                 
                 //Charge suspended on/off.
@@ -529,16 +552,16 @@ int main(void)
                     strcat(t_i2c_state,"on");
                 }
                 
-                i2c_num_data_decoded    = 3;
+                i2c_num_data_decoded    = 4;
                 flag_i2c_data_ready     = 0;//Reset flag for next TM.
             }
             //--------------------------------------------------------------------------------
             
             //TM status :---------------------------------------------------------------------
-            else if(flag_i2c_data_ready == 0 && i2c_num_data_decoded == 3){
+            else if(flag_i2c_data_ready == 0 && i2c_num_data_decoded == 4){
                 i2c_master_start_read_tm(TM_CHARGE_STATUS,&flag_i2c_data_ready);
             }
-            else if(flag_i2c_data_ready == 1 && i2c_num_data_decoded == 3){//Data is ready.
+            else if(flag_i2c_data_ready == 1 && i2c_num_data_decoded == 4){//Data is ready.
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_CHARGE_STATUS);
                                                 
                 if(s_i2c_tm_analog.data_3 == 1){//CC with ICHARGE_DAC ON.
@@ -551,70 +574,82 @@ int main(void)
                     strcpy(t_i2c_status,"CC/CV error");
                 }
                 
-                i2c_num_data_decoded    = 4;
+                i2c_num_data_decoded    = 5;
                 flag_i2c_data_ready     = 0;//Reset flag for next TM.
             }
             //--------------------------------------------------------------------------------
                         
             //TM NTC temperature (digital value = NTC_RATIO) :--------------------------------
-            else if(flag_i2c_data_ready == 0 && i2c_num_data_decoded == 4){
+            else if(flag_i2c_data_ready == 0 && i2c_num_data_decoded == 5){
                 i2c_master_start_read_tm(TM_NTC_RATIO,&flag_i2c_data_ready);
             }
-            else if(flag_i2c_data_ready == 1 && i2c_num_data_decoded == 4){//Data is ready.
+            else if(flag_i2c_data_ready == 1 && i2c_num_data_decoded == 5){//Data is ready.
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_NTC_RATIO);
                 
                 float_to_ascii(s_i2c_tm_analog.data_1,t_i2c_ntc);
                 
-                i2c_num_data_decoded    = 5;
+                i2c_num_data_decoded    = 6;
                 flag_i2c_data_ready     = 0;//Reset flag for next TM.
             }
             //--------------------------------------------------------------------------------
             
             //TM LTC4015 die temperature :----------------------------------------------------
-            else if(flag_i2c_data_ready == 0 && i2c_num_data_decoded == 5){
+            else if(flag_i2c_data_ready == 0 && i2c_num_data_decoded == 6){
                 i2c_master_start_read_tm(TM_DIE_TEMP,&flag_i2c_data_ready);
             }
-            else if(flag_i2c_data_ready == 1 && i2c_num_data_decoded == 5){//Data is ready.
+            else if(flag_i2c_data_ready == 1 && i2c_num_data_decoded == 6){//Data is ready.
                 s_i2c_tm_analog     = i2c_master_get_tm(TM_DIE_TEMP);
                 
                 float_to_ascii(s_i2c_tm_analog.data_1,t_i2c_die);
                 
-                i2c_num_data_decoded    = 6;
+                i2c_num_data_decoded    = 7;
             }
             //--------------------------------------------------------------------------------
                         
             //Prepare data to send on USB :---------------------------------------------------
-            if(flag_i2c_data_ready == 1 && i2c_num_data_decoded == 6){
+            if(flag_i2c_data_ready == 1 && i2c_num_data_decoded == 7){
                 
-                unsigned short i_1          = 0;//For table_concatenation().
+                unsigned short  i_1          = 0;//For table_concatenation().
+                char            t_usb[90]   = "";
                 
-                table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_vbat,
-                              sizeof(t_i2c_vbat),&i_1);
-                table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_vbat_time,
-                              sizeof(t_i2c_vbat_time),&i_1);
-                table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_ibat,
-                              sizeof(t_i2c_ibat),&i_1);
-                table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_ibat_time,
-                              sizeof(t_i2c_ibat_time),&i_1);
-                table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_state,
-                              sizeof(t_i2c_state),&i_1);
-                table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_status,
-                              sizeof(t_i2c_status),&i_1);
-                table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_ntc,
-                              sizeof(t_i2c_ntc),&i_1);
-                table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_die,
-                              sizeof(t_i2c_die),&i_1);
+                table_concatenation(t_usb,sizeof(t_usb),t_i2c_vin,
+                              sizeof(t_i2c_vin),&i_1);
+                table_concatenation(t_usb,sizeof(t_usb),t_i2c_vbat,
+                                    sizeof(t_i2c_vbat),&i_1);
+                table_concatenation(t_usb,sizeof(t_usb),t_i2c_vbat_time,
+                                    sizeof(t_i2c_vbat_time),&i_1);
+                table_concatenation(t_usb,sizeof(t_usb),t_i2c_ibat,
+                                    sizeof(t_i2c_ibat),&i_1);
+                table_concatenation(t_usb,sizeof(t_usb),t_i2c_ibat_time,
+                                    sizeof(t_i2c_ibat_time),&i_1);
+                table_concatenation(t_usb,sizeof(t_usb),t_i2c_state,
+                                    sizeof(t_i2c_state),&i_1);
+                table_concatenation(t_usb,sizeof(t_usb),t_i2c_status,
+                                    sizeof(t_i2c_status),&i_1);
+                table_concatenation(t_usb,sizeof(t_usb),t_i2c_ntc,
+                                    sizeof(t_i2c_ntc),&i_1);
+                table_concatenation(t_usb,sizeof(t_usb),t_i2c_die,
+                                    sizeof(t_i2c_die),&i_1);
                 
-                t_data_usb_com[i_1] = '\r';
+                t_usb[i_1] = '\r';
                 i_1++;
-                t_data_usb_com[i_1] = '\n';
+                t_usb[i_1] = '\n';
                                 
-                write_usb_com(t_data_usb_com,&f_data_sending);
-
+                write_usb_com(t_usb,&f_data_sending);
+                
+//                char t_data_usb_sam[] = "+8.793;+0.003;+56411;-0.001;+56411;on;off;CC/CV error;"
+//                                        "+10896;+32.697;bonjour;\r\n\0";
+//                char t_usb[90] = ""; 
+//                table_concatenation(t_usb,sizeof(t_usb),t_data_usb_sam,
+//                                    sizeof(t_data_usb_sam),&i_1);
+//                               
+//                write_usb_com(t_usb,&f_data_sending);
+                
                 if(f_data_sending == 1){//"1" if USB ready.
                     flag_i2c_data_ready     = 0;//Reset flag after USB ready to send.
                     i2c_num_data_decoded    = 0;//Reset data number for next turn.
                     
+                    empty_table(t_i2c_vin,sizeof(t_i2c_vin));
                     empty_table(t_i2c_vbat,sizeof(t_i2c_vbat));
                     empty_table(t_i2c_vbat_time,sizeof(t_i2c_vbat_time));
                     empty_table(t_i2c_ibat,sizeof(t_i2c_ibat));
@@ -623,6 +658,7 @@ int main(void)
                     empty_table(t_i2c_status,sizeof(t_i2c_status));
                     empty_table(t_i2c_ntc,sizeof(t_i2c_ntc));
                     empty_table(t_i2c_die,sizeof(t_i2c_die));
+                    empty_table(t_i2c_die,sizeof(t_usb));
                     
                     led_red     = !led_red;//Led blinking at +- 1s.
                 }
@@ -769,7 +805,7 @@ void table_concatenation(char *t_final,unsigned short t_final_size,char *t_new,
  */
     unsigned short i_1  = 0;//Index for final table.
     unsigned short i_2  = 0;//Index for new table to add.
-        
+    
     i_1 = *i_t_final;
     
     //Add data separator if table not empty :
