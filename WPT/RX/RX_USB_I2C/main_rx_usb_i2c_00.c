@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : main_rx_usb_i2c_00.c
- * Date             : 20/04/2020.   
+ * Date             : 04/05/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -70,58 +70,6 @@ int main(void)
     Date_time           str_data_time;
     /***********************************************************************************/
     
-//    unsigned short i_1          = 0;//For table_concatenation().
-//    
-//    strcpy(t_i2c_vin,"+8.765");
-//    strcpy(t_i2c_vbat,"+3.987");
-//    strcpy(t_i2c_vbat_time,"+56856");
-//    strcpy(t_i2c_ibat,"+0.001");
-//    strcpy(t_i2c_ibat_time,"+56856");
-//    strcpy(t_i2c_state,"off;off");
-//    strcpy(t_i2c_status,"CC/CV error");
-//    strcpy(t_i2c_ntc,"+108961");
-//    strcpy(t_i2c_die,"+32.192");
-//    
-//                
-//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_vin,
-//                  sizeof(t_i2c_vin),&i_1);
-//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_vbat,
-//                  sizeof(t_i2c_vbat),&i_1);
-//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_vbat_time,
-//                  sizeof(t_i2c_vbat_time),&i_1);
-//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_ibat,
-//                  sizeof(t_i2c_ibat),&i_1);
-//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_ibat_time,
-//                  sizeof(t_i2c_ibat_time),&i_1);
-//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_state,
-//                  sizeof(t_i2c_state),&i_1);
-//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_status,
-//                  sizeof(t_i2c_status),&i_1);
-//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_ntc,
-//                  sizeof(t_i2c_ntc),&i_1);
-//    table_concatenation(t_data_usb_com,sizeof(t_data_usb_com),t_i2c_die,
-//                  sizeof(t_i2c_die),&i_1);
-//
-//    t_data_usb_com[i_1] = '\r';
-//    i_1++;
-//    t_data_usb_com[i_1] = '\n';
-//    
-//    Nop();
-//    
-//    empty_table(t_i2c_vin,sizeof(t_i2c_vin));
-//    empty_table(t_i2c_vbat,sizeof(t_i2c_vbat));
-//    empty_table(t_i2c_vbat_time,sizeof(t_i2c_vbat_time));
-//    empty_table(t_i2c_ibat,sizeof(t_i2c_ibat));
-//    empty_table(t_i2c_ibat_time,sizeof(t_i2c_ibat_time));
-//    empty_table(t_i2c_state,sizeof(t_i2c_state));
-//    empty_table(t_i2c_status,sizeof(t_i2c_status));
-//    empty_table(t_i2c_ntc,sizeof(t_i2c_ntc));
-//    empty_table(t_i2c_die,sizeof(t_i2c_die));
-//    
-//    Nop();
-    
-    
-    
     
     // initialize the device
     SYSTEM_Initialize();
@@ -152,16 +100,39 @@ int main(void)
         menu_number = 99;//Fonctionnement autonome sans IHM.
     }
     
+    //i2c_charger_init();-----------------------------------------------------------
+    
     //Stop the charge battery at the beginning of the code :
     i2c_master_start_write_data(TX_CONFIG_BITS,0x0100,&f_i2c_end_writing);
+    while(f_i2c_end_writing != 1){Nop();}
+    f_i2c_end_writing = 0;//Reset.
     
-//    //Stop the charge battery at the beginning of the code :
-//    i2c_master_start_write_data(CHARGER_CONFIG_BITS,0x0000,&f_i2c_end_writing);
-    //ICHARGE_TARGET register ...
-   
+    //Disable jeita temperature profile.
+    i2c_master_start_write_data(CHARGER_CONFIG_BITS,0x0000,&f_i2c_end_writing);
+    while(f_i2c_end_writing != 1){Nop();}
+    f_i2c_end_writing = 0;//Reset.
+    //------------------------------------------------------------------------------
+    
+    //I bat charge at 0.5 A <-> ICHARGE_TARGET = 7.
+    i2c_master_start_write_data(TM_TC_ICHARGE_TARGET,7,&f_i2c_end_writing);
+    while(f_i2c_end_writing != 1){Nop();}
+    f_i2c_end_writing = 0;//Reset.
+    
+    
+      
+    
+            
+    static unsigned short   s_counter        = 0;
+    static unsigned short   f_start             = 0;
+    static unsigned long    start_time_second   = 0;
+    unsigned long           time_second         = 0;
 
     while (1)
-    {   
+    {
+        //!!! if(vbat < 4.2)---> STOP CHARGE !!!
+        //!!! if (T_bat > 60 °C)---> STOP charge !!!
+        
+         
         //Read or write USB buffer only if USB device plugged on PC :
         if(time_out_while < time_out_max_while ){
             read_usb_com(&menu_number);
@@ -186,6 +157,41 @@ int main(void)
 //        else if(flag_i2c_data_ready == 1){//Data is ready.
 //            s_i2c_tm_analog     = i2c_master_get_tm(TM_NTC_RATIO);
 //        }
+        
+        if(menu_number == 11){
+            if(f_start == 0){
+                f_start = 1;//Set flag.
+            }
+        }
+        
+        if(f_start == 1){
+            soft_start_charge();
+//            if(start_time_second == 0){//At first call.
+//                start_time_second = get_i2c_sample_time();//Save first start time.
+//            }
+//            time_second = get_i2c_sample_time();//Get new time.
+//            time_second = time_second - start_time_second;
+//        
+//            if(s_counter == 0 && time_second > 10){
+//                i2c_master_start_write_data(TM_TC_ICHARGE_TARGET,9,&f_i2c_end_writing);
+//                while(f_i2c_end_writing != 1){Nop();}
+//                f_i2c_end_writing = 0;//Reset.
+//                s_counter++;
+////                led_red     = off;
+////                led_blue    = on;
+//            }
+//            else if(s_counter == 1 && time_second > 20){
+//                i2c_master_start_write_data(TM_TC_ICHARGE_TARGET,11,&f_i2c_end_writing);
+//                while(f_i2c_end_writing != 1){Nop();}
+//                f_i2c_end_writing = 0;//Reset.
+//                s_counter++;
+//            }
+        }
+        
+        
+        
+       
+        
         
         if(menu_number == 0){
             if(f_data_sending == 0 && f_data_sending_1 == 0){
@@ -486,6 +492,8 @@ int main(void)
             }
         }
         else if(menu_number == 9){//9  : V/I,times,status
+            //soft_start_charge();//Check if a soft start is necessary at each turn. 
+            
             //TM Vin :------------------------------------------------------------------------
             if(flag_i2c_data_ready == 0 && i2c_num_data_decoded == 0){
                 i2c_master_start_read_tm(TM_VIN,&flag_i2c_data_ready);
@@ -660,10 +668,31 @@ int main(void)
                     empty_table(t_i2c_die,sizeof(t_i2c_die));
                     empty_table(t_i2c_die,sizeof(t_usb));
                     
-                    led_red     = !led_red;//Led blinking at +- 1s.
+                    //led_red     = !led_red;//Led blinking at +- 1s.
                 }
             }
             //--------------------------------------------------------------------------------
+        }
+        else if(menu_number == 10){
+            if(flag_i2c_data_ready == 0){
+                i2c_master_start_read_tm(TM_TC_ICHARGE_TARGET,&flag_i2c_data_ready);
+            }
+            else if(flag_i2c_data_ready == 1){//Data is ready.
+                s_i2c_tm_analog     = i2c_master_get_tm(TM_TC_ICHARGE_TARGET);
+                
+                float_to_ascii(s_i2c_tm_analog.data_1,t_data_i2c);
+                
+                //Prepare data COM with string copy and concatenation :            
+                strcpy(t_data_usb_com,"ICHARGE_TARGET = ");
+                strcat(t_data_usb_com,t_data_i2c);
+                strcat(t_data_usb_com," A \r\n");
+            
+                write_usb_com(t_data_usb_com,&f_data_sending);
+                
+                if(f_data_sending == 1){//"1" if USB ready.
+                    flag_i2c_data_ready = 0;//Reset flag after USB ready to send.
+                }
+            }
         }
         else if(menu_number == 11){//11 : START/STOP charge.
             unsigned short tc_data      = 0x0100;//Stop charge.
@@ -742,6 +771,7 @@ void get_menu(unsigned short menu_number, char *t_menu, unsigned short t_menu_si
                         "8  : TM_I/V_CHARGE_DAC \r\n";
     
     char t_menu_2[] =   "9  : V/I,times,status \r\n"
+                        "10 : TM_ICHARGE_TARGET \r\n"
                         "11 : START/STOP charge \r\n"
                         "20 : Qt interface ON/OFF \r\n"
                         "-----------------------------------\r\n";

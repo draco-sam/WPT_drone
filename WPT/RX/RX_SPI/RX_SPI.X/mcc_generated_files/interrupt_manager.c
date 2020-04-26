@@ -52,8 +52,5 @@
 */
 void INTERRUPT_Initialize (void)
 {
-    //    SPII: SPI1 - SPI1 Transfer Done
-    //    Priority: 1
-        IPC2bits.SPI1IP = 1;
 
 }

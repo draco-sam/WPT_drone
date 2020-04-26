@@ -52,4 +52,15 @@
 */
 void INTERRUPT_Initialize (void)
 {
+    //    SPIRXI: SPI1 RX
+    //    Priority: 1
+        IPC2bits.SPI1RXIP = 1;
+        
+        IFS0bits.SPI1RXIF   = 0;//Clear interrupt flag.
+        
+        //Set the SPIx Interrupt Enable Control bit (SPIxIE) in the respective IECx register.
+        IEC0bits.SPI1RXIE   = 1;//Enable SPI 1 interrupt.
+        //IEC0bits.SPI1TXIE   = 1;
+        IFS7bits.SPI1IF     = 1;
+        
 }

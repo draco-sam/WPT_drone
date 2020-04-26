@@ -73,11 +73,11 @@
   @Example
     <code>
     // Set RB2 high (1)
-    SDI1_SetHigh();
+    SDO1_SetHigh();
     </code>
 
 */
-#define SDI1_SetHigh()          (_LATB2 = 1)
+#define SDO1_SetHigh()          (_LATB2 = 1)
 /**
   @Summary
     Sets the GPIO pin, RB2, low using LATB2.
@@ -97,11 +97,11 @@
   @Example
     <code>
     // Set RB2 low (0)
-    SDI1_SetLow();
+    SDO1_SetLow();
     </code>
 
 */
-#define SDI1_SetLow()           (_LATB2 = 0)
+#define SDO1_SetLow()           (_LATB2 = 0)
 /**
   @Summary
     Toggles the GPIO pin, RB2, using LATB2.
@@ -121,11 +121,11 @@
   @Example
     <code>
     // Toggle RB2
-    SDI1_Toggle();
+    SDO1_Toggle();
     </code>
 
 */
-#define SDI1_Toggle()           (_LATB2 ^= 1)
+#define SDO1_Toggle()           (_LATB2 ^= 1)
 /**
   @Summary
     Reads the value of the GPIO pin, RB2.
@@ -147,11 +147,11 @@
     uint16_t portValue;
 
     // Read RB2
-    postValue = SDI1_GetValue();
+    postValue = SDO1_GetValue();
     </code>
 
 */
-#define SDI1_GetValue()         _RB2
+#define SDO1_GetValue()         _RB2
 /**
   @Summary
     Configures the GPIO pin, RB2, as an input.
@@ -171,11 +171,11 @@
   @Example
     <code>
     // Sets the RB2 as an input
-    SDI1_SetDigitalInput();
+    SDO1_SetDigitalInput();
     </code>
 
 */
-#define SDI1_SetDigitalInput()  (_TRISB2 = 1)
+#define SDO1_SetDigitalInput()  (_TRISB2 = 1)
 /**
   @Summary
     Configures the GPIO pin, RB2, as an output.
@@ -195,11 +195,11 @@
   @Example
     <code>
     // Sets the RB2 as an output
-    SDI1_SetDigitalOutput();
+    SDO1_SetDigitalOutput();
     </code>
 
 */
-#define SDI1_SetDigitalOutput() (_TRISB2 = 0)
+#define SDO1_SetDigitalOutput() (_TRISB2 = 0)
 /**
   @Summary
     Sets the GPIO pin, RC7, high using LATC7.
@@ -219,11 +219,11 @@
   @Example
     <code>
     // Set RC7 high (1)
-    SDO1_SetHigh();
+    SDI1_SetHigh();
     </code>
 
 */
-#define SDO1_SetHigh()          (_LATC7 = 1)
+#define SDI1_SetHigh()          (_LATC7 = 1)
 /**
   @Summary
     Sets the GPIO pin, RC7, low using LATC7.
@@ -243,11 +243,11 @@
   @Example
     <code>
     // Set RC7 low (0)
-    SDO1_SetLow();
+    SDI1_SetLow();
     </code>
 
 */
-#define SDO1_SetLow()           (_LATC7 = 0)
+#define SDI1_SetLow()           (_LATC7 = 0)
 /**
   @Summary
     Toggles the GPIO pin, RC7, using LATC7.
@@ -267,11 +267,11 @@
   @Example
     <code>
     // Toggle RC7
-    SDO1_Toggle();
+    SDI1_Toggle();
     </code>
 
 */
-#define SDO1_Toggle()           (_LATC7 ^= 1)
+#define SDI1_Toggle()           (_LATC7 ^= 1)
 /**
   @Summary
     Reads the value of the GPIO pin, RC7.
@@ -293,11 +293,11 @@
     uint16_t portValue;
 
     // Read RC7
-    postValue = SDO1_GetValue();
+    postValue = SDI1_GetValue();
     </code>
 
 */
-#define SDO1_GetValue()         _RC7
+#define SDI1_GetValue()         _RC7
 /**
   @Summary
     Configures the GPIO pin, RC7, as an input.
@@ -317,11 +317,11 @@
   @Example
     <code>
     // Sets the RC7 as an input
-    SDO1_SetDigitalInput();
+    SDI1_SetDigitalInput();
     </code>
 
 */
-#define SDO1_SetDigitalInput()  (_TRISC7 = 1)
+#define SDI1_SetDigitalInput()  (_TRISC7 = 1)
 /**
   @Summary
     Configures the GPIO pin, RC7, as an output.
@@ -341,11 +341,11 @@
   @Example
     <code>
     // Sets the RC7 as an output
-    SDO1_SetDigitalOutput();
+    SDI1_SetDigitalOutput();
     </code>
 
 */
-#define SDO1_SetDigitalOutput() (_TRISC7 = 0)
+#define SDI1_SetDigitalOutput() (_TRISC7 = 0)
 /**
   @Summary
     Sets the GPIO pin, RD10, high using LATD10.
@@ -365,11 +365,11 @@
   @Example
     <code>
     // Set RD10 high (1)
-    SCK1OUT_SetHigh();
+    SCK1IN_SetHigh();
     </code>
 
 */
-#define SCK1OUT_SetHigh()          (_LATD10 = 1)
+#define SCK1IN_SetHigh()          (_LATD10 = 1)
 /**
   @Summary
     Sets the GPIO pin, RD10, low using LATD10.
@@ -389,11 +389,11 @@
   @Example
     <code>
     // Set RD10 low (0)
-    SCK1OUT_SetLow();
+    SCK1IN_SetLow();
     </code>
 
 */
-#define SCK1OUT_SetLow()           (_LATD10 = 0)
+#define SCK1IN_SetLow()           (_LATD10 = 0)
 /**
   @Summary
     Toggles the GPIO pin, RD10, using LATD10.
@@ -413,11 +413,11 @@
   @Example
     <code>
     // Toggle RD10
-    SCK1OUT_Toggle();
+    SCK1IN_Toggle();
     </code>
 
 */
-#define SCK1OUT_Toggle()           (_LATD10 ^= 1)
+#define SCK1IN_Toggle()           (_LATD10 ^= 1)
 /**
   @Summary
     Reads the value of the GPIO pin, RD10.
@@ -439,11 +439,11 @@
     uint16_t portValue;
 
     // Read RD10
-    postValue = SCK1OUT_GetValue();
+    postValue = SCK1IN_GetValue();
     </code>
 
 */
-#define SCK1OUT_GetValue()         _RD10
+#define SCK1IN_GetValue()         _RD10
 /**
   @Summary
     Configures the GPIO pin, RD10, as an input.
@@ -463,11 +463,11 @@
   @Example
     <code>
     // Sets the RD10 as an input
-    SCK1OUT_SetDigitalInput();
+    SCK1IN_SetDigitalInput();
     </code>
 
 */
-#define SCK1OUT_SetDigitalInput()  (_TRISD10 = 1)
+#define SCK1IN_SetDigitalInput()  (_TRISD10 = 1)
 /**
   @Summary
     Configures the GPIO pin, RD10, as an output.
@@ -487,11 +487,11 @@
   @Example
     <code>
     // Sets the RD10 as an output
-    SCK1OUT_SetDigitalOutput();
+    SCK1IN_SetDigitalOutput();
     </code>
 
 */
-#define SCK1OUT_SetDigitalOutput() (_TRISD10 = 0)
+#define SCK1IN_SetDigitalOutput() (_TRISD10 = 0)
 /**
   @Summary
     Sets the GPIO pin, RD11, high using LATD11.
@@ -511,11 +511,11 @@
   @Example
     <code>
     // Set RD11 high (1)
-    SS1OUT_SetHigh();
+    SS1_SetHigh();
     </code>
 
 */
-#define SS1OUT_SetHigh()          (_LATD11 = 1)
+#define SS1_SetHigh()          (_LATD11 = 1)
 /**
   @Summary
     Sets the GPIO pin, RD11, low using LATD11.
@@ -535,11 +535,11 @@
   @Example
     <code>
     // Set RD11 low (0)
-    SS1OUT_SetLow();
+    SS1_SetLow();
     </code>
 
 */
-#define SS1OUT_SetLow()           (_LATD11 = 0)
+#define SS1_SetLow()           (_LATD11 = 0)
 /**
   @Summary
     Toggles the GPIO pin, RD11, using LATD11.
@@ -559,11 +559,11 @@
   @Example
     <code>
     // Toggle RD11
-    SS1OUT_Toggle();
+    SS1_Toggle();
     </code>
 
 */
-#define SS1OUT_Toggle()           (_LATD11 ^= 1)
+#define SS1_Toggle()           (_LATD11 ^= 1)
 /**
   @Summary
     Reads the value of the GPIO pin, RD11.
@@ -585,11 +585,11 @@
     uint16_t portValue;
 
     // Read RD11
-    postValue = SS1OUT_GetValue();
+    postValue = SS1_GetValue();
     </code>
 
 */
-#define SS1OUT_GetValue()         _RD11
+#define SS1_GetValue()         _RD11
 /**
   @Summary
     Configures the GPIO pin, RD11, as an input.
@@ -609,11 +609,11 @@
   @Example
     <code>
     // Sets the RD11 as an input
-    SS1OUT_SetDigitalInput();
+    SS1_SetDigitalInput();
     </code>
 
 */
-#define SS1OUT_SetDigitalInput()  (_TRISD11 = 1)
+#define SS1_SetDigitalInput()  (_TRISD11 = 1)
 /**
   @Summary
     Configures the GPIO pin, RD11, as an output.
@@ -633,11 +633,11 @@
   @Example
     <code>
     // Sets the RD11 as an output
-    SS1OUT_SetDigitalOutput();
+    SS1_SetDigitalOutput();
     </code>
 
 */
-#define SS1OUT_SetDigitalOutput() (_TRISD11 = 0)
+#define SS1_SetDigitalOutput() (_TRISD11 = 0)
 
 /**
     Section: Function Prototypes

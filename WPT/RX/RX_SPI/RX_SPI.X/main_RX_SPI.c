@@ -31,7 +31,7 @@ int main(void)
     unsigned long   time_counter    = 0;
     
    
-    spi_data_out = 0xaaaa;
+    spi_data_out = 0xaa;
 
     while (1)
     {
@@ -41,7 +41,10 @@ int main(void)
         }
         led_red = !led_red;
         
-        spi_data_in = SPI1_Exchange16bit(spi_data_out);
+        
+        
+        spi_data_in = SPI1_Exchange8bit(spi_data_out);
+        //spi_data_in = SPI1_Exchange16bit(spi_data_out);
         //spi_status = SPI1_Exchange16bitBuffer(spi_data_out,2,&spi_data_in);
     }
 

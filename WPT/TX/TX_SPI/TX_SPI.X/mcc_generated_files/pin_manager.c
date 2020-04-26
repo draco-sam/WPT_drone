@@ -70,9 +70,9 @@ void PIN_MANAGER_Initialize (void)
      * Setting the GPIO Direction SFR(s)
      ***************************************************************************/
     TRISA = 0x001F;
-    TRISB = 0xFFFD;
-    TRISC = 0xFF7F;
-    TRISD = 0xF7FF;
+    TRISB = 0xFFF9;
+    TRISC = 0xFFFF;
+    TRISD = 0xFFFF;
 
     /****************************************************************************
      * Setting the Weak Pull Up and Weak Pull Down SFR(s)
@@ -98,20 +98,19 @@ void PIN_MANAGER_Initialize (void)
      * Setting the Analog/Digital Configuration SFR(s)
      ***************************************************************************/
     ANSELA = 0x001F;
-    ANSELB = 0x0099;
-    ANSELC = 0x00CF;
-    ANSELD = 0x2800;
+    ANSELB = 0x009D;
+    ANSELC = 0x004F;
+    ANSELD = 0x2000;
     
     /****************************************************************************
      * Set the PPS
      ***************************************************************************/
     __builtin_write_RPCON(0x0000); // unlock PPS
 
-    RPOR21bits.RP75R = 0x0007;    //RD11->SPI1:SS1OUT
-    RPOR21bits.RP74R = 0x0006;    //RD10->SPI1:SCK1OUT
-    RPINR20bits.SDI1R = 0x0022;    //RB2->SPI1:SDI1
-    RPOR11bits.RP55R = 0x0005;    //RC7->SPI1:SDO1
-    RPINR20bits.SCK1R = 0x004A;    //RD10->SPI1:SCK1OUT
+    RPINR20bits.SDI1R = 0x0037;    //RC7->SPI1:SDI1.RP55 <-> 0x0037 (55).
+    RPINR20bits.SCK1R = 0x004A;    //RD10->SPI1:SCK1IN. RP74 <-> 0x004A (74).
+    RPOR1bits.RP34R = 0x0005;    //RB2->SPI1:SDO1
+    RPINR21bits.SS1R = 0x004B;    //RD11->SPI1:SS1. RP75 <-> 0x004B (75).
 
     __builtin_write_RPCON(0x0800); // lock PPS
 }

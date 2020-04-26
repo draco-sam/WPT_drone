@@ -1,6 +1,6 @@
 /*************************************************************************************************** 
  * File             : i2c_sam_01.h
- * Date             : 31/03/2020.   
+ * Date             : 04/05/2020.   
  * Author           : Samuel LORENZINO.
  * Comments         :
  * Revision history : 
@@ -12,16 +12,16 @@
 #include "../../lib_mplab/rtcc.h"
 
 //Sub addresses of read register on i2c slave IC charger :
-#define TX_CONFIG_BITS      0x14
-#define TM_ICHARGE_TARGET   0x1a
-#define TM_VCHARGE_SETTING  0x1b
-#define TM_MAX_CHARGE_TIMER 0x30
-#define TM_CV_TIMER         0x31
-#define TM_CHARGER_STATE    0x34
-#define TM_CHARGE_STATUS    0x35
-#define TM_SYSTEM_STATUS    0x39
-#define TM_VBAT             0x3a
-#define TM_IBAT             0x3d
+#define TX_CONFIG_BITS          0x14
+#define TM_TC_ICHARGE_TARGET    0x1a
+#define TM_VCHARGE_SETTING      0x1b
+#define TM_MAX_CHARGE_TIMER     0x30
+#define TM_CV_TIMER             0x31
+#define TM_CHARGER_STATE        0x34
+#define TM_CHARGE_STATUS        0x35
+#define TM_SYSTEM_STATUS        0x39
+#define TM_VBAT                 0x3a
+#define TM_IBAT                 0x3d
 #define CHARGER_CONFIG_BITS     0x29//Read/write register.
 #define TM_VIN                  0x3b
 #define TM_VSYS                 0x3c
@@ -64,3 +64,5 @@ void float_to_ascii(float data_float,char *t_table);
 unsigned long get_i2c_sample_time();
 unsigned long convertTimeToSeconds(unsigned int hour,unsigned int minutes,unsigned int seconds);
 void set_RTCC_data_time(int year,int month,int day,int weekDay,int hours,int minutes,int seconds);
+void soft_start_charge();
+void i2c_write_i_charge(unsigned short i_charge_target,unsigned short *counter);

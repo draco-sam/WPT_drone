@@ -277,8 +277,8 @@ unsigned long get_i2c_sample_time(){
  * 
  * 
  */ 
-    #define time_out_max        5000000
-    Date_time str_date_time;
+    #define         time_out_max        5000000
+    Date_time       str_date_time;
     bool            rtcc_status = false;
     unsigned long   seconds     = 0;
     unsigned long   time_out    = 0;
@@ -302,7 +302,7 @@ I2c_tm_analog i2c_master_get_tm(unsigned short tm_address){
  */
     unsigned short  digital_data        = 0;
     short           digital_data_signed = 0;
-    I2c_tm_analog i2c_tm_analog;
+    I2c_tm_analog   i2c_tm_analog;
     
     //Reset value :
     i2c_tm_analog.sample_time   = 0.0;
@@ -377,8 +377,8 @@ I2c_tm_analog i2c_master_get_tm(unsigned short tm_address){
     else if(tm_address == TM_V_CHARGE_DAC){//PAS de loi de conversion ???
         i2c_tm_analog.data_1 = digital_data;
     }
-    else if(tm_address == TM_ICHARGE_TARGET){//0x1a, 5-bit [4:0].
-        i2c_tm_analog.data_1 = (((digital_data & 0x1f) + 1) * 1e-3) / R_SENS_BATTERY;
+    else if(tm_address == TM_TC_ICHARGE_TARGET){//0x1a, 5-bit [4:0].
+        i2c_tm_analog.data_1 = ((digital_data & 0x1f) + 1) * (1e-3 / R_SENS_BATTERY);
     }
     else if(tm_address == TM_VCHARGE_SETTING){//0x1a, 5-bit [4:0].
         i2c_tm_analog.data_1 = (((digital_data & 0x1f)/80.0) + 3.8125) * CELL_COUNT ;
@@ -646,3 +646,88 @@ unsigned long convertTimeToSeconds(unsigned int hour,unsigned int minutes,unsign
 }
 //__________________________________________________________________________________________________
 
+void soft_start_charge(){
+/*
+ * ICHARGE_TARGET = Ich * (R_SNS_B/1mV) - 1.
+ * 
+ * A faire :    - Coder fonction qui convertit un courant en ICHARGE_TARGET.
+ */
+    static unsigned short   soft_counter        = 0;
+    static unsigned long    start_time_second   = 0;
+    unsigned long           time_second         = 0;
+    unsigned short          f_i2c_end_writing   = 0;
+    
+    if(start_time_second == 0){//At first call.
+        start_time_second = get_i2c_sample_time();//Save first start time.
+    }
+    time_second = get_i2c_sample_time();//Get new time.
+    time_second = time_second - start_time_second;
+    
+    if(soft_counter == 0 && time_second > 10){
+        i2c_master_start_write_data(TM_TC_ICHARGE_TARGET,9,&f_i2c_end_writing);
+        while(f_i2c_end_writing != 1){Nop();}
+        f_i2c_end_writing = 0;//Reset.
+        soft_counter++;
+    }
+    else if(soft_counter == 1 && time_second > 20){
+        i2c_master_start_write_data(TM_TC_ICHARGE_TARGET,11,&f_i2c_end_writing);
+        while(f_i2c_end_writing != 1){Nop();}
+        f_i2c_end_writing = 0;//Reset.
+        soft_counter++;
+    }
+    else if(soft_counter == 2 && time_second > 30){
+        i2c_master_start_write_data(TM_TC_ICHARGE_TARGET,13,&f_i2c_end_writing);
+        while(f_i2c_end_writing != 1){Nop();}
+        f_i2c_end_writing = 0;//Reset.
+        soft_counter++;
+    }
+    else if(soft_counter == 3 && time_second > 40){
+        i2c_master_start_write_data(TM_TC_ICHARGE_TARGET,15,&f_i2c_end_writing);
+        while(f_i2c_end_writing != 1){Nop();}
+        f_i2c_end_writing = 0;//Reset.
+        soft_counter++;
+    }
+
+//    
+//    if(soft_counter == 0 && time_second < 10){
+//        i2c_write_i_charge(7,&s_counter);//I bat charge at 0.5 A <-> ICHARGE_TARGET = 7.
+//        soft_counter++;
+//        if(s_counter == 1){
+//            led_red     = off;
+//            led_blue    = on;
+//        }
+//    }
+//    else if(soft_counter == 1 && time_second >= 10){
+//        i2c_write_i_charge(9,&soft_counter);//I bat charge at 0.625 A <-> ICHARGE_TARGET = 9.
+//    }
+//    else if(soft_counter == 2 && time_second >= 20){
+//        i2c_write_i_charge(11,&soft_counter);//I bat charge at 0.75 A <-> ICHARGE_TARGET = 11.
+//    }
+//    else if(soft_counter == 3 && time_second >= 30){
+//        i2c_write_i_charge(13,&soft_counter);//I bat charge at 0.875 A <-> ICHARGE_TARGET = 13.
+//    }
+//    else if(soft_counter == 4 && time_second >= 40){
+//        i2c_write_i_charge(15,&soft_counter);//I bat charge at 1 A <-> ICHARGE_TARGET = 15.
+//    }
+    
+    
+    
+    
+    
+    
+}
+//__________________________________________________________________________________________________
+
+void i2c_write_i_charge(unsigned short i_charge_target,unsigned short *counter){
+/* Function for "soft_start_charge()".
+ * 
+ * Increase counter every time the function is called. 
+ */
+    unsigned short f_i2c_end_writing = 0;
+    
+    i2c_master_start_write_data(TM_TC_ICHARGE_TARGET,i_charge_target,&f_i2c_end_writing);
+    while(f_i2c_end_writing != 1){Nop();}//Wait i2c write interrupt ending.
+    
+    //*counter++;
+}
+//__________________________________________________________________________________________________

@@ -95,8 +95,15 @@ void SPI1_Initialize (void)
     SPI1URDTL = 0x00;
     // SPI1URDTH 0; 
     SPI1URDTH = 0x00;
-    // SPIEN enabled; DISSDO disabled; MCLKEN FOSC/2; CKP Idle:Low, Active:High; SSEN disabled; MSTEN Master; MODE16 disabled; SMP Middle; DISSCK disabled; SPIFE Frame Sync pulse precedes; CKE Idle to Active; MODE32 disabled; SPISIDL disabled; ENHBUF enabled; DISSDI disabled; 
-    SPI1CON1L = 0x8021;
+    // SPIEN enabled; DISSDO SDO controlled by SPI module;Com 8-bit;Input data sampled at middle;
+    // SSx not use;idle clock=low and active=high;slave mode;SDI controlled by SPI module;
+    // SCK controlled by SPI module;MCLKEN FOSC/2 (Fp clock for baud rate);??Frame Sync pulse (Idle-to-active edge) precedes the first bit clock;
+    //Enhanced Buffer Enable (désactiver ???).
+    SPI1CON1L = 0x8001;
+    
+    SPI1CON1Lbits.SPIEN = 1;
+    
+    
 
 }
 
@@ -228,6 +235,20 @@ SPI1_STATUS SPI1_StatusGet()
 {
     return(SPI1STATL);
 }
+
+void __attribute__((__interrupt__)) _SPI1Interrupt(void)
+{
+    //IFS0bits.SPI1IF = 0;
+    #define led_red         LATCbits.LATC14
+    #define led_green       LATCbits.LATC13
+    #define led_blue        LATCbits.LATC12
+    #define on              0
+    #define off             1
+
+    led_red     = off;
+    led_green   = on;
+}
+
 
 /**
  End of File
